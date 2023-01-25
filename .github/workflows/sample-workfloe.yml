@@ -8,3 +8,5 @@ jobs:
         run: echo "Hello"
       - name: Print Bye
         run: echo "Bye"
+      - name: Print gradle version
+        run: gradle --version
