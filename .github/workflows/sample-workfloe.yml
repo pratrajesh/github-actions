@@ -10,3 +10,12 @@ jobs:
         run: echo "Bye"
       - name: Print gradle version
         run: gradle --version
+      - name: Make Request
+        id: myRequest
+        uses: fjogeleit/http-request-action@v1
+        with:
+           url: "http://google.com"
+      - name: Show Response
+        run: |
+         echo ${{ steps.myRequest.outputs.response }}
+         echo ${{ steps.myRequest.outputs.headers }}
