@@ -36,10 +36,5 @@ jobs:
             -H 'Content-Type: application/json' \
            -d '{
             "position": 0,
-            "body": "Comment from github action",
-            "replies": [
-             {
-               "body": "Test Comment 1"
-             }
-             ]
+            "body": "Comment from github action"
           }'
