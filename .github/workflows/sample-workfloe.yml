@@ -27,7 +27,3 @@ jobs:
       - name: Show Response
         run: |
          echo $(cat workspaces.json)
-      - name: Get Response    
-        run: |
-          response = $(curl http://google.com)         
-          echo "response from curl= $response"  
