@@ -23,7 +23,7 @@ jobs:
       - name: Curl call
         id: curl
         run: |
-          curl -X GET "https://gorest.co.in/public/v2/users"
+          curl -X GET "https://gorest.co.in/public/v2/users" -o workspaces.json
       - name: Show Response
         run: |
          echo ${{ steps.curl.outputs.response }}
