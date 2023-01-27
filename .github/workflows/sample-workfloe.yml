@@ -26,7 +26,7 @@ jobs:
           curl -X GET "https://gorest.co.in/public/v2/users" -o workspaces.json
       - name: Show Response
         run: |
-         echo $(cat workspaces.json)
+         echo $(workspaces.json)
       - name: Get Response    
         run: |
           response = $(curl http://google.com)         
