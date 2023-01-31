@@ -65,6 +65,5 @@ jobs:
            ls -a
            cd ..
            ./.github/scripts/apicall.sh
-        shell: bash
 
 
