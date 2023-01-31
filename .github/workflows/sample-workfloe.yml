@@ -50,5 +50,9 @@ jobs:
         id: weather2
         run: |
           curl --write-out "%{http_code}\n" "https://samples.openweathermap.org/data/2.5/weather?q=London,uk&appid=b6907d289e10d714a6e88b30761fae22" --output output.txt
+      - name: Wearher check call with response code and output in file without transfer rate
+        id: weather3
+        run: |
+          curl --write-out "%{http_code}\n" "https://samples.openweathermap.org/data/2.5/weather?q=London,uk&appid=b6907d289e10d714a6e88b30761fae22" --output output.txt --silent
 
 
