@@ -64,7 +64,8 @@ jobs:
       - name: Wearher check call with script file
         id: weather5
         run: | 
-           chmod 755 ./.github/scripts/apicall.sh
+           # chmod 755 ./.github/scripts/apicall.sh
+           sh ./.github/scripts/apicall.sh
         shell: bash
       - name: print ouput of script file
         id: weather6
