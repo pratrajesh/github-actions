@@ -61,7 +61,7 @@ jobs:
           echo $HTTP_CODE
       - name: Wearher check call with script file
         id: weather5
-        run: |
-          /.github/scripts/apicall.sh
+        run: ./.github/scripts/apicall.sh
+        shell: bash
 
 
