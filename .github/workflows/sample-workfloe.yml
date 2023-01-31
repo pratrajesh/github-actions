@@ -70,6 +70,5 @@ jobs:
       - name: print ouput of script file
         id: weather6
         run: |
-           ls -a
-           #echo $(cat output1.txt)
+           echo $(cat output1.txt)
 
