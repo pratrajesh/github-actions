@@ -65,5 +65,8 @@ jobs:
         id: weather5
         run: | 
            chmod 755 ./.github/scripts/apicall.sh
-
+      - name: print ouput of script file
+        id: weather6
+        run: | 
+           echo $(cat output1.txt)
 
