@@ -62,7 +62,8 @@ jobs:
       - name: Wearher check call with script file
         id: weather5
         run: | 
-           ls
+           ls -a
+           cd ..
            ./.github/scripts/apicall.sh
         shell: bash
 
