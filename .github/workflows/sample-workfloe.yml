@@ -26,6 +26,8 @@ jobs:
           grep -Eoh "$ERROR_REGEX" linter.log > aaa.log
           #grep "error" linter.log > error.log
           ls -a
+          echo "::::::::::::::::::::::::::"
+          cat linter.log
           echo "------------------------"
           cat aaa.log
       - name: Extract errors
