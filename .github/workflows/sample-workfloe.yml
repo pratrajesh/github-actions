@@ -34,6 +34,7 @@ jobs:
           echo "::error file=${ERROR_FILE},line=1,col=1::${ERROR_MESSAGE}"
           echo "error-logs=${ERROR_MESSAGE}" >> $GITHUB_OUTPUT
       - name: Print logs of previous step 
+        if: failure() && steps.lintcode.outcome == 'failure'
         run: |
            echo echo "${{ steps.log-extract.outputs.error-logs }}"
       - name: External Api call (Weather Map)
