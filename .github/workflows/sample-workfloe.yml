@@ -27,7 +27,7 @@ jobs:
           #grep "error" linter.log > error.log
           ls -a
           echo "------------------------"
-          #echo $(cat aaa.log)
+          cat aaa.log
       - name: Extract errors
         id: log-extract
         if: failure() && steps.lintcode.outcome == 'failure'
