@@ -31,7 +31,7 @@ jobs:
           ERROR_REGEX='^.*:(.*)\serror\s.*$'
           ERROR_FILE=$(grep -Eoh "$ERROR_REGEX" linter.log | cut -d ':' -f 1 | uniq)
           ERROR_MESSAGE=$(grep -Eoh "$ERROR_REGEX" linter.log)
-          echo "::error file=${ERROR_FILE},line=1,col=1::${ERROR_MESSAGE}"
+          echo "${ERROR_MESSAGE}"
           echo "error-logs=${ERROR_MESSAGE}" >> $GITHUB_OUTPUT
       - name: Print logs of previous step 
         if: failure() && steps.lintcode.outcome == 'failure'
