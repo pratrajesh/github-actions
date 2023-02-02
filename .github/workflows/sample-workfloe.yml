@@ -22,10 +22,12 @@ jobs:
       - name: List files
         if: failure() && steps.lintcode.outcome == 'failure'
         run: |
-          grep "error" linter.log > error.log
+          ERROR_REGEX='^.*:(.*)\serror\s.*$'
+          grep -Eoh "$ERROR_REGEX" linter.log > aaa.log
+          #grep "error" linter.log > error.log
           ls -a
           echo "------------------------"
-          echo $(cat error.log)
+          echo $(cat aaa.log)
       - name: Extract errors
         id: log-extract
         if: failure() && steps.lintcode.outcome == 'failure'
