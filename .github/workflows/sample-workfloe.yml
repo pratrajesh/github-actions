@@ -25,12 +25,17 @@ jobs:
           ERROR_MESSAGE=$(cat linter.log | grep "^\s*\d*:\d*\s*error\s.*$")
           echo "error message : ${ERROR_MESSAGE}"
       - name: Extract errors
+        id: log-extract
         if: failure() && steps.lintcode.outcome == 'failure'
         run: |
           ERROR_REGEX='^.*:(.*)\serror\s.*$'
           ERROR_FILE=$(grep -Eoh "$ERROR_REGEX" linter.log | cut -d ':' -f 1 | uniq)
           ERROR_MESSAGE=$(grep -Eoh "$ERROR_REGEX" linter.log)
           echo "::error file=${ERROR_FILE},line=1,col=1::${ERROR_MESSAGE}"
+          echo "error-logs=${ERROR_MESSAGE}" >> $GITHUB_OUTPUT
+      - name: Print logs of previous step 
+        run: |
+           echo echo "${{ steps.log-extract.outputs.error-logs }}"
       - name: External Api call (Weather Map)
         run: |
            HTTP_CODE=$(curl --write-out "%{http_code}\n" "https://samples.openweathermap.org/data/2.5/weather?q=London,uk&appid=b6907d289e10d714a6e88b30761fae22" --output output.txt --silent)
