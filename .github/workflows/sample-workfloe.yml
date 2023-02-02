@@ -22,8 +22,8 @@ jobs:
       - name: List files
         if: failure() && steps.lintcode.outcome == 'failure'
         run: |
-          ERROR_MESSAGE=$(cat linter.log | grep "^\s*\d*:\d*\s*error\s.*$")
-          echo "error message : ${ERROR_MESSAGE}"
+          value=`cat linter.log`
+          echo "error message : ${value}"
       - name: Extract errors
         id: log-extract
         if: failure() && steps.lintcode.outcome == 'failure'
