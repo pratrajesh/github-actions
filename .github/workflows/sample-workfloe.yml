@@ -22,10 +22,10 @@ jobs:
       - name: List files
         if: failure() && steps.lintcode.outcome == 'failure'
         run: |
-          value=(grep "error" linter.log > error.log)
-          echo $(cat output.txt)
+          grep "error" linter.log > error.log
+          ls -a
           echo "------------------------"
-          echo "error message : ${value}"
+          echo $(cat error.log)
       - name: Extract errors
         id: log-extract
         if: failure() && steps.lintcode.outcome == 'failure'
