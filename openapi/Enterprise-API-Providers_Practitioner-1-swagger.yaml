@@ -1,0 +1,1874 @@
+openapi: 3.0.0
+info:
+  version: '1'
+  title: Practitioners - DRAFT
+  description: API will allow for ability to search based on speciality of behav health to provider a list of practitionsers within a defined geographic area. 
+  contact:
+    name: 'TODO'
+    url: 'TODO'
+    email: 'TODO@test.com'
+servers:
+  # Added by API Auto Mocking Plugin
+  - description: SwaggerHub API Auto Mocking
+    url: https://virtserver.swaggerhub.com/Enterprise-API/Providers/2.0.0
+  - url: https://apihub.test.com/v2/provider-management ##TODO
+    description: The server URL for v1 APIs
+
+security:
+  - bearerAuth: []
+paths:
+
+  '/practitioners/search':
+    post:
+      parameters: 
+        - $ref: '#/components/parameters/offset'
+        - $ref: '#/components/parameters/limit'
+      tags: 
+        - Practitioners  - Complex Search
+      summary: Complex Practitioners Search 
+      description: Conduct a complex, multi-faceted search for a specific provider with the given criteria
+      requestBody:
+        description: Search parameters composition
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/practitioners-search-request-model'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/practitioners-search-response-model'
+        '401':
+          description: Unauthorized access
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTP-401'
+        '404':
+          description: Resource not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTP-404'
+        '422':
+          description: Unprocessable entity
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTP-422'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTP-500'
+        '503':
+          description: Service Unavailable
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTP-503'
+
+  '/practitioners':
+    get:
+      tags:
+        - Practitioners
+      summary: Get a list of all practitioners
+      description: Get a list of all practitioners
+      parameters: 
+        - $ref: '#/components/parameters/offset'
+        - $ref: '#/components/parameters/limit'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/practitioners-response'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTP-400'
+        '401':
+          description: Unauthorized access
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTP-401'
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                properties:
+                  applicationStatusDescription:
+                    type: string
+                    example: "ineligible"
+                  reasonsForIneligibility:
+                    type: array
+                    items:
+                      properties:
+                        ineligibilityCode:
+                          type: string
+                        ineligibilityDescription:
+                          type: string
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTP-500'
+        '503':
+          description: Service Unavailable
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTP-503'
+
+  '/practitioners/{practitionersId}':
+    get:
+      tags:
+        - Practitioners
+      summary: Retrieve one provider
+      description: Retrieve one provider
+      parameters: 
+        - $ref: '#/components/parameters/practitioners-id'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/practitioners-individual-response'
+        '401':
+          description: Unauthorized access
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTP-401'
+        '404':
+          description: Resource not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTP-404'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTP-500'
+        '503':
+          description: Service Unavailable
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTP-503'
+
+  '/practitioners/{practitionersId}/basic-information':
+    get:
+      tags:
+        - Practitioners
+      summary: Retrieve basic information fields for the practitioners
+      description: Retrieve basic information fields for the practitioners
+      parameters: 
+        - $ref: '#/components/parameters/practitioners-id'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/practitioners-basic-information-response'
+        '401':
+          description: Unauthorized access
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTP-401'
+        '404':
+          description: Resource not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTP-404'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTP-500'
+        '503':
+          description: Service Unavailable
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTP-503'
+
+  '/practitioners/{practitionersId}/personal-information':
+    get:
+      tags:
+        - Practitioners
+      summary: Retrieve personal information fields for the practitioners
+      description: Retrieve personal information fields for the practitioners, if the provider is an individual
+      parameters: 
+        - $ref: '#/components/parameters/practitioners-id'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/practitioners-personal-information-response'
+        '401':
+          description: Unauthorized access
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTP-401'
+        '404':
+          description: Resource not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTP-404'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTP-500'
+        '503':
+          description: Service Unavailable
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTP-503'
+
+  '/practitioners/{practitionersId}/contact-information':
+    get:
+      tags:
+        - Practitioners
+      summary: Retrieve communication and contact information for the practitioners
+      description: Retrieve communication and contact information for the practitioners
+      parameters: 
+        - $ref: '#/components/parameters/practitioners-id'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/practitioners-contact-information-response'
+        '401':
+          description: Unauthorized access
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTP-401'
+        '404':
+          description: Resource not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTP-404'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTP-500'
+        '503':
+          description: Service Unavailable
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTP-503'
+
+  '/practitioners/{practitionersId}/offices':
+    get:
+      tags:
+        - Practitioners
+      summary: Retrieve list of offices
+      description: Retrieve office information for the practitioners
+      parameters: 
+        - $ref: '#/components/parameters/practitioners-id'
+        - $ref: '#/components/parameters/return-office-hours'
+        - $ref: '#/components/parameters/return-certifications'
+        - $ref: '#/components/parameters/return-affiliations'
+        ##- $ref: '#/components/parameters/return-distance'
+        ##- $ref: '#/components/parameters/return-flagMedicaidCertified'
+        ##- $ref: '#/components/parameters/return-language'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/practitioners-offices-response'
+        '401':
+          description: Unauthorized access
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTP-401'
+        '404':
+          description: Resource not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTP-404'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTP-500'
+        '503':
+          description: Service Unavailable
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTP-503'
+
+  '/practitioners/{practitionersId}/legal-identifiers':
+    get:
+      tags:
+        - Practitioners
+      summary: Retrieve legal identifiers for the practitioners
+      description: Retrieve legal identifiers for the practitioners
+      parameters: 
+        - $ref: '#/components/parameters/practitioners-id'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/practitioners-legal-identifiers-response'
+        '401':
+          description: Unauthorized access
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTP-401'
+        '404':
+          description: Resource not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTP-404'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTP-500'
+        '503':
+          description: Service Unavailable
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTP-503'
+
+  '/practitioners/{practitionersId}/practitioners-specialties':
+    get:
+      tags:
+        - Practitioners
+      summary: Retrieve specialties
+      description: Retrieve specialties
+      parameters: 
+        - $ref: '#/components/parameters/practitioners-id'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/practitioners-specialties-response'
+        '401':
+          description: Unauthorized access
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTP-401'
+        '404':
+          description: Resource not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTP-404'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTP-500'
+        '503':
+          description: Service Unavailable
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTP-503'
+
+  '/practitioners/{practitionersId}/products':
+    get:
+      tags:
+        - Practitioners
+      summary: Retrieve products and plans
+      description: Retrieve products and plans associated with the practitioner
+      parameters: 
+        - $ref: '#/components/parameters/practitioners-id'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/practitioners-products-response'
+        '401':
+          description: Unauthorized access
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTP-401'
+        '404':
+          description: Resource not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTP-404'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTP-500'
+        '503':
+          description: Service Unavailable
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTP-503'
+
+  '/practitioners/{practitionersId}/accessible-services':
+    get:
+      tags:
+        - Practitioners
+      summary: Retrieve accessible services
+      description: Retrieve accessible services associated with the practitioners
+      parameters: 
+        - $ref: '#/components/parameters/practitioners-id'
+        - in: query
+          name: serviceCategoryCode
+          schema:
+            type: string
+          description: Optional, to query the response by service category codes (full list available at /lookups/accessible-service-category-types)
+          required: false
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/practitioners-accessible-services-response'
+        '401':
+          description: Unauthorized access
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTP-401'
+        '404':
+          description: Resource not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTP-404'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTP-500'
+        '503':
+          description: Service Unavailable
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTP-503'
+
+  '/networks':
+    get:
+      tags:
+        - Practitioners Networks
+      summary: Get a list of all practitioners networks
+      description: Get a list of all practitioners networks
+      parameters: 
+        - $ref: '#/components/parameters/required-postal-code'
+        - $ref: '#/components/parameters/time-period'
+        - $ref: '#/components/parameters/coverage-type'
+        - $ref: '#/components/parameters/offset'
+        - $ref: '#/components/parameters/limit'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/networks-response'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTP-400'
+        '401':
+          description: Unauthorized access
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTP-401'
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTP-422'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTP-500'
+        '503':
+          description: Service Unavailable
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTP-503'
+ 
+  
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      description: JWT-based authorization token, to be provided as a bearer token
+      scheme: bearer
+      bearerFormat: JWT
+    OpenID:
+      type: openIdConnect
+      openIdConnectUrl: https://api.test.com/.well-known/openid-configuration
+    OAuth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://api.test.com/oauth2/authorize
+          tokenUrl: https://api.test.com/oauth2/token
+          scopes:
+            read: Grants read access
+            write: Grants write access
+            admin: Grants access to admin operations      
+  parameters:
+    practitioners-id:
+      in: path
+      name: practitionersId
+      schema:
+        type: string
+      description: Unique identifier for a specific provider
+      required: true
+    county:
+      in: query
+      name: county
+      schema:
+        type: string
+      description: An optional parameter to search applicable FIPS codes with county information. If provided, a value for the 'state' parameter also has to be provided; otherwise a 404 - Not found error will be returned.
+      required: false
+    fips-code:
+      in: query
+      name: fipsCode
+      schema:
+        type: string
+      description: An optional parameter to retrieve values for a given set of FIPS codes. Can be a comma-delimited array of string values.
+      required: false
+    state:
+      in: query
+      name: state
+      schema:
+        type: string
+      description: "An optional parameter to retrieve values for given states. Can be a comma-delimited array of string values. NOTE: Implementing team to provide feedback on whether it's possible to return all plans available for within the state; provision of a county requires a state to be provided in conjunction; however, we should be able to query with the state information only."
+      required: false
+    optional-postal-code:
+      in: query
+      name: postalCode
+      schema:
+        type: string
+      description: An optional parameter to search applicable FIPS codes with postal code (zip code in US) information. Can be a comma-delimited array of string values.
+      required: false
+    required-postal-code:
+      in: query
+      name: postalCode
+      schema:
+        type: string
+      description: Postal code to search for; used as a faux path parameter
+      required: true
+    time-period:
+      in: query
+      name: timePeriod
+      schema: 
+        type: string
+        enum:
+          - Current
+          - Future
+      description: Time period for which networks are being requested. Default is Current.
+      required: true
+    coverage-type:
+      in: query
+      name: coverageType
+      schema:
+        type: string
+        enum:
+          - Employer
+          - IndividualFamily
+          - MedicareMedicaid
+          - Medicaid
+      required: true
+    offset:
+      in: query
+      name: offset
+      schema:
+        type: integer
+      description: Optional. This parameter is used to facilitate pagination of available results by providing an offset position to the results list. It can be sent by the consumer to indicate the starting point of the result set for the current call. The offset is a non-negative integer representing the first result to return. If not provided, it defaults the value of 0.
+      example: 0
+    limit:
+      in: query
+      name: limit
+      schema:
+        type: integer
+      description: Optional. Default is 50 records. This parameter is used to facilitate pagination by indicating a count of results to return in each page. The query parameter limit should be sent by the consumer to determine the number of results returned in the current call. The limit shall be a non-negative, non-zero integer indicating the maximum number of results to return at one time.
+      example: 50
+    return-affiliations:
+      in: query
+      name: returnAffiliations
+      schema:
+        type: boolean
+      description: Optional, default False. Returns affiliations of the specific office if True.
+      required: false
+      example: false
+    return-office-hours:
+      in: query
+      name: returnOfficeHours
+      schema:
+        type: boolean
+      description: Optional, default False. Returns office hours of the specific office if True.
+      required: false
+      example: false
+    return-certifications:
+      in: query
+      name: returnCertifications
+      schema:
+        type: boolean
+      description: Optional, default False. Returns certifications associated with the specific office if True.
+      required: false
+      example: false
+    return-distance:
+      in: query
+      name: returndistance
+      schema: 
+        type: integer
+      description: returns distance from search address to primary office address
+    return-flagMedicaidCertified:
+      in: query
+      name: returnflagMedicaidCertified
+      schema:
+        type: boolean
+      description: optional, defult False. Returns flagMedicaidCertified if location of service is Medicare certified if True.
+      required: false
+      example: false
+    return-language:
+      in: query
+      name: returnlanguage
+      schema:
+        type: boolean
+      description: return languages if set to true
+      required: true
+      example: true
+    
+  schemas:
+
+  #START - practitioners search
+    practitioners-search-item:
+      properties:
+        searchType:
+          type: string
+          description: Type of search to be conducted; default is within All types
+          example: All
+          enum:
+            - All
+            - practitionersName
+            - Condition
+            - practitionersSpecialty
+        fieldName:
+          type: string
+          description: Field on which to conduct the search
+          example: PostalCode
+          enum:
+            - PostalCode
+            - DistanceFromPostalCode
+            - NetworkId
+            - ProviderTierType
+        isExactMatch:
+          type: boolean
+          description: Default is true. Determines whether an exact match, or a partial match (on string criteria) will be performed on the search criteria provided
+          example: true
+        values:
+          type: array
+          description: Required. Array of case-insensitive values to search for
+    practitioners-search-request-model:
+      properties:
+        filters:
+          type: array
+          description: Search criteria
+          items:
+            $ref: '#/components/schemas/practitioners-search-item'
+          example:
+            - searchType: "All"
+              fieldName: "postalCode"
+              values: [ "90210" ]
+            - searchType: "Condition"
+              fieldName: "DistanceFromPostalCode"
+              values: [ "25" ]
+
+    pagination-model:
+      type: object
+      description: Pagination attributes
+      required:
+        - offset
+        - limit
+        - itemCount
+        - pageCount
+      properties:
+        offset:
+          type: integer
+          example: 0
+        limit:
+          type: integer
+          example: 20
+        countOfItems:
+          type: integer
+          example: 1000
+        countOfPages:
+          type: integer
+          example: 50
+
+    practitioners-model:
+      type: object
+      description: Individual providers top-level attributes
+      properties:
+        practitionersId:
+          type: string
+          description: Unique id of the practitioner
+          example: ABC123
+        href:
+          type: string
+          description: Link to the provider top-level resource
+          example: "https://api.test.com/v1/practitioners/ABC123"
+        links:
+          type: array
+          description: A list of all available sub-resources for the provider record
+          items:
+            $ref: '#/components/schemas/link-model'
+          example:
+          - rel: practitioners.contact-information
+            href: "https://api.test.com/v1/practitioners/ABC123/contact-information"
+          - rel: providers.basic-information
+            href: "https://api.test.com/v1/practitioners/ABC123/basic-information"
+
+    link-model:
+      properties:
+        rel:
+          type: string
+          description: Name of the sub-resource
+        href:
+          type: string
+          description: Path to the sub-resource
+
+    practitioners-search-response-model:
+      properties:
+        products:
+          type: array
+          description: List of products found
+          items:
+            $ref: '#/components/schemas/practitioners-model'
+        pagination:
+          $ref: '#/components/schemas/pagination-model'
+        filters:
+          type: array
+          description: A reflection of the search criteria used to generate the results
+          items:
+            $ref: '#/components/schemas/practitioners-search-item'
+          example:
+            - fieldName: "planYear"
+              values: [ "2022" ]
+            - fieldName: "planTeamName"
+              values: [ "BroadRidge" ]
+            - fieldName: "product-types"
+              isExactMatch: true
+              values: [ "code":"PPO", "code":"HMO"]
+            - fieldName: "plan-service-area-codes"
+              isExactMatch: true
+              values: [ "code":"21111", "postalCodes":"22111,12234","state":"KY"]
+            - fieldName: "plan-tag-types"
+              values: [ "code":"$0 Premium", "code":"AvailForWeb"]
+        links:
+          type: array
+          description: Optional. A list of pagination links, if applicable
+          items:
+            $ref: '#/components/schemas/link-model'
+          example:
+          - rel: self
+            href: "https://api.test.com/enterprise/v1/products/search?offset=20&limit=20"
+          - rel: first
+            href: "https://api.test.com/enterprise/v1/products/search?offset=0&limit=20"
+          - rel: prev
+            href: "https://api.test.com/enterprise/v1/products/search?offset=0&limit=20"
+          - rel: next
+            href: "https://api.test.com/enterprise/v1/products/search?offset=40&limit=20"
+          - rel: last
+            href: "https://api.test.com/enterprise/v1/products/search?offset=80&limit=20"
+  #END - practitioners search
+
+  #START - practitioners
+    practitioners-response:
+      properties:
+        providers:
+          type: array
+          items:
+            allOf:
+            - $ref: '#/components/schemas/practitioners-id-block'
+            - $ref: '#/components/schemas/practitioners-core-attributes-block'
+            - $ref: '#/components/schemas/practitioners-tier-type-block'
+            - $ref: '#/components/schemas/practitioners-links-block'
+    practitioners-id-block:
+      properties:
+        practitionersId:
+          type: string
+          description: Unique identifier for the practitioner
+    practitioners-individual-response:
+      allOf:
+      - $ref: '#/components/schemas/practitioners-id-block'
+      - $ref: '#/components/schemas/practitioners-core-attributes-block'
+      - $ref: '#/components/schemas/practitioners-core-attributes-block'
+      - $ref: '#/components/schemas/practitioners-links-block'
+    practitioners-core-attributes-block:
+      properties:
+        href:
+          type: string
+          example: "https://api.test.com/v1/practitioners/ABC123"
+        practitionersType:
+          type: object
+          properties:
+            code:
+              type: string
+              example: "1"
+            description:
+              type: string
+              example: "Primary Care and Family Medicine"
+        practitionersTierType:
+          type: object
+          properties:
+            code:
+              type: string
+              example: "ipa"
+            description:
+              type: string
+              example: "TBD"
+        practitionersName:
+          type: string
+          example: "John Smith MD"
+        isAcceptingNewPatients:
+          type: boolean
+        ispractitionerAnIndividual:
+          type: boolean
+        ispractitionerAnOrganization:
+          type: boolean
+        distanceFromPostalCode:
+          type: number
+          description: "TODO"
+    practitioners-tier-type-block:
+      properties:
+        practitionersTier:
+          type: object
+          properties:
+            code:
+              type: string
+              example: "ipa"
+            description:
+              type: string
+              example: "TODO"
+    practitioners-links-block:
+      properties:
+        links:
+          type: array
+          description: A list of all available sub-resources for the practitioners record
+          items:
+            properties:
+              rel:
+                type: string
+                description: Name of the sub-resource
+              href:
+                type: string
+                description: Path to the sub-resource
+            example:
+              - rel: practitioners.basic-information
+                href: "https://api.test.com/v1/practitioners/ABC123/basic-information"
+              - rel: practitioners.contact-information
+                href: "https://api.test.com/v1/practitioners/ABC123/contact-information"
+              - rel: practitioners.legal-identifiers
+                href: "https://api.test.com/v1/practitioners/ABC123/legal-identifiers"
+  #END - practitioners
+
+  #START - practitioners basic information
+    practitioners-basic-information-response:
+      allOf:
+        - $ref: '#/components/schemas/practitioners-basic-information-href-block'
+        - $ref: '#/components/schemas/practitioners-id-block'
+        - $ref: '#/components/schemas/ratings-block'
+        - $ref: '#/components/schemas/practice-focus-areas-block'
+        - $ref: '#/components/schemas/practitioners-languages-block'
+        - $ref: '#/components/schemas/practitioners-networks-block'
+    ratings-block:
+      properties:
+        ratings:
+          type: array
+          items:
+            properties:
+              taxId:
+                type: string
+                description: "TODO, why do we have a taxId associated with ratings?"
+              effectiveness:
+                type: object
+                properties:
+                  code:
+                    type: string
+                    example: "BZ"
+                  description:
+                    type: string
+                    example: "Bronze"
+              effectivenessRating:
+                type: string
+                example: "1"
+              efficiency:
+                type: object
+                properties:
+                  code:
+                    type: string
+                    example: "SL"
+                  description:
+                    type: string
+                    example: "Silver"
+              efficiencyRating:
+                type: string
+                example: "2"
+              combinedRatingCode:
+                type: string
+                example: "SL_BZ"
+              combinedRating:
+                type: number
+                example: 100
+    practice-focus-areas-block:
+      properties:
+        practiceFocuses:
+          type: array
+          items:
+            properties:
+              code:
+                type: string
+                example: "322"
+              description:
+                type: string
+                example: "Wound Care Supplies"
+    practitioners-languages-block:
+      properties:
+        languages:
+          type: array
+          items:
+            allOf:
+            - $ref: '#/components/schemas/language-block'
+    language-block:
+      type: object
+      description: "practitioners languages"
+      properties:
+        code:
+          type: string
+          description: Language code
+          example: "33"
+        description:
+          type: string
+          description: Description of the code
+          example: "Hebrew"
+  #END - practitioners basic information
+  
+  #START - practitioners personal information
+    practitioners-personal-information-response:
+      allOf:
+        - $ref: '#/components/schemas/practitioners-personal-information-href-block'
+        - $ref: '#/components/schemas/practitioners-id-block'
+        - $ref: '#/components/schemas/practitioners-person-name-block'
+        - $ref: '#/components/schemas/practitioners-person-demographics-block'
+    practitioners-person-demographics-block:
+      properties:
+        gender:
+          type: string
+          enum:
+            - Male
+            - Female
+    practitioners-person-name-block:
+      properties:
+        firstName:
+          type: string
+          description: First name of the provider
+          example: John
+        middleInitial:
+          type: string
+          description: Middle initial of the provider
+          example: W
+        lastName:
+          type: string
+          description: Last name of the provider
+          example: Smith
+        fullName:
+          type: string
+          description: Full name of the provider
+          example: "John W Smith"
+  #END - practitioners personal information
+
+  #START - practitioners contact information
+    practitioners-contact-information-response:
+      allOf:
+        - $ref: '#/components/schemas/practitioners-contact-information-href-block'
+        - $ref: '#/components/schemas/practitioners-id-block'
+        - $ref: '#/components/schemas/practitioners-contact-information-block'
+    practitioners-contact-information-block:
+      allOf:
+        - $ref: '#/components/schemas/practitioners-email-addresses-block'
+        - $ref: '#/components/schemas/practitioners-phone-numbers-block'
+    practitioners-email-addresses-block:
+      properties:
+        emailAddress:
+          type: string
+          example: myemail@gmail.com
+        websiteUrl:
+          type: string
+    practitioners-phone-numbers-block:
+      properties:
+        generalPhoneNumber:
+          type: string
+          description: General / central phone number of the practitioners
+          example: +1-111-222-3333
+  #END - practitioners contact information
+
+  #START - practitioners offices
+    practitioners-offices-response:
+      allOf:
+        - $ref: '#/components/schemas/practitioners-offices-href-block'
+        - $ref: '#/components/schemas/practitioners-id-block'
+        - $ref: '#/components/schemas/practitioners-offices-block'
+    practitioners-offices-block:
+      properties:
+        offices:
+          type: array
+          items:
+            properties:
+              officeId:
+                type: string
+                description: "TODO, unique office identifier"
+              providerTypeCode:
+                type: string
+                description: "TODO, need to figure this out"
+              distanceFromPostalCode:
+                type: number
+                description: "TODO, need to confirm"
+              phoneNumber:
+                type: string
+                example: +1-111-222-3333
+              faxNumber:
+                type: string
+                example: +1-111-222-4444
+              isServicingCounty:
+                type: boolean
+              isMedicaidCertified:
+                type: boolean
+              hasHealthCareProviderAccess:
+                type: boolean
+                description: "TODO - need info"
+              localMedId:
+                type: string
+                description: "TODO"
+              websiteUrl:
+                type: string
+                description: "TODO, an array or a single value?"
+              ispractitionerInformationUpdatedRecently:
+                type: boolean
+                description: "TODO, need to figure out what this represents"
+              officeAddress:
+                $ref: '#/components/schemas/postal-address-block'
+              addressLatitude:
+                type: string
+              addressLongitude:
+                type: string
+              promotionCode:
+                type: string
+                description: "TODO"
+              accesibleServices:
+                type: array
+                items:
+                  allOf:
+                  - $ref: '#/components/schemas/accessible-services-block'
+              practitionersCertifications:
+                description: "TODO"
+                $ref: '#/components/schemas/certification-block'
+              practitionersAffiliations:
+                type: array
+                description: "TODO"
+                items:
+                  allOf:
+                  - $ref: '#/components/schemas/affiliation-block'
+    certification-block:
+      properties:
+        isLeapfrogCertified:
+          type: boolean
+          description: "TODO"
+        isDiabetesCertifiedByNcqa:
+          type: boolean
+          description: "TODO"
+        isHeartCertifiedByNcqa:
+          type: boolean
+          description: "TODO"
+        isBackPainCertifiedByNcqa:
+          type: boolean
+        isMedicalHomeCertifiedByNcqa:
+          type: boolean
+          description: "TODO"
+        isConnectCertifiedByNcqa:
+          type: boolean
+          description: "TODO"
+        isWisconsinCoalitionCertified:
+          type: boolean
+          description: "TODO"
+        isAmericanBoardOfInternalMedicineCertified:
+          type: boolean
+          description: "TODO"
+        isBariatricCertified:
+          type: boolean
+          description: "TODO"
+        isMedicaidCertified:
+          type: boolean
+          description: "TODO"
+        isJointCommissionCertified:
+          type: boolean
+          description: "TODO"
+        isHfapCertified:
+          type: boolean
+          description: "Health Care Facilities Accreditation Program (HFAP) certified"
+        isDnvniahoCertified: 
+          type: boolean
+          description: "Det Norske Veritas National Integrated Accreditation for Healthcare Organization (DNVNIAHO)"
+        isChapCertified:
+          type: boolean
+          description: "Community Health Accreditation Program (CHAP)"
+        isAchcCertified:
+          type: boolean
+          description: "Accreditation Commission for Health Care Inc. (ACHC)"
+        isCarfCertified:
+          type: boolean
+          description: "Commission on Accreditation or Rehabilitations Facilities (CARF)"
+        isAaaasfCertified:
+          type: boolean
+          description: "American Association for Accreditation of Ambulatory Surgical Facilities (AAAASF)"
+        isAaahcCertified:
+          type: boolean
+          description: "Accreditation Association for Ambulatory Health Care (AAAHC)"
+        isCoaCertified:
+          type: boolean
+          description: "Council on Accreditation for Children and Family Services (COA)"
+        isCliaCertified:
+          type: boolean
+          description: "Clinical Laboratory Association Improvement Amendments (CLIA)"
+        isCmsCertified:
+          type: boolean
+          description: "Centers for Medicare and Medicaid Services (CMS)"
+        isBoardCertified:
+          type: boolean
+          description: "Board certification"
+      example:
+      - isLeapfrogCertified: false
+        isDiabetesCertifiedByNcqa: false
+        isHeartCertifiedByNcqa: false
+        isBackPainCertifiedByNcqa: false
+        isMedicalHomeCertifiedByNcqa: false
+        isConnectCertifiedByNcqa: false
+        isWisconsinCoalitionCertified: false
+        isAmericanBoardOfInternalMedicineCertified: false
+        isBariatricCertified: false
+        isMedicaidCertified: false
+        isJointCommissionCertified: false
+        isHfapCertified: false
+        isDnvniahoCertified: false
+        isChapCertified: false
+        isAchcCertified: false
+        isCarfCertified: false
+        isAaaasfCertified: false
+        isAaahcCertified: false
+        isCoaCertified: false
+        isCliaCertified: false
+        isCmsCertified: false
+        isBoardCertified: false
+    affiliation-block:
+      properties:
+        affiliationGroupId:
+          type: string
+          description: "TODO"
+        affiliationGroupName:
+          type: string
+          description: "TODO"
+        independentPhysicianAssociationId:
+          type: string
+          description: "TODO"
+        independentPhysiciationAssociationName:
+          type: string
+          description: "TODO"
+        hospitalId:
+          type: string
+          description: "TODO"
+        hospitalName:
+          type: string
+          description: "TODO"
+        effectiveDate:
+          type: string
+          format: datetime
+          description: "TODO"
+        terminationDate:
+          type: string
+          format: datetime
+          description: "TODO"
+        newPatientIndicatorEnum:
+          type: string
+          description: "TODO - can this be a boolean"
+        roomBoardRate:
+          type: string
+          description: "TODO"
+        groupAffiliatedProviders:
+          type: boolean
+          description: "TODO - the meaning of this boolean is not clear"
+        specialties:
+          type: array
+          description: "TODO - should this be an array?"
+          items:
+            properties:
+              npis:
+                type: string
+                description: "TODO"
+              practitionersTypeId:
+                type: string
+                description: "TODO - this seems to be different than the provider types listed in the lookup, need to check - there's no description value in the sample"
+              practitionersLimitations:
+                type: array
+                description: "TODO - should/can this be a lookup?"
+                items:
+                  properties:
+                    limitationId:
+                      type: string
+                      example: "3"
+                    limitationDescription:
+                      type: string
+                      example: "Provider at multiple locations"
+              isPrimarySpecialty:
+                type: boolean
+            allOf:
+              - $ref: '#/components/schemas/specialtyCode'
+  #END - practitioners offices
+
+  #START - practitioners
+
+    practitioners-legal-identifiers-response:
+      allOf:
+        - $ref: '#/components/schemas/practitioners-legal-identifiers-href-block'
+        - $ref: '#/components/schemas/practitioners-id-block'
+        - $ref: '#/components/schemas/practitioners-legal-identifiers-block'
+
+    practitioners-products-response:
+      allOf:
+        - $ref: '#/components/schemas/practitioners-products-href-block'
+        - $ref: '#/components/schemas/practitioners-id-block'
+        - $ref: '#/components/schemas/practitioners-products-response-block'
+
+    practitioners-specialties-response:
+      allOf:
+        - $ref: '#/components/schemas/practitioners-specialties-href-block'
+        - $ref: '#/components/schemas/practitioners-id-block'
+        - $ref: '#/components/schemas/practitioners-specialties-block'
+    
+    practitioners-accessible-services-response:
+      allOf:
+        - $ref: '#/components/schemas/practitioners-accessible-services-href-block'
+        - $ref: '#/components/schemas/practitioners-id-block'
+        - $ref: '#/components/schemas/practitioners-accessible-services-block'
+
+    practitioners-networks-block:
+      properties:
+        networks:
+          type: array
+          items:
+            allOf:
+            - $ref: '#/components/schemas/network-block'
+
+            
+    practitioners-postal-addresses-block:
+      properties:
+        postalAddresses:
+          type: array
+          items:
+            allOf:
+              - $ref: '#/components/schemas/postal-address-type-block'
+              - $ref: '#/components/schemas/postal-address-block'
+    postal-address-type-block:
+      properties:
+        addressType:
+          type: string
+          description: Type of the address, details TODO
+          enum:
+            - Mailing
+            - Permanent
+    postal-address-block:
+      properties:
+        addressLine1:
+          type: string
+          example: 123 Main Street
+        addressLine2:
+          type: string
+          example: Apartment 5A
+        city:
+          type: string
+          example: Louisville
+        county:
+          type: string
+          example: Louisville
+        stateOrProvince:
+          type: string
+          example: KY
+        postalCode:
+          type: string
+          example: 12345
+        countryCode:
+          type: string
+          example: USA
+    practitioners-legal-identifier-block:
+      properties:
+        legalIdentifier:
+          type: object
+          description: Legal Identifier
+          properties:
+            code:
+              type: string
+              description: Legal identifier code, based on the lookup
+              example: SSN
+    practitioners-legal-identifier-entry-block:
+      properties:
+        identifierValue:
+          type: string
+          description: Value of the identifier
+          example: 111-ABC-DDEE
+    practitioners-legal-identifiers-block:
+      properties:
+        legalIdentifiers:
+          type: array
+          description: "List of legal identifiers, based on FHIR v4.6.0 identifiers (https://build.fhir.org/valueset-identifier-type.html)"
+          items:
+            allOf:
+              - $ref: '#/components/schemas/practitioners-legal-identifier-block'
+              - $ref: '#/components/schemas/practitioners-legal-identifier-entry-block'
+    practitioners-specialties-block:
+      properties:
+        practitionersSpecialties:
+          type: array
+          description: "List of practitioners specialties"
+          items:
+            properties:
+              isPrimarySpecialty:
+                type: boolean
+            allOf:
+              - $ref: '#/components/schemas/specialtyCode'
+    specialtyCode:
+      type: object
+      description: "A provider specialty code reference"
+      properties:
+        code:
+          type: string
+          description: Specialty code
+          example: "1"
+        description:
+          type: string
+          description: Description of the code
+          example: "Acupuncture"
+    network-block:
+      properties:
+        networkId:
+          type: string
+          description: Unique network identifier
+        networkName:
+          type: string
+      example:
+        - networkId: "124"
+          networkDescription: "test/ChoiceCare Network PPO"
+        - networkId: "275"
+          networkDescription: "test/ChoiceCare+ Network PPO"
+    accessible-services-block:
+      properties:
+        serviceCategory:
+          type: object
+          properties:
+            code:
+              type: string
+            description: 
+              type: string
+        code:
+          type: string
+        description: 
+          type: string
+      example:
+        - serviceCategory:
+            code: "2"
+            description: "Handicap Accessible"
+          code: "BLD"
+          description: "Building"
+        - serviceCategory:
+            code: "3"
+            description: "Access to Public Transportation"
+          code: "BUS"
+          description: "Bus"
+    practitioners-accessible-services-block:
+      properties:
+        accessibleServices:
+          type: array
+          items:
+            allOf:
+            - $ref: '#/components/schemas/accessible-services-block'
+    practitioners-products-response-block:
+      properties:
+        products:
+          type: array
+          description: List of products found
+          items:
+            $ref: '#/components/schemas/product-model'
+    product-model:
+      type: object
+      description: Individual product top-level attributes
+      properties:
+        productId:
+          type: string
+          description: Unique id of the product
+          example: HPASMI15195
+        href:
+          type: string
+          description: Link to the product top-level resource
+          example: "https://api.test.com/enterprise/v1/products/HPASMI15195"
+        links:
+          type: array
+          description: A list of all available sub-resources for the product record
+          items:
+            $ref: '#/components/schemas/link-model'
+          example:
+          - rel: products.plans
+            href: "https://api.test.com/enterprise/v1/products/HPASMI15195/plans/H5216-142-002-2021"
+          - rel: products.plans.basic-information
+            href: "https://api.test.com/enterprise/v1/products/HPASMI15195/plans/H5216-142-002-2021/basic-information"
+  #END - practitioners
+  
+  #START - networks
+    networks-response:
+      properties:
+        networks:
+          type: array
+          items:
+            allOf:
+            - $ref: '#/components/schemas/network-id-block'
+            - $ref: '#/components/schemas/network-attributes-block'
+          example:
+            - networkId: "110"
+              networkName: "National EPO"
+              lineOfBusinessType:
+                code: "5"
+                description: "PPO"
+              coverageType:
+                code: "1"
+                description: "Employer Group Plan"
+              isMedicareProvider: false
+              hasSupportForAffiliatedFacilityProvider: false
+              redirectUrl: ""
+              isEnabledToShowLanguage: true
+              isEnabledForFeedback: false
+              directorySegments: []
+            - networkId: "112"
+              networkName: "testPPO"
+              lineOfBusinessType:
+                code: "5"
+                description: "PPO"
+              coverageType:
+                code: "1"
+                description: "Employer Group Plan"
+              isMedicareProvider: false
+              hasSupportForAffiliatedFacilityProvider: false
+              redirectUrl: ""
+              isEnabledToShowLanguage: true
+              isEnabledForFeedback: false
+              directorySegments: []
+
+    network-id-block:
+      properties:
+        networkId:
+          type: string
+          description: "TODO"
+    network-attributes-block:
+      properties:
+        networkName:
+          type: string
+        lineOfBusinessType:
+          type: object
+          properties:
+            code:
+              type: string
+            description:
+              type: string
+        coverageType:
+          type: object
+          properties:
+            code:
+              type: string
+            description:
+              type: string
+        isMedicareProvider:
+          type: boolean
+        hasSupportForAffiliatedFacilityProvider:
+          type: boolean
+          description: "Whether the network has supports Affiliated Facility Provider (AFP)"
+        redirectUrl:
+          type: string
+          description: "TODO"
+        isEnabledToShowLanguage:
+          type: boolean
+          description: "TODO"
+        isEnabledForFeedback:
+          type: boolean
+          description: "TODO"
+        directorySegments:
+          type: array
+          description: "TODO"
+  #END - networks
+  
+  #START - href blocks
+    practitioners-basic-information-href-block:
+      properties:
+        id:
+          type: string
+          example: "ABC123.basic-information"
+        href:
+          type: string
+          example: "https://api.test.com/v1/practitioners/ABC123/basic-information"
+    practitioners-personal-information-href-block:
+      properties:
+        id:
+          type: string
+          example: "ABC123.personal-information"
+        href:
+          type: string
+          example: "https://api.test.com/v1/practitioners/ABC123/personal-information"
+    practitioners-contact-information-href-block:
+      properties:
+        id:
+          type: string
+          example: "ABC123.contact-information"
+        href:
+          type: string
+          example: "https://api.test.com/v1/practitioners/ABC123/contact-information"
+    practitioners-offices-href-block:
+      properties:
+        id:
+          type: string
+          example: "ABC123.offices"
+        href:
+          type: string
+          example: "https://api.test.com/v1/practitioners/ABC123/offices"
+    practitioners-legal-identifiers-href-block:
+      properties:
+        id:
+          type: string
+          example: "ABC123.legal-identifiers"
+        href:
+          type: string
+          example: "https://api.test.com/v1/practitioners/ABC123/legal-identifiers"
+    practitioners-products-href-block:
+      properties:
+        id:
+          type: string
+          example: "ABC123.products"
+        href:
+          type: string
+          example: "https://api.test.com/v1/practitioners/ABC123/products"
+    practitioners-specialties-href-block:
+      properties:
+        id:
+          type: string
+          example: "ABC123.practitioners-specialties"
+        href:
+          type: string
+          example: "https://api.test.com/v1/practitioners/ABC123/provider-specialties"
+    practitioners-accessible-services-href-block:
+      properties:
+        id:
+          type: string
+          example: "ABC123.accessible-services"
+        href:
+          type: string
+          example: "https://api.test.com/v1/practitioners/ABC123/accessible-services"
+  #END - href blocks
+
+  #START - errors
+    HTTP-401:
+      properties:
+        timestamp:
+          type: string
+          description: An ISO 8601 date/time in UTC indicating when the error occurred
+          example: '2022-02-15T22:14:45.624+0000'
+        status:
+          type: integer
+          description: The HTTP status code generated by service for this occurrence of the problem. 
+          example: 401
+        code:
+          type: string
+          description: A case-insensitive alpha-numeric identifier for the error. 
+          example: invalid.login
+        path:
+          type: string
+          description: A URI reference that identifies the Enterprise API resource which produced the problem.  
+          example: "v1/providers/12345/sub-resource-name-here"
+
+    HTTP-400:
+      properties:
+        timestamp:
+          type: string
+          description: An ISO 8601 date/time in UTC indicating when the error occurred
+          example: '2022-02-15T22:14:45.624+0000'
+        status:
+          type: integer
+          description: The HTTP status code generated by service for this occurrence of the problem. 
+          example: 400
+        code:
+          type: string
+          description: A case-insensitive alpha-numeric identifier for the error. 
+          example: invalid.login
+        path:
+          type: string
+          description: A URI reference that identifies the Enterprise API resource which produced the problem.  
+          example: "v1/practitioner/12345/sub-resource-name-here"
+        description:
+          type: string
+          description: A description of the specific error
+          example: "Error XYZ from back-end ABC"
+        traceId:
+          type: string
+          description:  a trace identifier which may be used to consult logs and telemetry infrastructure regarding the error
+          example: 1234HH4445
+
+    HTTP-404:
+      properties:
+        timestamp:
+          type: string
+          description: An ISO 8601 date/time in UTC indicating when the error occurred
+          example: '2022-02-15T22:14:45.624+0000'
+        status:
+          type: integer
+          description: The HTTP status code generated by service for this occurrence of the problem. 
+          example: 404
+        code:
+          type: string
+          description: A case-insensitive alpha-numeric identifier for the error. 
+          example: resource.not.found
+        path:
+          type: string
+          description: A URI reference that identifies the Enterprise API resource which produced the problem.  
+          example: "v1/practitioner/12345/sub-resource-name-here"
+    HTTP-422:
+      properties:
+        message:
+          type: string
+          description: The error message associated with procesing failure
+          example: "Validation Failed"
+        timestamp:
+          type: string
+          description: An ISO 8601 date/time in UTC indicating when the error occurred
+          example: '2022-02-15T22:14:45.624+0000'
+        status:
+          type: integer
+          description: The HTTP status code generated by service for this occurrence of the problem. 
+          example: 422
+        code:
+          type: string
+          description: A case-insensitive alpha-numeric identifier for the error. The collection of expected error codes should be documented within the OpenAPI specification.
+          example: P5ABCD     
+        path:
+          type: string
+          description: A URI reference that identifies the Enterprise API resource which produced the problem.  
+          example: "v1/practitioners/12345/sub-resource-name-here"
+        description:
+          type: string
+          description: A description of the specific error
+          example: "Error XYZ from back-end ABC"
+        traceId:
+          type: string
+          description:  a trace identifier which may be used to consult logs and telemetry infrastructure regarding the error
+          example: 1234HH4445
+        causes:
+          type: array
+          items:
+            properties:
+              timestamp:
+                type: string
+                description: An ISO 8601 date/time in UTC indicating when the error occurred
+                example: '2022-02-15T22:14:45.624+0000'
+              status:
+                type: integer
+                description: The HTTP status code generated by service for this occurrence of the problem. 
+                example: 422
+              code:
+                type: string
+                description: A case-insensitive alpha-numeric identifier for the error. The collection of expected error codes should be documented within the OpenAPI specification.
+                example: P5ABCD     
+              path:
+                type: string
+                description: A URI reference that identifies the Enterprise API resource which produced the problem.  
+                example: "v1/practitioners/12345/sub-resource-name-here"
+              description:
+                type: string
+                description: A description of the specific error
+                example: "Error XYZ from back-end ABC"
+              traceId:
+                type: string
+                description:  a trace identifier which may be used to consult logs and telemetry infrastructure regarding the error
+                example: 1234HH4445
+
+    HTTP-500:
+      properties:
+        timestamp:
+          type: string
+          description: An ISO 8601 date/time in UTC indicating when the error occurred
+          example: '2022-02-15T22:14:45.624+0000'
+        status:
+          type: integer
+          description: The HTTP status code generated by service for this occurrence of the problem. 
+          example: 500
+        code:
+          type: string
+          description: A case-insensitive alpha-numeric identifier for the error. The collection of expected error codes should be documented within the OpenAPI specification.
+          example: AABBCC
+        path:
+          type: string
+          description: A URI reference that identifies the Enterprise API resource which produced the problem.  
+          example: "v1/practitioners/12345/sub-resource-name-here"
+        description:
+          type: string
+          description: A description of the specific error
+          example: "Error XYZ from back-end ABC"
+        traceId:
+          type: string
+          description:  a trace identifier which may be used to consult logs and telemetry infrastructure regarding the error
+          example: 1234HH4445
+        causes:
+          type: array
+          items:
+            properties:
+              timestamp:
+                type: string
+                description: An ISO 8601 date/time in UTC indicating when the error occurred
+                example: '2022-02-15T22:14:45.624+0000'
+              status:
+                type: integer
+                description: The HTTP status code generated by service for this occurrence of the problem. 
+                example: 500
+              code:
+                type: string
+                description: A case-insensitive alpha-numeric identifier for the error. The collection of expected error codes should be documented within the OpenAPI specification.
+                example: AABBDD     
+              path:
+                type: string
+                description: A URI reference that identifies the Enterprise API resource which produced the problem.  
+                example: "v1/practitioners/12345/sub-resource-name-here"
+              description:
+                type: string
+                description: A description of the specific error
+                example: "Error XYZ from back-end ABC"
+              traceId:
+                type: string
+                description:  a trace identifier which may be used to consult logs and telemetry infrastructure regarding the error
+                example: 1234HH4445
+
+    HTTP-503:
+      properties:
+        timestamp:
+          type: string
+          description: An ISO 8601 date/time in UTC indicating when the error occurred
+          example: '2022-02-15T22:14:45.624+0000'
+        status:
+          type: integer
+          description: The HTTP status code generated by service for this occurrence of the problem. 
+          example: 503
+        code:
+          type: string
+          description: A case-insensitive alpha-numeric identifier for the error. The collection of expected error codes should be documented within the OpenAPI specification.
+          example: AABBCC
+        path:
+          type: string
+          description: A URI reference that identifies the Enterprise API resource which produced the problem.  
+          example: "v1/practitioners/12345/sub-resource-name-here"
+        description:
+          type: string
+          description: A description of the specific error
+          example: "Error XYZ from back-end ABC"
+        traceId:
+          type: string
+          description:  a trace identifier which may be used to consult logs and telemetry infrastructure regarding the error
+          example: 1234HH4445
+        causes:
+          type: array
+          items:
+            properties:
+              timestamp:
+                type: string
+                description: An ISO 8601 date/time in UTC indicating when the error occurred
+                example: '2022-02-15T22:14:45.624+0000'
+              status:
+                type: integer
+                description: The HTTP status code generated by service for this occurrence of the problem. 
+                example: 503
+              code:
+                type: string
+                description: A case-insensitive alpha-numeric identifier for the error. The collection of expected error codes should be documented within the OpenAPI specification.
+                example: AABBDD     
+              path:
+                type: string
+                description: A URI reference that identifies the Enterprise API resource which produced the problem  
+                example: "v1/practitioners/12345/sub-resource-name-here"
+              description:
+                type: string
+                description: A description of the specific error
+                example: "Error XYZ from back-end ABC"
+              traceId:
+                type: string
+                description:  a trace identifier which may be used to consult logs and telemetry infrastructure regarding the error
+                example: 1234HH4445
+  
+  #END - errors

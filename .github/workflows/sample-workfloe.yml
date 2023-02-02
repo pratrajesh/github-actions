@@ -1,74 +1,39 @@
-name: First WorkFlow
+name: SwaggerHub Integration
 on: workflow_dispatch
 jobs:
-  first-job:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
+  Hello:
+   runs-on: ubuntu-latest
+   steps:
+      - name: Checkout code
         uses: actions/checkout@v3
-      - name: Print Hello
-        run: echo "Hello"
-      - name: Print Bye
-        run: echo "Bye"
-      - name: Print gradle version
-        run: gradle --version
-      - name: Make Request
-        id: myRequest
-        uses: fjogeleit/http-request-action@v1
         with:
-           url: "http://google.com"
-           method: GET
-      - name: Show Response
-        run: |
-         echo ${{ steps.myRequest.outputs.response }}
-         echo ${{ steps.myRequest.outputs.headers }}
-      - name: Curl call
-        id: curl
-        run: |
-          curl -X GET "https://gorest.co.in/public/v2/users" -o workspaces.json
-      - name: Show Response
-        run: |
-         echo $(cat workspaces.json)
-      - name: Update swagerHub
-        run: |
-         curl -X 'POST' \
-          'https://api.swaggerhub.com/apis/RAJESHP1231234_1/Rajesh/1.0.0/comments' \
-           -H 'accept: application/json' \
-           -H 'Authorization: 2f28cdbb-c5df-4146-a8c4-05046a380d00' \
-            -H 'Content-Type: application/json' \
-           -d '{
-            "position": 0,
-            "body": "Comment from github action"
-          }'
-      - name: Wearher check call
-        id: weather
-        run: |
-          curl "https://samples.openweathermap.org/data/2.5/weather?q=London,uk&appid=b6907d289e10d714a6e88b30761fae22"
-      - name: Wearher check call with response code
-        id: weather1
-        run: |
-          curl --write-out "%{http_code}\n" "https://samples.openweathermap.org/data/2.5/weather?q=London,uk&appid=b6907d289e10d714a6e88b30761fae22"
-      - name: Wearher check call with response code and output in file
-        id: weather2
-        run: |
-          curl --write-out "%{http_code}\n" "https://samples.openweathermap.org/data/2.5/weather?q=London,uk&appid=b6907d289e10d714a6e88b30761fae22" --output output.txt
-      - name: Wearher check call with response code and output in file without transfer rate
-        id: weather3
-        run: |
-          curl --write-out "%{http_code}\n" "https://samples.openweathermap.org/data/2.5/weather?q=London,uk&appid=b6907d289e10d714a6e88b30761fae22" --output output.txt --silent
-      - name: Wearher check call with response code and output in file and assign it to variable and  without transfer rate
-        id: weather4
-        run: |
-          HTTP_CODE=$(curl --write-out "%{http_code}\n" "https://samples.openweathermap.org/data/2.5/weather?q=London,uk&appid=b6907d289e10d714a6e88b30761fae22" --output output.txt --silent)
-          echo $HTTP_CODE
-      - name: Wearher check call with script file
-        id: weather5
-        run: | 
-           # chmod 755 ./.github/scripts/apicall.sh
-           sh ./.github/scripts/apicall.sh
-        shell: bash
-      - name: print ouput of script file
-        id: weather6
-        run: |
-           echo $(cat output1.txt)
+          # Full git history is needed to get a proper list of changed files within `super-linter`
+          fetch-depth: 0
 
+      - name: Lint Code Base
+        uses: github/super-linter@v4
+        id: lintcode
+        env:
+          VALIDATE_OPENAPI: true
+          DEFAULT_BRANCH: swaggerhub
+          CREATE_LOG_FILE: true
+          LOG_FILE: linter.log
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: List files
+        if: failure() && steps.lintcode.outcome == 'failure'
+        run: |
+          ERROR_MESSAGE=$(cat linter.log | grep "^\s*\d*:\d*\s*error\s.*$")
+          echo "error message : ${ERROR_MESSAGE}"
+      - name: Extract errors
+        if: failure() && steps.lintcode.outcome == 'failure'
+        run: |
+          ERROR_REGEX='^.*:(.*)\serror\s.*$'
+          ERROR_FILE=$(grep -Eoh "$ERROR_REGEX" linter.log | cut -d ':' -f 1 | uniq)
+          ERROR_MESSAGE=$(grep -Eoh "$ERROR_REGEX" linter.log)
+          echo "::error file=${ERROR_FILE},line=1,col=1::${ERROR_MESSAGE}"
+      - name: External Api call (Weather Map)
+        run: |
+           HTTP_CODE=$(curl --write-out "%{http_code}\n" "https://samples.openweathermap.org/data/2.5/weather?q=London,uk&appid=b6907d289e10d714a6e88b30761fae22" --output output.txt --silent)
+      - name: Print External Api call Output 
+        run: |
+           echo $(cat output.txt)
