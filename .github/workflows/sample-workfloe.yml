@@ -20,16 +20,18 @@ jobs:
           LOG_FILE: linter.log
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: List files
+        id: lintOutput
         if: failure() && steps.lintcode.outcome == 'failure'
         run: |
           ERROR_REGEX='^.*:(.*)\serror\s.*$'
-          grep -Eoh "$ERROR_REGEX" linter.log > aaa.log
+          err-log=$(grep -Eoh "$ERROR_REGEX" linter.log > aaa.log)
           #grep "error" linter.log > error.log
           ls -a
           echo "::::::::::::::::::::::::::"
           cat linter.log
           echo "------------------------"
           cat aaa.log
+          echo "err-logs=${err-log}" >> $GITHUB_OUTPUT
       - name: Extract errors
         id: log-extract
         if: failure() && steps.lintcode.outcome == 'failure'
@@ -42,7 +44,7 @@ jobs:
       - name: Print logs of previous step 
         if: failure() && steps.lintcode.outcome == 'failure'
         run: |
-           echo  "${{ steps.log-extract.outputs.error-logs }}"
+           echo  "${{ steps.lintOutput.outputs.err-logs }}"
       - name: External Api call (Weather Map)
         run: |
            HTTP_CODE=$(curl --write-out "%{http_code}\n" "https://samples.openweathermap.org/data/2.5/weather?q=London,uk&appid=b6907d289e10d714a6e88b30761fae22" --output output.txt --silent)
