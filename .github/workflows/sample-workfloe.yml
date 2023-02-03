@@ -30,7 +30,7 @@ jobs:
           echo "::::::::::::::::::::::::::"
           cat linter.log
           echo "------------------------"
-          echo ::set-env name=TAG_NAME::$(cat aaa.log)
+          echo "TAG_NAME=$(cat aaa.log)" >> $GITHUB_OUTPUT
           #test-var=$(cat aaa.log)
           #echo "${test-var}"
       - name: Extract errors
@@ -45,11 +45,11 @@ jobs:
       - name: Print logs of previous step 
         if: failure() && steps.lintcode.outcome == 'failure'
         run: |
-           echo  "${{ steps.lintOutput.outputs.err-logs }}"
+           echo  "${{ steps.lintOutput.outputs.TAG_NAME }}"
       - name: Update swagerHub
         if: failure() && steps.lintcode.outcome == 'failure'
         run: |
-         echo "${{ env.TAG_NAME }}"
+         echo "${{ steps.lintOutput.outputs.TAG_NAME }}"
          curl -X 'POST' \
           'https://api.swaggerhub.com/apis/RAJESHP1231234_1/Rajesh/1.0.0/comments' \
            -H 'accept: application/json' \
@@ -57,7 +57,7 @@ jobs:
             -H 'Content-Type: application/json' \
            -d '{
             "position": 0,
-            "body": ${{ env.TAG_NAME }}
+            "body": "${{ steps.lintOutput.outputs.TAG_NAME }}"
           }'
       - name: External Api call (Weather Map)
         run: |
