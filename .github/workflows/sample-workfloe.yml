@@ -30,8 +30,8 @@ jobs:
           echo "::::::::::::::::::::::::::"
           cat linter.log
           echo "------------------------"
-          echo "err-logs=$(cat aaa.log)" >> $GITHUB_OUTPUT
-          #echo "${err-log}"
+          test-var=$(cat aaa.log)
+          echo "${test-var}"
       - name: Extract errors
         id: log-extract
         if: failure() && steps.lintcode.outcome == 'failure'
