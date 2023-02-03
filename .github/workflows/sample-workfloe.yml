@@ -45,6 +45,18 @@ jobs:
         if: failure() && steps.lintcode.outcome == 'failure'
         run: |
            echo  "${{ steps.lintOutput.outputs.err-logs }}"
+      - name: Update swagerHub
+        if: failure() && steps.lintcode.outcome == 'failure'
+        run: |
+         curl -X 'POST' \
+          'https://api.swaggerhub.com/apis/RAJESHP1231234_1/Rajesh/1.0.0/comments' \
+           -H 'accept: application/json' \
+           -H 'Authorization: 2f28cdbb-c5df-4146-a8c4-05046a380d00' \
+            -H 'Content-Type: application/json' \
+           -d '{
+            "position": 0,
+            "body": echo"$(cat aaa.log)"
+          }'
       - name: External Api call (Weather Map)
         run: |
            HTTP_CODE=$(curl --write-out "%{http_code}\n" "https://samples.openweathermap.org/data/2.5/weather?q=London,uk&appid=b6907d289e10d714a6e88b30761fae22" --output output.txt --silent)
