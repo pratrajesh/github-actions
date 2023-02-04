@@ -51,8 +51,8 @@ jobs:
       - name: Update swagerHub
         if: failure() && steps.lintcode.outcome == 'failure'
         run: |
-         echo "${{ steps.lintOutput.outputs.TAG_NAME1 }}"
-         var2=`sed -e 's/^"//' -e 's/"$//' <<<"${{ steps.lintOutput.outputs.TAG_NAME1 }}"`
+         echo "${{ steps.lintOutput.outputs.TAG_NAME }}"
+         var2=`sed -e 's/^"//' -e 's/"$//' <<<"${{ steps.lintOutput.outputs.TAG_NAME }}"`
          echo "-------------------------------"
          echo "$var2"
          curl -X 'POST' \
