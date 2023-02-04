@@ -25,7 +25,7 @@ jobs:
         run: |
           ERROR_REGEX='^.*:(.*)\serror\s.*$'
           #ERROR_REGEX='^.*(\d*):(\d*)(\s*)error\s.*$'
-          grep -Eoh "$ERROR_REGEX" linter.log > aaa.log
+          grep -Eoh "$ERROR_REGEX" linter.log | sed "s/\"//g" > aaa.log
           #grep "error" linter.log > error.log
           ls -a
           echo "::::::::::::::::::::::::::"
