@@ -29,9 +29,9 @@ jobs:
           #grep "error" linter.log > error.log
           ls -a
           echo "::::::::::::::::::::::::::"
-          cat aaa.log
+          echo "`cat aaa.log`"
           echo "------------------------"
-          echo "TAG_NAME=`cat aaa.log`" >> $GITHUB_OUTPUT
+          echo "TAG_NAME="`cat aaa.log`"" >> $GITHUB_OUTPUT
           #test-var="cat aaa.log"
           #echo "${test-var}"
       - name: Extract errors
