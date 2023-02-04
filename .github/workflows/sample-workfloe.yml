@@ -32,7 +32,7 @@ jobs:
           cat aaa.log
           echo "------------------------"
           echo "TAG_NAME=`cat aaa.log`" >> $GITHUB_OUTPUT
-          #test-var="`cat aaa.log`"
+          #test-var="cat aaa.log"
           #echo "${test-var}"
       - name: Extract errors
         id: log-extract
