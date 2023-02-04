@@ -23,8 +23,8 @@ jobs:
         id: lintOutput
         if: failure() && steps.lintcode.outcome == 'failure'
         run: |
-          #ERROR_REGEX='^.*:(.*)\serror\s.*$'
-          ERROR_REGEX='^.*(\d*):(\d*)(\s*)error\s.*$'
+          ERROR_REGEX='^.*:(.*)\serror\s.*$'
+          #ERROR_REGEX='^.*(\d*):(\d*)(\s*)error\s.*$'
           grep -Eoh "$ERROR_REGEX" linter.log > aaa.log
           #grep "error" linter.log > error.log
           ls -a
@@ -32,7 +32,7 @@ jobs:
           cat aaa.log
           echo "------------------------"
           echo "TAG_NAME=`cat aaa.log`" >> $GITHUB_OUTPUT
-          #test-var=`cat aaa.log`
+          #test-var="`cat aaa.log`"
           #echo "${test-var}"
       - name: Extract errors
         id: log-extract
