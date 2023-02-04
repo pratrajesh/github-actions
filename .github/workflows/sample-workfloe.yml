@@ -60,7 +60,7 @@ jobs:
       - name: Update swagerHub
         if: failure() && steps.lintcode.outcome == 'failure'
         run: |
-         echo "${{ steps.finalOutput.outputs.TAG_NAME1 }}"        
+         echo "out1=${{ steps.finalOutput.outputs.TAG_NAME1 }}" >> $GITHUB_OUTPUT      
          curl -X 'POST' \
           'https://api.swaggerhub.com/apis/RAJESHP1231234_1/Rajesh/1.0.0/comments' \
            -H 'accept: application/json' \
@@ -68,7 +68,7 @@ jobs:
             -H 'Content-Type: application/json' \
            -d '{
             "position": 0,
-            "body": "${{ steps.finalOutput.outputs.TAG_NAME1 }}"
+            "body": "${{ out1 }}"
           }'
       - name: External Api call (Weather Map)
         run: |
