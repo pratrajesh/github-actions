@@ -48,13 +48,19 @@ jobs:
         if: failure() && steps.lintcode.outcome == 'failure'
         run: |
            echo  "${{ steps.lintOutput.outputs.TAG_NAME }}"
+      - name: remove doublequotes 
+        id: finalOutput
+        if: failure() && steps.lintcode.outcome == 'failure'
+        run: |
+           echo  "${{ steps.lintOutput.outputs.TAG_NAME }}"
+           var2=`sed -e 's/^"//' -e 's/"$//' <<<"${{ steps.lintOutput.outputs.TAG_NAME }}"`
+           echo "-------------------------------"
+           echo "$var2"
+           echo "TAG_NAME1=${var2}" >> $GITHUB_OUTPUT
       - name: Update swagerHub
         if: failure() && steps.lintcode.outcome == 'failure'
         run: |
-         echo "${{ steps.lintOutput.outputs.TAG_NAME }}"
-         var2=`sed -e 's/^"//' -e 's/"$//' <<<"${{ steps.lintOutput.outputs.TAG_NAME }}"`
-         echo "-------------------------------"
-         echo "$var2"
+         echo "${{ steps.finalOutput.outputs.TAG_NAME1 }}"        
          curl -X 'POST' \
           'https://api.swaggerhub.com/apis/RAJESHP1231234_1/Rajesh/1.0.0/comments' \
            -H 'accept: application/json' \
@@ -62,7 +68,7 @@ jobs:
             -H 'Content-Type: application/json' \
            -d '{
             "position": 0,
-            "body": "{{$var2}}"
+            "body": "${{ steps.finalOutput.outputs.TAG_NAME1 }}"
           }'
       - name: External Api call (Weather Map)
         run: |
