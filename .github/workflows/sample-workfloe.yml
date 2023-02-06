@@ -68,7 +68,7 @@ jobs:
             -H 'Content-Type: application/json' \
            -d '{
             "position": 0,
-            "body": "${{out1}}"
+            "body": "$out1"
           }'
       - name: External Api call (Weather Map)
         run: |
