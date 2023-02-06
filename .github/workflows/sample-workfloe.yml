@@ -32,7 +32,7 @@ jobs:
       - name: Update swagerHub
         if: failure() && steps.lintcode.outcome == 'failure'
         run: |
-         ERROR_MSG=$(echo $(cat error.log))
+         ERROR_MSG=$(cat error.log)
          echo "${ERROR_MSG}"
          curl -X 'POST' \
           'https://api.swaggerhub.com/apis/RAJESHP1231234_1/Rajesh/1.0.0/comments' \
