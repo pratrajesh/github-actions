@@ -38,5 +38,5 @@ jobs:
             -H 'Content-Type: application/json' \
            -d '{
             "position": 0,
-            "body": "echo $(cat error.log)"
+            "body": echo $(cat error.log)
           }'
