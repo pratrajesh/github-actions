@@ -5,6 +5,8 @@
 
 request_payload={\"body\":\"$(cat error.log)\"}
 
+echo ":::::$request_payload"
+
 curl --silent \
     --request POST \
     --data '$request_payload' \
