@@ -41,5 +41,5 @@ jobs:
             -H 'Content-Type: application/json' \
            -d '{
             "position": 0,
-            "body": ${ERROR_MSG}
+            "body": @error.log
           }'
