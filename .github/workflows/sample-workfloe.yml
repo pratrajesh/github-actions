@@ -40,4 +40,4 @@ jobs:
            -H 'accept: application/json' \
            -H 'Authorization: 2f28cdbb-c5df-4146-a8c4-05046a380d00' \
             -H 'Content-Type: application/json' \
-            --data $request_payload 
+            -d '$request_payload'
