@@ -9,6 +9,6 @@ curl --silent \
     --request POST \
     --data $request_payload \
     --header  'accept: application/json' \
-    --header  Authorization: 2f28cdbb-c5df-4146-a8c4-05046a380d00' \
+    --header  'Authorization: 2f28cdbb-c5df-4146-a8c4-05046a380d00' \
     --header  'Content-Type: application/json' \
     https://api.swaggerhub.com/apis/RAJESHP1231234_1/Rajesh/1.0.0/comments
