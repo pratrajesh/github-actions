@@ -26,7 +26,7 @@ jobs:
           ERROR_REGEX='^.*:(.*)\serror\s.*$'
           grep -Eoh "$ERROR_REGEX" linter.log > error.log
           #ERROR_MESSAGE=$(sed -i 's#"##g' error.log)
-          ERROR_MESSAGE=$(sed -i -e 's/^"//' -e 's/"$//' error.log)
+          ERROR_MESSAGE=$(sed -e 's/^"//' -e 's/"$//' error.log)
           echo "#################################"
           echo $(cat error.log)
           echo "error-logs=${ERROR_MESSAGE}" >> $GITHUB_OUTPUT
