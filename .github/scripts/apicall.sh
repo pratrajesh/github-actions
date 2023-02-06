@@ -3,7 +3,9 @@
 #echo output1.txt
 
 
-request_payload={\"body\":\"$(cat error.log)\"}
+#request_payload={\"body\":\"$(cat error.log)\"}
+
+request_payload={\"body\":\"abc\"}
 
 echo ":::::$request_payload"
 
