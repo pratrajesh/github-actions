@@ -25,9 +25,10 @@ jobs:
         run: |
           ERROR_REGEX='^.*:(.*)\serror\s.*$'
           grep -Eoh "$ERROR_REGEX" linter.log > error.log
-          sed -i 's#"##g' error.log
+          ERROR_MESSAGE=$(sed -i 's#"##g' error.log)
           echo "#################################"
           echo $(cat error.log)
+          echo "error-logs=${ERROR_MESSAGE}" >> $GITHUB_OUTPUT
       - name: Update swagerHub
         if: failure() && steps.lintcode.outcome == 'failure'
         run: |
@@ -39,5 +40,5 @@ jobs:
             -H 'Content-Type: application/json' \
            -d '{
             "position": 0,
-            "body": $ERROR_MSG
+            "body": "${{ steps.lintOutput.outputs.error-logs }}"
           }'
