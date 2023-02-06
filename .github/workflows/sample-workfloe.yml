@@ -24,46 +24,13 @@ jobs:
         if: failure() && steps.lintcode.outcome == 'failure'
         run: |
           ERROR_REGEX='^.*:(.*)\serror\s.*$'
-          #ERROR_REGEX='^.*(\d*):(\d*)(\s*)error\s.*$'
-          grep -Eoh "$ERROR_REGEX" linter.log > aaa.log
-          #grep "error" linter.log > error.log
-          ls -a
-          echo "::::::::::::::::::::::::::"
-          echo "`cat aaa.log`"
-          echo "------------------------"
-          echo "TAG_NAME="`cat aaa.log`"" >> $GITHUB_OUTPUT
-          #echo "TAG_NAME1=$var2" >> $GITHUB_OUTPUT
-          #test-var="cat aaa.log"
-          #echo "${test-var}"
-      - name: Extract errors
-        id: log-extract
-        if: failure() && steps.lintcode.outcome == 'failure'
-        run: |
-          ERROR_REGEX='^.*:(.*)\serror\s.*$'
-          #ERROR_FILE=$(grep -Eoh "$ERROR_REGEX" linter.log)
-          #ERROR_MESSAGE=$(grep -Eoh "$ERROR_REGEX" linter.log)
-          sed -i 's#"##g' linter.log
+          grep -Eoh "$ERROR_REGEX" linter.log > error.log
+          sed -i 's#"##g' error.log
           echo "#################################"
-          echo $(cat linter.log)
-          #echo "error-logs=${ERROR_MESSAGE}" >> $GITHUB_OUTPUT
-          #echo $(cat output.txt)
-      - name: Print logs of previous step 
-        if: failure() && steps.lintcode.outcome == 'failure'
-        run: |
-           echo  "${{ steps.lintOutput.outputs.TAG_NAME }}"
-      - name: remove doublequotes 
-        id: finalOutput
-        if: failure() && steps.lintcode.outcome == 'failure'
-        run: |
-           echo  "${{ steps.lintOutput.outputs.TAG_NAME }}"
-           var2=`sed -e 's/^"//' -e 's/"$//' <<<"${{ steps.lintOutput.outputs.TAG_NAME }}"`
-           echo "-------------------------------"
-           echo "$var2"
-           echo "TAG_NAME1=${var2}" >> $GITHUB_OUTPUT
+          echo $(cat error.log)
       - name: Update swagerHub
         if: failure() && steps.lintcode.outcome == 'failure'
         run: |
-         echo "out1=${{ steps.finalOutput.outputs.TAG_NAME1 }}" >> $GITHUB_OUTPUT      
          curl -X 'POST' \
           'https://api.swaggerhub.com/apis/RAJESHP1231234_1/Rajesh/1.0.0/comments' \
            -H 'accept: application/json' \
@@ -71,11 +38,5 @@ jobs:
             -H 'Content-Type: application/json' \
            -d '{
             "position": 0,
-            "body": "$out1"
+            "body": "test"
           }'
-      - name: External Api call (Weather Map)
-        run: |
-           HTTP_CODE=$(curl --write-out "%{http_code}\n" "https://samples.openweathermap.org/data/2.5/weather?q=London,uk&appid=b6907d289e10d714a6e88b30761fae22" --output output.txt --silent)
-      - name: Print External Api call Output 
-        run: |
-           echo $(cat output.txt)
