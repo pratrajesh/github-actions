@@ -33,13 +33,11 @@ jobs:
         if: failure() && steps.lintcode.outcome == 'failure'
         run: |
          ERROR_MSG=$(cat error.log)
+         request_payload={\"body\":\"$ERROR_MSG\"}
          echo "${ERROR_MSG}"
          curl -X 'POST' \
           'https://api.swaggerhub.com/apis/RAJESHP1231234_1/Rajesh/1.0.0/comments' \
            -H 'accept: application/json' \
            -H 'Authorization: 2f28cdbb-c5df-4146-a8c4-05046a380d00' \
             -H 'Content-Type: application/json' \
-           -d '{
-            "position": 0,
-            "body": `cat error.log`
-          }'
+            -d $request_payload 
