@@ -3,9 +3,9 @@
 #echo output1.txt
 
 
-#request_payload={\"body\":\"$(cat error.log)\"}
+request_payload={\"position\":\"0\" , \"body\":\"$(cat error.log)\"}
 
-request_payload={\"position\":\"0\" , \"body\":\"$(sed -e 's/^"//' -e 's/"$//' <<<error.log`)\"}
+#request_payload={\"position\":\"0\" , \"body\":\"$(sed -e 's/^"//' -e 's/"$//' <<<error.log`)\"}
 
 echo ":::::$request_payload"
 
