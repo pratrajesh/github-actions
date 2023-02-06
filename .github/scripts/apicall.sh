@@ -7,7 +7,7 @@ request_payload={\"body\":\"$(cat error.log)\"}
 
 curl --silent \
     --request POST \
-    --data $request_payload \
+    --data '$request_payload' \
     --header  'accept: application/json' \
     --header  'Authorization: 2f28cdbb-c5df-4146-a8c4-05046a380d00' \
     --header  'Content-Type: application/json' \
