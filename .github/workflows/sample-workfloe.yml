@@ -44,7 +44,7 @@ jobs:
           #ERROR_MESSAGE=$(grep -Eoh "$ERROR_REGEX" linter.log)
           sed -i 's#"##g' linter.log
           echo "#################################"
-          echo "${linter.log}"
+          echo $(cat linter.log)
           #echo "error-logs=${ERROR_MESSAGE}" >> $GITHUB_OUTPUT
           #echo $(cat output.txt)
       - name: Print logs of previous step 
