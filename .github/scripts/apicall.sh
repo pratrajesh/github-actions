@@ -5,6 +5,8 @@
 
 #request_payload={\"position\":\"0\" , \"body\":\"$(cat error.log)\"}
 messgae=$(cat error.log)
+
+echo "-------$messgae"
 request_payload={\"body\":\"$messgae\", \"position\":\"0\"}
 
 #request_payload={\"position\":\"0\" , \"body\":\"$(sed -e 's/^"//' -e 's/"$//' <<<error.log`)\"}
