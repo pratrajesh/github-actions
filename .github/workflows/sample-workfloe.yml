@@ -24,7 +24,7 @@ jobs:
         if: failure() && steps.lintcode.outcome == 'failure'
         run: |
           #ERROR_REGEX=\s*\d*:\d*\s*error\s.*$
-          grep -Eoh "\s*\d*:\d*\s*error\s.*" linter.log > error.log
+          grep -Eoh "\s*\d*:\d*\s*error\s.*$" linter.log > error.log
           ERROR_MESSAGE=$(sed -i 's#"##g' error.log)
           ERROR_MESSAGE1=$(sed -i ':a;N;$!ba;s/\n/ /g' error.log)
           #ERROR_MESSAGE=$(sed -i  's/^"//' -i 's/"$//' error.log)
