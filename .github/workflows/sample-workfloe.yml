@@ -23,7 +23,8 @@ jobs:
         id: lintOutput
         if: failure() && steps.lintcode.outcome == 'failure'
         run: |
-          ERROR_REGEX='^.*:(.*)\serror\s.*$'
+          #ERROR_REGEX='^.*:(.*)\serror\s.*$'
+          ERROR_REGEX='^.*(\d*):(\d*)(\s*)error\s.*$'
           #grep -Eoh "^\s\+\d\+:\d\+\s\+error\s\+.*$" linter.log > error.log
           grep -Eoh "$ERROR_REGEX" linter.log > error.log
           ERROR_MESSAGE=$(sed -i 's#"##g' error.log)
