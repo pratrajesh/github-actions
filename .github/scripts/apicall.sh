@@ -5,7 +5,7 @@
 
 #request_payload={\"position\":\"0\" , \"body\":\"$(cat error.log)\"}
 
-request_payload={\"position\":\"0\" , \"body\":\"$(cat error.log)\"}
+request_payload={\"body\":\"$(cat error.log)\"}
 
 #request_payload={\"position\":\"0\" , \"body\":\"$(sed -e 's/^"//' -e 's/"$//' <<<error.log`)\"}
 
