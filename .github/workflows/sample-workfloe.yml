@@ -14,19 +14,20 @@ jobs:
         id: lintcode
         env:
           VALIDATE_OPENAPI: true
-          DEFAULT_BRANCH: swaggerhub
+          DEFAULT_BRANCH: main
           CREATE_LOG_FILE: true
           LOG_FILE: linter.log
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: List files
-        id: lintOutput
+      - name: Extract error logs
+        id: extractErrors
         if: failure() && steps.lintcode.outcome == 'failure'
         run: |
           ERROR_REGEX='^\s*([0-9]*):([0-9]*)\s*error\s*.*$'
+          # Extracting only errors from log file
           grep -Eoh "$ERROR_REGEX" linter.log > error.log
-          #ERROR_MESSAGE=$(sed -i 's#"##g' error.log)
           # Removing double quotes
           sed -i 's#"##g' error.log
+          # Removing duplicate entries in error log file
           awk -i inplace '!seen[$0]++' error.log
           #ERROR_MESSAGE1=$(sed -i ':a;N;$!ba;s/\n/ /g' error.log)
       - name: Update swagerHub
