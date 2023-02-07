@@ -25,6 +25,7 @@ jobs:
           ERROR_REGEX='^\s*([0-9]*):([0-9]*)\s*error\s*.*$'
           grep -Eoh "$ERROR_REGEX" linter.log > error.log
           ERROR_MESSAGE=$(sed -i 's#"##g' error.log)
+          sort error.log | uniq -u
           #ERROR_MESSAGE1=$(sed -i ':a;N;$!ba;s/\n/ /g' error.log)
       - name: Update swagerHub
         if: failure() && steps.lintcode.outcome == 'failure'
