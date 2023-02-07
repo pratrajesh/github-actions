@@ -16,7 +16,7 @@ echo ":::::$request_payload"
 
 curl --silent \
     --request POST \
-    -d $request_payload \
+    --data $request_payload \
     -H 'accept: application/json' \
     -H 'Authorization: 2f28cdbb-c5df-4146-a8c4-05046a380d00' \
     -H 'Content-Type: application/json' \
