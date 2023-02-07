@@ -10,11 +10,6 @@
 
 request_payload={\"body\":\"Rajesh\",\"position\":0}
 
-
-#request_payload={"body": "'"$(cat error.log)"'","position":"0"}
-
-#request_payload={\"position\":\"0\" , \"body\":\"$(sed -e 's/^"//' -e 's/"$//' <<<error.log`)\"}
-
 echo ":::::$request_payload"
 
 curl --location --request POST 'https://api.swaggerhub.com/apis/RAJESHP1231234_1/Rajesh/1.0.0/comments' \
