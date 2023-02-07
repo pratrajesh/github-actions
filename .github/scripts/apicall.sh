@@ -16,4 +16,4 @@ curl --location --request POST 'https://api.swaggerhub.com/apis/RAJESHP1231234_1
 --header 'accept: application/json' \
 --header 'Authorization: 2f28cdbb-c5df-4146-a8c4-05046a380d00' \
 --header 'Content-Type: application/json' \
---data-binary '$request_payload'
+--data-raw '$request_payload'
