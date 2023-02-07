@@ -23,7 +23,7 @@ jobs:
         id: lintOutput
         if: failure() && steps.lintcode.outcome == 'failure'
         run: |
-          ERROR_REGEX='^(\s)*(\d)*:(\d)*\serror\s.*$'
+          ERROR_REGEX='^\s*([0-9]*):([0-9]*)\s*error\s*.*$'
           grep -Eoh "$ERROR_REGEX" linter.log
       - name: Update swagerHub
         if: failure() && steps.lintcode.outcome == 'failure'
