@@ -24,12 +24,12 @@ jobs:
         if: failure() && steps.lintcode.outcome == 'failure'
         run: |
           ERROR_REGEX='^(\s)*(\d)*:(\d)*\serror\s.*$'
-          grep -Eoh $ERROR_REGEX linter.log > error.log
-          ERROR_MESSAGE=$(sed -i 's#"##g' error.log)
-          ERROR_MESSAGE1=$(sed -i ':a;N;$!ba;s/\n/ /g' error.log)
-          echo "#################################"
-          echo $(cat error.log)
-          echo "error-logs=${ERROR_MESSAGE}" >> $GITHUB_OUTPUT
+          grep -Eoh $ERROR_REGEX linter.log | cat
+          #ERROR_MESSAGE=$(sed -i 's#"##g' error.log)
+          #ERROR_MESSAGE1=$(sed -i ':a;N;$!ba;s/\n/ /g' error.log)
+          #echo "#################################"
+          #echo $(cat error.log)
+          #echo "error-logs=${ERROR_MESSAGE}" >> $GITHUB_OUTPUT
       - name: Update swagerHub
         if: failure() && steps.lintcode.outcome == 'failure'
         run: |
