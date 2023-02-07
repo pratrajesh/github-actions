@@ -14,10 +14,8 @@ request_payload={\"body\":\"$(cat error.log)\",\"position\":\"0\"}
 
 echo ":::::$request_payload"
 
-curl --silent \
-    --request POST \
-    --data $request_payload \
-    -H 'accept: application/json' \
-    -H 'Authorization: 2f28cdbb-c5df-4146-a8c4-05046a380d00' \
-    -H 'Content-Type: application/json' \
-    https://api.swaggerhub.com/apis/RAJESHP1231234_1/Rajesh/1.0.0/comments
+curl --location --request POST 'https://api.swaggerhub.com/apis/RAJESHP1231234_1/Rajesh/1.0.0/comments' \
+--header 'accept: application/json' \
+--header 'Authorization: 2f28cdbb-c5df-4146-a8c4-05046a380d00' \
+--header 'Content-Type: application/json' \
+--data-raw '$request_payload'
