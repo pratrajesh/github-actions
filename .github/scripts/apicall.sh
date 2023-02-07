@@ -6,7 +6,10 @@
 #request_payload={\"position\":\"0\" , \"body\":\"$(cat error.log)\"}
 
 #request_payload={\"body\":\"$(cat error.log)\"}
-request_payload={\"body\":\"$(cat error.log)\",\"position\":0}
+#request_payload={\"body\":\"$(cat error.log)\",\"position\":0}
+
+request_payload={\"body\":\"Rajesh\",\"position\":0}
+
 
 #request_payload={"body": "'"$(cat error.log)"'","position":"0"}
 
