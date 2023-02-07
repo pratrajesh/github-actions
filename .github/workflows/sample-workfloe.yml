@@ -7,7 +7,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
         with:
-          # Full git history is needed to get a proper list of changed files within `super-linter`
           fetch-depth: 0
 
       - name: Lint Code Base
@@ -30,8 +29,5 @@ jobs:
       - name: Update swagerHub
         if: failure() && steps.lintcode.outcome == 'failure'
         run: |
-         ERROR_MSG=$(cat error.log)
-         #request_payload={\"body\":\"$ERROR_MSG\"}
-         #echo "${ERROR_MSG}"
          sh ./.github/scripts/apicall.sh
         shell: bash
