@@ -10,9 +10,9 @@ request_payload={\"body\":\"$(cat error.log)\",\"position\":0} >> body.json
 
 #request_payload={\"position\":0,"body":"Rajesh"}
 
-echo ":::::$request_payload"
-
-echo "------$body.json"
+#echo ":::::$request_payload"
+echo "printing body json"
+cat body.json
 
 curl --location --request POST 'https://api.swaggerhub.com/apis/RAJESHP1231234_1/Rajesh/1.0.0/comments' \
 -H "Expect:" \
