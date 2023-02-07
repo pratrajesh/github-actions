@@ -6,7 +6,7 @@
 #request_payload={\"position\":\"0\" , \"body\":\"$(cat error.log)\"}
 
 #request_payload={\"body\":\"$(cat error.log)\"}
-request_payload={\"body\":\"$(cat error.log)\",\"position\":0} >> body.json
+request_payload={\"body\":\"$(cat error.log)\",\"position\":0} > body.json
 
 #request_payload={\"position\":0,"body":"Rajesh"}
 
