@@ -2,17 +2,17 @@
 #echo "{\"body\":\"$(cat error.log)\",\"position\":0}" > body.json
 
 lintStatus=$1
-date= date '+%m/%d/%Y %H:%M:%S'
+date= $(date '+%m/%d/%Y %H:%M:%S')
 
 echo "lint step status :: $lintStatus"
 
 echo "date :: $date"
 
-if [ lintStatus == 'failure' ]
+if [ $lintStatus == 'failure' ]
 then
 echo "{\"body\":\"$(cat error.log)\",\"position\":0}" > body.json
 else
-   if [ lintStatus == 'success' ]
+   if [ $lintStatus == 'success' ]
    then
       echo "{\"body\":\"success\",\"position\":0}" > body.json
    fi
