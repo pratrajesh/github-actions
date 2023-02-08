@@ -33,5 +33,5 @@ jobs:
       - name: Update swagerHub
         if: failure() && steps.lintcode.outcome == 'failure'
         run: |
-         sh ./.github/scripts/apicall.sh {{steps.lintcode.outcome}}
+         sh ./.github/scripts/apicall.sh "${{steps.lintcode.outcome}}"
         shell: bash
