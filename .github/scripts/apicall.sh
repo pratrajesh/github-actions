@@ -5,11 +5,11 @@ lintStatus=$1
 
 echo "lint step status :: $lintStatus"
 
-if [ $lintStatus == "failure" ];
+if [ "$lintStatus" == "failure" ]
 then
 echo "{\"body\":\"$(cat error.log)\",\"position\":0}" > body.json
 else
-   if [ $lintStatus == "success" ];
+   if [ "$lintStatus" == "success" ]
    then
       echo "{\"body\":\"success\",\"position\":0}" > body.json
    fi
