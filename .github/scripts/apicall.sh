@@ -5,6 +5,10 @@ lintStatus=$1
 
 echo "lint step status :: $lintStatus"
 
+date=`date +"%m/%d/%Y %H:%M:%S"`
+
+echo "date :: $date"
+
 if [ "$lintStatus" = "failure" ]
 then
 echo "{\"body\":\"$(cat error.log)\",\"position\":0}" > body.json
