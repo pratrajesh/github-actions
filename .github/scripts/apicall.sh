@@ -1,12 +1,22 @@
 # Building request body and saving it to json file
-echo "{\"body\":\"$(cat error.log)\",\"position\":0}" > body.json
+#echo "{\"body\":\"$(cat error.log)\",\"position\":0}" > body.json
 
-lintOutput=$1
+lintStatus=$1
 date= date '+%m/%d/%Y %H:%M:%S'
 
-echo "lint step status :: $lintOutput"
+echo "lint step status :: $lintStatus"
 
 echo "date :: $date"
+
+if [ lintStatus == 'failure' ]
+then
+echo "{\"body\":\"$(cat error.log)\",\"position\":0}" > body.json
+else
+   if [ lintStatus == 'success' ]
+   then
+      echo "{\"body\":\"success\",\"position\":0}" > body.json
+   fi
+fi
 
 cat body.json
 
