@@ -2,7 +2,7 @@
 #echo "{\"body\":\"$(cat error.log)\",\"position\":0}" > body.json
 
 while read line; do
-  if [[ $line =~ ^\s*([0-9]*):([0-9]*)(\s*)(.*)error(\s*)(.*) ]] ; then echo $line; fi
+  if [ "$line" =~ ^\s*([0-9]*):([0-9]*)(\s*)(.*)error(\s*)(.*) ] then echo "$line" fi
   #if [[ $line =~ ^\s*([0-9]*):([0-9]*)(.*)error(\s*)(.*) ]] ; then echo ${BASH_REMATCH[5]}; fi
 done <error.log
 
