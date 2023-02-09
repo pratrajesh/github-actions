@@ -3,9 +3,15 @@
 
 while read line; do
   #if [ "$line" = '^\s*([0-9]*):([0-9]*)\s*error\s*.*$' ] 
-  if [ 1 = 1 ] 
-   then echo "$line"
-   fi
+regex="^\s*([0-9]*):([0-9]*)\s*error\s*.*$"
+if [[ $line =~ $regex ]]
+then
+    #week="${BASH_REMATCH[1]}"
+    #day="${BASH_REMATCH[2]}"
+    #hour="${BASH_REMATCH[3]}"
+    #echo $week --- $day ---- $hour
+    echo "Hi:::::::::::::::"
+fi
 done <error.log
 
 lintStatus=$1
