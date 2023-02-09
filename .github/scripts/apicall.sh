@@ -2,7 +2,8 @@
 #echo "{\"body\":\"$(cat error.log)\",\"position\":0}" > body.json
 
 while read line; do
-  if [ "$line" = '^\s*([0-9]*):([0-9]*)\s*error\s*.*$' ] 
+  #if [ "$line" = '^\s*([0-9]*):([0-9]*)\s*error\s*.*$' ] 
+  if [ 1 = 1 ] 
    then echo "$line"
    fi
 done <error.log
