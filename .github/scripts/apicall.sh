@@ -3,7 +3,7 @@
 
 while read line; do
   if [ "$line" = "^\s*([0-9]*):([0-9]*)(.*)error(\s*)(.*)" ] 
-   then echo "${BASH_REMATCH[5]}"
+   then echo "$line"
    fi
   #if [[ $line =~ ^\s*([0-9]*):([0-9]*)(.*)error(\s*)(.*) ]] ; then echo ${BASH_REMATCH[5]}; fi
 done <error.log
