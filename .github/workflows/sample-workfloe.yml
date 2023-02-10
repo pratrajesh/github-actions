@@ -24,12 +24,13 @@ jobs:
         run: |
           ERROR_REGEX='^\s*([0-9]*):([0-9]*)\s*error\s*.*$'
           # Extracting only errors from log file
-          grep -Eoh "$ERROR_REGEX" linter.log > error.log
+          grep -Eoh "$ERROR_REGEX" linter.log > error1.log
           # Removing double quotes
           sed -i 's#"##g' error.log
           # Removing duplicate entries in error log file
-          awk -i inplace '!seen[$0]++' error.log
+          awk -i inplace '!seen[$0]++' error1.log
           #ERROR_MESSAGE1=$(sed -i ':a;N;$!ba;s/\n/ /g' error.log)
+          cat error1.log | while read line; do echo "<td>"${line}"</td>" >> error.log; done
       - name: Update swagerHub
         if: failure() && steps.lintcode.outcome == 'failure'
         run: |
