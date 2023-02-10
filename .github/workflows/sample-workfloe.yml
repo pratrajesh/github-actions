@@ -26,7 +26,7 @@ jobs:
           # Extracting only errors from log file
           grep -Eoh "$ERROR_REGEX" linter.log > error1.log
           # Removing double quotes
-          sed -i 's#"##g' error.log
+          sed -i 's#"##g' error1.log
           # Removing duplicate entries in error log file
           awk -i inplace '!seen[$0]++' error1.log
           #ERROR_MESSAGE1=$(sed -i ':a;N;$!ba;s/\n/ /g' error.log)
