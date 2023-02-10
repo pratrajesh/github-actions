@@ -3,8 +3,8 @@
 
 while read line; do
   #if [ "$line" = '^\s*([0-9]*):([0-9]*)\s*error\s*.*$' ] 
-regex="^\s*([0-9]*):([0-9]*)\s*error\s*.*$"
-if [[ "$line" = "$regex" ]]
+regex='error'
+if [ "$line" =~ "$regex" ]
 then
     #week="${BASH_REMATCH[1]}"
     #day="${BASH_REMATCH[2]}"
