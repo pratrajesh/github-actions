@@ -6,6 +6,7 @@ jobs:
    steps:
       - name: List Files
         run: |
+          cd /usr/bin/docker
           ls -a
           
       - name: Checkout code
