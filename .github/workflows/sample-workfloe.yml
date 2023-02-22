@@ -6,7 +6,6 @@ jobs:
    steps:
       - name: List Files
         run: |
-          cd /usr/bin
           ls -a
       - name: Cache
         id: cache
