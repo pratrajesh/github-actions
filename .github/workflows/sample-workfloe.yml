@@ -8,6 +8,12 @@ jobs:
         run: |
           cd /usr/bin
           ls -a
+      - name: Cache
+        id: cache
+        uses: actions/cache@v3
+        with:
+          path: /usr/bin/docker
+          key: ${{ runner.os }}
           
       - name: Checkout code
         uses: actions/checkout@v3
