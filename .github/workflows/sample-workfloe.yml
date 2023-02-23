@@ -5,12 +5,11 @@ jobs:
    runs-on: ubuntu-latest
    steps:
       
-      - name: Cache
-        id: cache
+      - name: Cache Super Linter checkout code
         uses: actions/cache@v3
         with:
-          path: /usr/bin/docker
-          key: ${{ runner.os }}
+          path: ~/.super-linter
+          key: super-linter-checkout-code
           
       - name: Checkout code
         uses: actions/checkout@v3
@@ -18,7 +17,7 @@ jobs:
           fetch-depth: 0
       
       - name: Lint Code Base
-        uses: github/super-linter/slim@v4
+        uses: github/super-linter@v4
         id: lintcode
         env:
           VALIDATE_OPENAPI: true
