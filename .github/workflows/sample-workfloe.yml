@@ -9,24 +9,35 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
         with:
-          fetch-depth: 1
-          ref: ${{ github.ref }}
-          path: openapi
-      
-      - name: Lint Code Base
-        uses: github/super-linter@v4
-        id: lintcode
+          fetch-depth: 0
+      - name: Cache Docker image
+        uses: actions/cache@v2
+        with:
+          path: ~/.docker
+          key: ${{ runner.os }}-docker-${{ hashFiles('**/Dockerfile') }}
+          restore-keys: ${{ runner.os }}-docker-
+
+      - name: Run Linter
+        uses: docker://github/super-linter:v4
         with:
           # Specify any additional options or arguments here
           args: --no-annotate
-          # Specify the directory that needs to be linted
-          directory: openapi
         env:
           VALIDATE_OPENAPI: true
           DEFAULT_BRANCH: main
           CREATE_LOG_FILE: true
           LOG_FILE: linter.log
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      
+      #- name: Lint Code Base
+      #  uses: github/super-linter@v4
+       # id: lintcode
+        #env:
+         # VALIDATE_OPENAPI: true
+          #DEFAULT_BRANCH: main
+          #CREATE_LOG_FILE: true
+          #LOG_FILE: linter.log
+          #GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Extract error logs
         id: extractErrors
         if: failure() && steps.lintcode.outcome == 'failure'
