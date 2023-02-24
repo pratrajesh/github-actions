@@ -19,7 +19,7 @@ jobs:
           #sudo ls /root/.local/share/Super-Linter
           #echo "----------------------"
           #sudo ls /root/.cache/Super-Linter
-          sudo find / -type d -name "super-linter"
+          #sudo find / -type d -name "super-linter"
 
       - name: Cache dependencies
         uses: actions/cache@v3
@@ -28,7 +28,8 @@ jobs:
           path: |
             #/root/.cache
             #/root/.local/share/Super-Linter
-            /root/.cache/Super-Linter
+            #/root/.cache/Super-Linter
+            /home/runner/work/_actions/github/super-linter
           key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/Enterprise-API-Providers_Practitioner-1-swagger.yaml') }}
       - name: Lint Code Base
         uses: github/super-linter/slim@v4
