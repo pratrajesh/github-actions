@@ -1,67 +1,30 @@
-name: SwaggerHub Integration
-on: workflow_dispatch
-jobs:
-  Hello:
-   runs-on: ubuntu-latest
-   steps:
-      
-          
-      - name: Checkout
-        uses: actions/checkout@v2
-        with:
-          # Set the repository to checkout
-          repository: pratrajesh/github-actions
+name: Lint OpenAPI spec
 
-          # Set the branch to checkout
-          ref: main
-      - name: Cache
-        uses: actions/cache@v2
-        with:
-          # A unique name for the cache
-          name: superlinter-checkout
-          # The cache key, which includes the commit SHA and the branch name
-          # This ensures that the cache is only used if the checkout step is identical to the previous run
-          key: ${{ runner.os }}-superlinter-${{ github.sha }}-${{ env.BRANCH_NAME }}
-          # The paths to cache
-          path: |
-            ./
-          # The amount of time to cache the files (one week in this example)
-          # You can adjust this as needed
-          # Note: caching is not permanent and files may be evicted before the specified time
-          # For more details, see: https://docs.github.com/en/actions/guides/caching-dependencies-to-speed-up-workflows#cache-retention-period
-          expires: '{{ 7.days | from_now | date: "%Y-%m-%dT%H:%M:%S%z" }}'
-      - name: Run Super-Linter
-        uses: github/super-linter@v4
-        with:
-          # Set the linters to run
-          # You can adjust this as needed
-          # For more details, see: https://github.com/github/super-linter/tree/v4#enabled-linters
-          lint-linters: |
-            spectral
-          # Set the languages to lint
-          # You can adjust this as needed
-          # For more details, see: https://github.com/github/super-linter/tree/v4#enabled-linters
-          lint-github: |
-            openapi
-          # The path to the files to lint
-          # You can adjust this as needed
-          # For more details, see: https://github.com/github/super-linter/tree/v4#specifying-files-to-lint
-          lint-path: '/'
-      - name: Extract error logs
-        id: extractErrors
-        if: failure() && steps.lintcode.outcome == 'failure'
-        run: |
-          ERROR_REGEX='^\s*([0-9]*):([0-9]*)\s*error\s*.*$'
-          # Extracting only errors from log file
-          grep -Eoh "$ERROR_REGEX" linter.log > error1.log
-          # Removing double quotes
-          sed -i 's#"##g' error1.log
-          # Removing duplicate entries in error log file
-          awk -i inplace '!seen[$0]++' error1.log
-          #ERROR_MESSAGE1=$(sed -i ':a;N;$!ba;s/\n/ /g' error.log)
-          cat error1.log | while read line; do echo "<td>"${line}"</td>" >> error.log; done
-      - name: Update swagerHub
-        if: failure() && steps.lintcode.outcome == 'failure'
-        run: |
-         sh ./.github/scripts/apicall.sh "${{steps.lintcode.outcome}}"
-        shell: bash
+on:
+  push:
+    branches: [main]
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Cache Super Linter checkout code
+      uses: actions/cache@v2
+      with:
+        path: ~/.super-linter
+        key: super-linter-checkout
+        restore-keys: |
+          super-linter-checkout-
+
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y npm
+        npm install -g @stoplight/spectral
+
+    - name: Lint OpenAPI spec
+      uses: github/super-linter@v4
