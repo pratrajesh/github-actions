@@ -6,38 +6,47 @@ jobs:
    steps:
       
           
-      - name: Checkout code
-        uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v2
         with:
-          fetch-depth: 0
-      - name: Cache Docker image
+          # Set the repository to checkout
+          repository: pratrajesh/github-actions
+
+          # Set the branch to checkout
+          ref: main
+      - name: Cache
         uses: actions/cache@v2
         with:
-          path: ~/.docker
-          key: ${{ runner.os }}-docker-${{ hashFiles('**/Dockerfile') }}
-          restore-keys: ${{ runner.os }}-docker-
-
-      - name: Run Linter
-        uses: docker://github/super-linter:v4
+          # A unique name for the cache
+          name: superlinter-checkout
+          # The cache key, which includes the commit SHA and the branch name
+          # This ensures that the cache is only used if the checkout step is identical to the previous run
+          key: ${{ runner.os }}-superlinter-${{ github.sha }}-${{ env.BRANCH_NAME }}
+          # The paths to cache
+          path: |
+            ./
+          # The amount of time to cache the files (one week in this example)
+          # You can adjust this as needed
+          # Note: caching is not permanent and files may be evicted before the specified time
+          # For more details, see: https://docs.github.com/en/actions/guides/caching-dependencies-to-speed-up-workflows#cache-retention-period
+          expires: '{{ 7.days | from_now | date: "%Y-%m-%dT%H:%M:%S%z" }}'
+      - name: Run Super-Linter
+        uses: github/super-linter@v4
         with:
-          # Specify any additional options or arguments here
-          args: --no-annotate
-        env:
-          VALIDATE_OPENAPI: true
-          DEFAULT_BRANCH: main
-          CREATE_LOG_FILE: true
-          LOG_FILE: linter.log
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      
-      #- name: Lint Code Base
-      #  uses: github/super-linter@v4
-       # id: lintcode
-        #env:
-         # VALIDATE_OPENAPI: true
-          #DEFAULT_BRANCH: main
-          #CREATE_LOG_FILE: true
-          #LOG_FILE: linter.log
-          #GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # Set the linters to run
+          # You can adjust this as needed
+          # For more details, see: https://github.com/github/super-linter/tree/v4#enabled-linters
+          lint-linters: |
+            spectral
+          # Set the languages to lint
+          # You can adjust this as needed
+          # For more details, see: https://github.com/github/super-linter/tree/v4#enabled-linters
+          lint-github: |
+            openapi
+          # The path to the files to lint
+          # You can adjust this as needed
+          # For more details, see: https://github.com/github/super-linter/tree/v4#specifying-files-to-lint
+          lint-path: '/'
       - name: Extract error logs
         id: extractErrors
         if: failure() && steps.lintcode.outcome == 'failure'
