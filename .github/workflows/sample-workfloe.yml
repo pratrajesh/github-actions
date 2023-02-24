@@ -5,6 +5,8 @@ on:
 jobs:
   Hello:
     runs-on: ubuntu-latest
+    env:
+      cache-name: my-cache-name  # Define cache-name environment variable
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
