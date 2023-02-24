@@ -1,5 +1,5 @@
 extends: spectral:oas
-rules:
+rules: 
   operation-operationId: false
   operation-tags: false
 
