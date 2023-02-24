@@ -19,7 +19,7 @@ jobs:
             /root/.cache
             /root/.local/share/Super-Linter
             /root/.cache/Super-Linter
-          key: ${{ runner.os }}-dependencies-966654405133
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/Enterprise-API-Providers_Practitioner-1-swagger.yaml') }}
       - name: Lint Code Base
         uses: github/super-linter@v4
         id: lintcode
