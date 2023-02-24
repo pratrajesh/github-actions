@@ -12,6 +12,13 @@ jobs:
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
+      - name: test
+        run: |
+          ls /root/.cache
+          echo ":::::::::::::::"
+          ls /root/.local/share/Super-Linter
+          echo "----------------------"
+          ls /root/.cache/Super-Linter
 
       - name: Cache dependencies
         uses: actions/cache@v3
