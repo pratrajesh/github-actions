@@ -8,6 +8,16 @@ jobs:
     env:
       cache-name: my-cache-name  # Define cache-name environment variable
     steps:
+      - name: Cache dependencies
+        uses: actions/cache@v3
+        id: cache-dependencies
+        with:
+          path: |
+            #/root/.cache
+            #/root/.local/share/Super-Linter
+            #/root/.cache/Super-Linter
+            /home/runner/work/_actions/github/super-linter
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/Enterprise-API-Providers_Practitioner-1-swagger.yaml') }}
       - name: Checkout code
         uses: actions/checkout@v3
         with:
@@ -21,17 +31,10 @@ jobs:
           #sudo ls /root/.cache/Super-Linter
           #sudo find / -type d -name "super-linter"
           sudo du -sh /home/runner/work/_actions/github/super-linter/
+          echo ":::::::::::::::"
+          cat /usr/bin/docker
 
-      - name: Cache dependencies
-        uses: actions/cache@v3
-        id: cache-dependencies
-        with:
-          path: |
-            #/root/.cache
-            #/root/.local/share/Super-Linter
-            #/root/.cache/Super-Linter
-            /home/runner/work/_actions/github/super-linter
-          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/Enterprise-API-Providers_Practitioner-1-swagger.yaml') }}
+      
       - name: Lint Code Base
         uses: github/super-linter/slim@v4
         id: lintcode
