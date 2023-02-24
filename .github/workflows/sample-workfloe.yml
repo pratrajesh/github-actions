@@ -19,8 +19,7 @@ jobs:
             /root/.cache
             /root/.local/share/Super-Linter
             /root/.cache/Super-Linter
-          key: ${{ runner.os }}-dependencies-${{ hashFiles('**/requirements.txt') }}
-
+          key: ${{ runner.os }}-dependencies-966654405133
       - name: Lint Code Base
         uses: github/super-linter@v4
         id: lintcode
