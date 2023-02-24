@@ -13,6 +13,7 @@ jobs:
         uses: github/super-linter@v4
         id: lintcode
         env:
+          VALIDATE_ALL_CODEBASE: false
           VALIDATE_OPENAPI: true
           DEFAULT_BRANCH: main
           CREATE_LOG_FILE: true
