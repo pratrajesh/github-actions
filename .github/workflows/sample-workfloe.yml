@@ -18,18 +18,9 @@ jobs:
         id: cache-dependencies
         with:
           path: |
-            /root/.cache
-            /root/.local/share/Super-Linter
-            /root/.cache/Super-Linter
+            #/root/.cache
+            #/root/.local/share/Super-Linter
+            /openapi
+            #/root/.cache/Super-Linter
           key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/Enterprise-API-Providers_Practitioner-1-swagger.yaml') }}
-      - name: Lint Code Base
-        uses: github/super-linter/slim@v4
-        id: lintcode
-        env:
-          VALIDATE_OPENAPI: true
-          DEFAULT_BRANCH: main
-          CREATE_LOG_FILE: true
-          LOG_FILE: linter.log
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SUPER_LINTER_USE_CACHE: true
-          SUPER_LINTER_CACHE_PATH: /root/.cache/Super-Linter
+     
