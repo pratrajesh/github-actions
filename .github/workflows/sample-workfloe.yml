@@ -1,30 +1,34 @@
-name: Lint OpenAPI spec
- 
 on:
+  workflow_dispatch:
   push:
-    branches: [main]
 
 jobs:
-  lint:
+  Hello:
     runs-on: ubuntu-latest
-
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
 
-    - name: Cache Super Linter checkout code
-      uses: actions/cache@v2
-      with:
-        path: ~/.super-linter
-        key: super-linter-checkout
-        restore-keys: |
-          super-linter-checkout-
+      - name: Cache dependencies
+        uses: actions/cache@v2
+        id: cache-dependencies
+        with:
+          path: |
+            /root/.cache
+            /root/.local/share/Super-Linter
+            /root/.cache/Super-Linter
+          key: ${{ runner.os }}-dependencies-${{ hashFiles('**/requirements.txt') }}
 
-    - name: Install dependencies
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y npm
-        npm install -g @stoplight/spectral
-
-    - name: Lint OpenAPI spec
-      uses: github/super-linter@v4
+      - name: Lint Code Base
+        uses: github/super-linter@v4
+        id: lintcode
+        env:
+          VALIDATE_OPENAPI: true
+          DEFAULT_BRANCH: main
+          CREATE_LOG_FILE: true
+          LOG_FILE: linter.log
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SUPER_LINTER_USE_CACHE: true
+          SUPER_LINTER_CACHE_PATH: /root/.cache/Super-Linter
