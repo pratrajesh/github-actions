@@ -20,7 +20,7 @@ jobs:
           path: |
             #/root/.cache
             #/root/.local/share/Super-Linter
-            /openapi
+            ${{ github.workspace }}/openapi
             #/root/.cache/Super-Linter
           key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/Enterprise-API-Providers_Practitioner-1-swagger.yaml') }}
      
