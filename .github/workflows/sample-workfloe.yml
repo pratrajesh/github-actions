@@ -27,7 +27,7 @@ jobs:
         id: lintcode
         env:
           VALIDATE_OPENAPI: true
-          DEFAULT_BRANCH: main
+          DEFAULT_BRANCH: swagger-sync
           CREATE_LOG_FILE: true
           LOG_FILE: linter.log
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
