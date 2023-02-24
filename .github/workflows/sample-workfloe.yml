@@ -16,9 +16,10 @@ jobs:
         run: |
           #sudo ls /root/.cache
           #echo ":::::::::::::::"
-          sudo ls /root/.local/share/Super-Linter
+          #sudo ls /root/.local/share/Super-Linter
           #echo "----------------------"
           #sudo ls /root/.cache/Super-Linter
+          find / -type d -name "super-linter"
 
       - name: Cache dependencies
         uses: actions/cache@v3
