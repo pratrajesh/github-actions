@@ -2,7 +2,7 @@ name: SwaggerHub Integration
 
 on:
   workflow_dispatch:
-  pull_request:
+  push:
 
 jobs:
   Hello:
