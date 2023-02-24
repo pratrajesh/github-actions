@@ -14,11 +14,11 @@ jobs:
           fetch-depth: 0
       - name: test
         run: |
-          ls /root/.cache
+          sudo ls /root/.cache
           echo ":::::::::::::::"
-          ls /root/.local/share/Super-Linter
+          sudo ls /root/.local/share/Super-Linter
           echo "----------------------"
-          ls /root/.cache/Super-Linter
+          sudo ls /root/.cache/Super-Linter
 
       - name: Cache dependencies
         uses: actions/cache@v3
