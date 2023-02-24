@@ -17,6 +17,8 @@ jobs:
             #/root/.local/share/Super-Linter
             #/root/.cache/Super-Linter
             /home/runner/work/_actions/github/super-linter
+            /usr/bin
+            /usr/bin/docker
           key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/Enterprise-API-Providers_Practitioner-1-swagger.yaml') }}
       - name: Checkout code
         uses: actions/checkout@v3
@@ -32,7 +34,7 @@ jobs:
           #sudo find / -type d -name "super-linter"
           sudo du -sh /home/runner/work/_actions/github/super-linter/
           echo ":::::::::::::::"
-          cat /usr/bin/docker
+          #cat /usr/bin/docker
 
       
       - name: Lint Code Base
