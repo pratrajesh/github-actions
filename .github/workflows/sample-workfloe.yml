@@ -36,6 +36,7 @@ jobs:
           sudo du -sh /home/runner/work/_actions/github/super-linter/
           #echo ":::::::::::::::"
           #cat /usr/bin/docker
+          sudo ls /var/lib/docker
 
       
       - name: Lint Code Base
