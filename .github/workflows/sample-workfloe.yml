@@ -1,58 +1,21 @@
+name: Lint
+
 on:
-  workflow_dispatch:
   push:
+    branches: [ test ]
+  pull_request:
 
 jobs:
-  Hello:
+  lint:
     runs-on: ubuntu-latest
-    env:
-      cache-name: my-cache-name  # Define cache-name environment variable
-    steps:
-      
-      - name: Checkout code
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-      - name: Cache dependencies
-        uses: actions/cache@v3
-        id: cache-dependencies
-        with:
-          path: |
-            #/root/.cache
-            #/root/.local/share/Super-Linter
-            #/root/.cache/Super-Linter
-            #/home/runner/work/_actions/github/super-linter
-            #/usr/bin
-            #/usr/bin/docker
-            /var/lib/docker
-          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/Enterprise-API-Providers_Practitioner-1-swagger.yaml') }}
-      - name: test
-        run: |
-          #sudo ls /root/.cache
-          #echo ":::::::::::::::"
-          #sudo ls /root/.local/share/Super-Linter
-          #echo "----------------------"
-          #sudo ls /root/.cache/Super-Linter
-          #sudo find / -type d -name "super-linter"
-          sudo du -sh /home/runner/work/_actions/github/super-linter/
-          #echo ":::::::::::::::"
-          #cat /usr/bin/docker
-          #sudo ls /var/lib/docker
-          echo ":::::::::::::::::::::"
-          #sudo ls -R /var/lib/docker
-          sudo du -sh /var/lib/docker
-          echo "----------------------"
-          sudo find /var/lib/docker -type d -name "super-linter"
 
-      
-      - name: Lint Code Base
-        uses: github/super-linter/slim@v4
-        id: lintcode
-        env:
-          VALIDATE_OPENAPI: true
-          DEFAULT_BRANCH: main
-          CREATE_LOG_FILE: true
-          LOG_FILE: linter.log
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SUPER_LINTER_USE_CACHE: true
-          SUPER_LINTER_CACHE_PATH: /home/runner/work/_actions/github/super-linter
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Build Super Linter Docker image
+      run: docker build -t my-super-linter .
+
+    - name: Run Super Linter
+      run: docker run -v ${{ github.workspace }}:/tmp/workspace -v /tmp/cache:/tmp/cache my-super-linter
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
