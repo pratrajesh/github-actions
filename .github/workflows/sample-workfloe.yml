@@ -11,15 +11,7 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-      - name: Set up Super Linter
-        uses: github/super-linter@v4
-        with:
-          lint-staged: false
-          delete: false
-          debug: false
-          fail-fast: false
-          mode: github-actions
-      - name: Run Super Linter on OpenAPI specs
-        run: |
-          cd $GITHUB_WORKSPACE
-          /usr/local/bin/super-linter --no-colors --json --log-level info --fail-on-warnings --validate-openapi
+      - name: Lint Code Base
+        uses: docker://github/super-linter:v3
+        env:
+          VALIDATE_OPENAPI: true
