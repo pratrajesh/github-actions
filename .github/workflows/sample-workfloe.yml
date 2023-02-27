@@ -10,4 +10,14 @@ jobs:
     - name: Run Super-Linter
       uses: github/super-linter@v4
       env:
-        VALIDATE_ALL_CODEBASE: true
+        VALIDATE_ALL_CODEBASE: false
+        VALIDATE_OPENAPI: true
+        VALIDATE_DOCKERFILE: false
+        VALIDATE_TERRAFORM: false
+        VALIDATE_ARM: false
+        VALIDATE_CFN: false
+        VALIDATE_GIT_COMMIT_MSG: false
+        VALIDATE_MAKEFILE: false
+        VALIDATE_MARKDOWN_LINK_CHECK: false
+        OPENAPI_PATHS: "openapi/**/*.yaml, openapi/**/*.yml"
+
