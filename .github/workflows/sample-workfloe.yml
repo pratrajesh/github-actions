@@ -9,9 +9,23 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
-    - name: Setup Super Linter
-      uses: github/super-linter-action@v4.1.0
+    - name: Install Node.js
+      uses: actions/setup-node@v2.4.1
       with:
-        VALIDATE_ALL_CODEBASE: true
+        node-version: '16.x'
+    - name: Install Super Linter
+      run: |
+        npm install -g super-linter
+      env:
+        NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - name: Cache dependencies
+      uses: actions/cache@v2
+      with:
+        path: ~/.npm
+        key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+        restore-keys: ${{ runner.os }}-node-
+    - name: Run Super Linter
+      run: |
+        super-linter
       env:
         VALIDATE_ALL_CODEBASE: true
