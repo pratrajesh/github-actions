@@ -1,21 +1,13 @@
-name: GitHub Super Linter
-on:
-  push:
-    branches: [ test ]
-  pull_request:
+name: Super Linter
+on: [push, pull_request]
 jobs:
-  build:
+  super-linter:
+    name: Lint code base
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
-    - name: Install Super Linter
-      run: |
-        npm install -g super-linter
-      env:
-        VALIDATE_ALL_CODEBASE: true
-    - name: Run Super Linter
-      run: |
-        /usr/bin/super-linter
+    - name: Checkout
+      uses: actions/checkout@v3
+    - name: Run Super-Linter
+      uses: github/super-linter@v4
       env:
         VALIDATE_ALL_CODEBASE: true
