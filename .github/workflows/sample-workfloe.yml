@@ -8,12 +8,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout code
-      uses: actions/checkout@v3
+      uses: actions/checkout@v2
     - name: Cache dependencies
-      uses: actions/cache@v3
+      uses: actions/cache@v2
       with:
         path: /tmp/super-linter
-        key: ${{ runner.os }}-linter-${{ hashFiles('**/Enterprise-API-Providers_Practitioner-1-swagger.yaml') }}
+        key: ${{ runner.os }}-linter-${{ hashFiles('**/super-linter.config.yml') }}
         restore-keys: ${{ runner.os }}-linter-
     - name: GitHub Super Linter
       uses: github/super-linter@v4
@@ -21,4 +21,6 @@ jobs:
         args: --no-test
       env:
         VALIDATE_ALL_CODEBASE: true
-      working-directory: /tmp/super-linter
+      run: |
+        cd /tmp/super-linter
+        super-linter
