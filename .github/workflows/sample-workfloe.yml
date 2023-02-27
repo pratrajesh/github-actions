@@ -1,7 +1,7 @@
 name: GitHub Super Linter
 on:
   push:
-    branches: [ main ]
+    branches: [ test ]
   pull_request:
 jobs:
   build:
