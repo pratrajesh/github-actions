@@ -1,19 +1,26 @@
-name: Lint
+name: Super Lint OpenAPI Spec
 
-on:
-  push:
-    branches: [ test ]
-  pull_request:
+on: [push, pull_request]
 
 jobs:
-  super-lint:
+  lint:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-      - name: Build Docker image
-        run: docker build -t my-super-linter .
-      - name: Super lint OpenAPI specification
-        run: |
-          docker run --rm -v "$(pwd)":/tmp/workspace -v /tmp/cache:/tmp/cache my-super-linter
+    - uses: actions/checkout@v2
 
+    - name: Build Docker image
+      run: docker build -t my-super-linter .
+
+    - name: Run Super Linter
+      run: docker run -v $PWD:/tmp/workspace -v /tmp/cache:/tmp/cache my-super-linter /usr/share/super-linter/run-linters.sh -c /tmp/workspace/.super-linter.yml
+
+    # Define Dockerfile for building the image
+    - name: Configure Docker
+      run: |
+        echo FROM ubuntu:latest > Dockerfile
+        echo RUN apt-get update -y >> Dockerfile
+        echo RUN apt-get install -y git nodejs npm >> Dockerfile
+        echo RUN git clone https://github.com/github/super-linter.git /usr/share/super-linter >> Dockerfile
+        echo RUN chmod +x /usr/share/super-linter/install.sh >> Dockerfile
+        echo RUN /usr/share/super-linter/install.sh >> Dockerfile
+        echo ENTRYPOINT ["super-linter"] >> Dockerfile
