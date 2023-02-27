@@ -8,9 +8,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout code
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
+    - name: Create /tmp/super-linter directory
+      run: |
+        mkdir -p /tmp/super-linter
     - name: Cache dependencies
-      uses: actions/cache@v2
+      uses: actions/cache@v3
       with:
         path: /tmp/super-linter
         key: ${{ runner.os }}-linter-${{ hashFiles('**/super-linter.config.yml') }}
