@@ -21,17 +21,4 @@ jobs:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         fail_on_error: false
 
-    - name: Create Comment
-      uses: peter-evans/create-pull-request-comment@v1
-      with:
-        message: |
-          The OpenAPI Spec validation has completed.
-      if: always
-
-    - name: Set Status
-      uses: xt0rted/status-gha@v1.2
-      with:
-        token: ${{ secrets.GITHUB_TOKEN }}
-        state: ${{ job.status }}
-        description: OpenAPI Spec validation status
-        context: openapi-spec-validation
+   
