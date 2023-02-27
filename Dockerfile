@@ -1,16 +1,9 @@
-FROM github/super-linter:latest
+FROM ubuntu:latest
 
-# Set up caching directory
-RUN mkdir -p /tmp/cache
-RUN chmod -R 777 /tmp/cache
+RUN apt-get update && apt-get install -y \
+    git \
+    && rm -rf /var/lib/apt/lists/*
 
-# Set up GitHub token
-ARG GITHUB_TOKEN
-ENV GITHUB_TOKEN=$GITHUB_TOKEN
-
-# Copy entrypoint script
-COPY entrypoint.sh /entrypoint.sh
-RUN chmod +x /entrypoint.sh
-
-# Set entrypoint
-ENTRYPOINT ["/entrypoint.sh"]
+RUN git clone https://github.com/github/super-linter.git /super-linter
+WORKDIR /super-linter
+RUN ./install.sh
