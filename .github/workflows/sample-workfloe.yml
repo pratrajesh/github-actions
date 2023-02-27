@@ -8,25 +8,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout code
-      uses: actions/checkout@v3
-    - name: Create /tmp/super-linter directory
-      run: |
-        mkdir -p /tmp/super-linter
-    - name: Install Super Linter
-      run: |
-        git clone https://github.com/github/super-linter.git /tmp/super-linter
-        cd /tmp/super-linter
-        ./install.sh
-    - name: Cache dependencies
-      uses: actions/cache@v3
+      uses: actions/checkout@v2
+    - name: Setup Super Linter
+      uses: github/super-linter-action@v4.1.0
       with:
-        path: /tmp/super-linter
-        key: ${{ runner.os }}-linter-${{ hashFiles('**/super-linter.config.yml') }}
-        restore-keys: ${{ runner.os }}-linter-
-    - name: Run Super Linter
+        VALIDATE_ALL_CODEBASE: true
       env:
         VALIDATE_ALL_CODEBASE: true
-      run: |
-        cd /tmp/super-linter
-        super-linter
-      working-directory: /tmp/super-linter
