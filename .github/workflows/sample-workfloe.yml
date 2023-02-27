@@ -37,9 +37,12 @@ jobs:
           sudo du -sh /home/runner/work/_actions/github/super-linter/
           #echo ":::::::::::::::"
           #cat /usr/bin/docker
-          sudo ls /var/lib/docker
+          #sudo ls /var/lib/docker
           echo ":::::::::::::::::::::"
-          sudo ls -R /var/lib/docker
+          #sudo ls -R /var/lib/docker
+          sudo du -sh /var/lib/docker
+          echo "----------------------"
+          sudo find /var/lib/docker -type d -name "super-linter"
 
       
       - name: Lint Code Base
