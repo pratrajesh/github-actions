@@ -8,7 +8,7 @@ jobs:
   openapi:
     runs-on: ubuntu-latest
     env:
-      DOCKER_IMAGE_CACHE: ${{ runner.workspace }}/docker-image-cache
+      DOCKER_IMAGE_CACHE: $rajesh9666544015/docker-image-cache
 
     steps:
     - name: Checkout code
