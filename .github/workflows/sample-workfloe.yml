@@ -1,24 +1,31 @@
-name: Validate OpenAPI Spec
+name: Super Linter
 
-on:
-  push:
-    branches: [test]
+on: [push]
 
 jobs:
-  openapi:
+  super-linter:
     runs-on: ubuntu-latest
-
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
-
-    - name: Validate OpenAPI Spec
-      uses: github/super-linter@v4
-      env:
-        VALIDATE_OPENAPI: true
-      with:
-        commit_sha: ${{ github.sha }}
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        fail_on_error: false
-
-   
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Cache dependencies
+        uses: actions/cache@v3
+        with:
+          path: |
+            ${{ env.HOME }}/.cache
+            ${{ env.HOME }}/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+      - name: Lint code
+        uses: github/super-linter@v4
+        env:
+          VALIDATE_ALL_CODEBASE: true
+          VALIDATE_OPENAPI: true
+        with:
+          level: 'warning'
+          output: 'github-pr-review'
+          annotations: 'true'
+          fail_on_error: 'false'
+          runner_temp: '/tmp/runner'
+          docker_image: 'alpine:3'
