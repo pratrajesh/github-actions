@@ -1,6 +1,6 @@
 name: Super Lint OpenAPI Spec
 
-on: [pull_request]
+on: [push, pull_request]
 
 jobs:
   lint:
