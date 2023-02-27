@@ -8,24 +8,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout code
-      uses: actions/checkout@v2
-    - name: Install Node.js
-      uses: actions/setup-node@v2.4.1
-      with:
-        node-version: '16.x'
+      uses: actions/checkout@v3
     - name: Install Super Linter
       run: |
-        npm install -g super-linter
+        git clone https://github.com/github/super-linter.git /tmp/super-linter
+        cd /tmp/super-linter
+        ./install.sh
       env:
-        NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    - name: Cache dependencies
-      uses: actions/cache@v2
-      with:
-        path: ~/.npm
-        key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-        restore-keys: ${{ runner.os }}-node-
+        VALIDATE_ALL_CODEBASE: true
     - name: Run Super Linter
       run: |
-        super-linter
+        /usr/bin/super-linter
       env:
         VALIDATE_ALL_CODEBASE: true
