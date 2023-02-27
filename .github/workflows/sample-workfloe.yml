@@ -1,26 +1,24 @@
-name: Super Lint OpenAPI Spec
-
-on: [push, pull_request]
-
+name: GitHub Super Linter
+on:
+  push:
+    branches: [ test ]
+  pull_request:
 jobs:
-  lint:
+  build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-
-    - name: Build Docker image
-      run: docker build -t my-super-linter .
-
-    - name: Run Super Linter
-      run: docker run -v $PWD:/tmp/workspace -v /tmp/cache:/tmp/cache my-super-linter /usr/share/super-linter/run-linters.sh -c /tmp/workspace/.super-linter.yml
-
-    # Define Dockerfile for building the image
-    - name: Configure Docker
-      run: |
-        echo FROM ubuntu:latest > Dockerfile
-        echo RUN apt-get update -y >> Dockerfile
-        echo RUN apt-get install -y git nodejs npm >> Dockerfile
-        echo RUN git clone https://github.com/github/super-linter.git /usr/share/super-linter >> Dockerfile
-        echo RUN chmod +x /usr/share/super-linter/install.sh >> Dockerfile
-        echo RUN /usr/share/super-linter/install.sh >> Dockerfile
-        echo ENTRYPOINT ["super-linter"] >> Dockerfile
+    - name: Checkout code
+      uses: actions/checkout@v3
+    - name: Cache dependencies
+      uses: actions/cache@v3
+      with:
+        path: /tmp/super-linter
+        key: ${{ runner.os }}-linter-${{ hashFiles('**/Enterprise-API-Providers_Practitioner-1-swagger.yaml') }}
+        restore-keys: ${{ runner.os }}-linter-
+    - name: GitHub Super Linter
+      uses: github/super-linter@v4
+      with:
+        args: --no-test
+      env:
+        VALIDATE_ALL_CODEBASE: true
+      working-directory: /tmp/super-linter
