@@ -6,16 +6,12 @@ on:
   pull_request:
 
 jobs:
-  lint:
+  super-lint:
     runs-on: ubuntu-latest
-
     steps:
-    - uses: actions/checkout@v2
-
-    - name: Build Super Linter Docker image
-      run: docker build -t my-super-linter -f ./Dockerfile .
-
-    - name: Run Super Linter
-      run: docker run -v ${{ github.workspace }}:/tmp/workspace -v /tmp/cache:/tmp/cache my-super-linter
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Super lint OpenAPI specification
+        run: |
+          docker pull github/super-linter:v3
+          docker run --rm -v "$(pwd)":/tmp/workspace -v /tmp/cache:/tmp/cache github/super-linter:v3
