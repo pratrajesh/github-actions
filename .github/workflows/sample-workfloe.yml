@@ -1,38 +1,25 @@
-name: Validate OpenAPI Spec
+name: Super Linter OpenAPI Lint
 
 on:
   push:
-    branches: [test]
+    branches: [ test ]
 
 jobs:
-  openapi:
+  super-linter:
+    name: Super Linter OpenAPI Lint
     runs-on: ubuntu-latest
-    env:
-      DOCKER_IMAGE_CACHE: $rajesh9666544015/docker-image-cache
-
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
-
-    - name: Cache Docker image
-      uses: actions/cache@v2
-      with:
-        path: ${{ env.DOCKER_IMAGE_CACHE }}
-        key: ${{ runner.os }}-docker-${{ hashFiles('**/Dockerfile') }}
-
-    - name: Pull Docker image
-      if: steps.cache.outputs.cache-hit != 'true'
-      run: docker pull github/super-linter:v4
-
-    - name: Tag Docker image
-      if: steps.cache.outputs.cache-hit != 'true'
-      run: docker tag github/super-linter:v4 ${{ env.DOCKER_IMAGE_CACHE }}/github-super-linter:v4
-
-    - name: Validate OpenAPI Spec
-      uses: docker://$DOCKER_IMAGE_CACHE/github-super-linter:v4
-      env:
-        VALIDATE_OPENAPI: true
-      with:
-        commit_sha: ${{ github.sha }}
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        fail_on_error: false
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Set up Super Linter
+        uses: github/super-linter@v4
+        with:
+          lint-staged: false
+          delete: false
+          debug: false
+          fail-fast: false
+          mode: github-actions
+      - name: Run Super Linter on OpenAPI specs
+        run: |
+          cd $GITHUB_WORKSPACE
+          /usr/local/bin/super-linter --no-colors --json --log-level info --fail-on-warnings --validate-openapi
