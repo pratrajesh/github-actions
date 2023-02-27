@@ -1,7 +1,7 @@
 name: GitHub Super Linter
 on:
   push:
-    branches: [ test ]
+    branches: [ main ]
   pull_request:
 jobs:
   build:
@@ -15,12 +15,10 @@ jobs:
         path: /tmp/super-linter
         key: ${{ runner.os }}-linter-${{ hashFiles('**/super-linter.config.yml') }}
         restore-keys: ${{ runner.os }}-linter-
-    - name: GitHub Super Linter
-      uses: github/super-linter@v4
-      with:
-        args: --no-test
+    - name: Run Super Linter
       env:
         VALIDATE_ALL_CODEBASE: true
       run: |
         cd /tmp/super-linter
         super-linter
+      working-directory: /tmp/super-linter
