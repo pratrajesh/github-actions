@@ -10,10 +10,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v2
 
     - name: Build Super Linter Docker image
-      run: docker build -t my-super-linter .
+      run: docker build -t my-super-linter -f ./Dockerfile .
 
     - name: Run Super Linter
       run: docker run -v ${{ github.workspace }}:/tmp/workspace -v /tmp/cache:/tmp/cache my-super-linter
