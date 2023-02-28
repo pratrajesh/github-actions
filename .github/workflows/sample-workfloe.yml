@@ -16,3 +16,8 @@ jobs:
         run: npm install @stoplight/spectral-cli
       - name: Lint OpenAPI
         run: npx spectral lint openapi/*.yaml
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: linter-results
+          path: spectral-results.json
