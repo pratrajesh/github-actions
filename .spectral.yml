@@ -1,19 +1,34 @@
+extends: spectral:oas
 rules:
-  operation-http-method:
-    description: "Operation has an invalid HTTP method"
+  operation-operationId: false
+  operation-tags: false
+
+  servers-description:
+    description: Please provide a description for each tag.
+    documentationUrl: https://www.example.com/docs/tag-description.md
+    given: $.servers[*]
+    severity: error
+    then:
+      field: description
+      function: truthy
+
+  humana-poc-properties-camelCase-alphanumeric:
+    description: All JSON Schema properties MUST follow fields-camelCase and be ASCII alphanumeric characters or `_` or `$`.
+    severity: error
     recommended: true
-    given: "$.paths[*][*]"
+    message: "{{property}} MUST follow camelCase and be ASCII alphanumeric characters or `_` or `$`."
+    given: $.definitions..properties[*]~
     then:
-      field: "operationId"
-      function: "pattern"
+      function: pattern
       functionOptions:
-        match: "^[a-z]+(_[a-z]+)*_[a-z]+$"
-    severity: "error"
-  path-parameters:
-    description: "Path parameter not found in the path"
-    given: "$.paths[*][*]"
+        match: "/^[a-z$_]{1}[A-Z09$_]*/"
+
+  humana-poc-request-GET-no-body:
+    description: "A 'GET' request MUST NOT accept a 'body` parameter"
+    severity: error
+    given: $.paths..get.parameters..in
     then:
-      function: "oasOp"
+      function: pattern
       functionOptions:
-        notPathParameter: true
-    severity: "warning"
+        notMatch: "/^requestBody$/"
+
