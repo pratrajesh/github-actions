@@ -13,6 +13,6 @@ jobs:
         with:
           node-version: 16
       - name: Install dependencies
-        run: npm install @stoplight/spectral
+        run: npm install @stoplight/spectral-cli
       - name: Lint OpenAPI
         run: npx spectral lint openapi/*.yaml
