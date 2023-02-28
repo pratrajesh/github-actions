@@ -1,13 +1,7 @@
 name: OpenAPI Lint
 on:
   push:
-    paths:
-      - 'openapi/**.yml'
-      - 'openapi/**.json'
-  pull_request:
-    paths:
-      - 'openapi/**.yml'
-      - 'openapi/**.json'
+   
 jobs:
   lint:
     runs-on: ubuntu-latest
