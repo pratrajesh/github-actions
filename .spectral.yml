@@ -1,0 +1,19 @@
+rules:
+  operation-http-method:
+    description: "Operation has an invalid HTTP method"
+    recommended: true
+    given: "$.paths[*][*]"
+    then:
+      field: "operationId"
+      function: "pattern"
+      functionOptions:
+        match: "^[a-z]+(_[a-z]+)*_[a-z]+$"
+    severity: "error"
+  path-parameters:
+    description: "Path parameter not found in the path"
+    given: "$.paths[*][*]"
+    then:
+      function: "oasOp"
+      functionOptions:
+        notPathParameter: true
+    severity: "warning"
