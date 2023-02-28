@@ -17,6 +17,7 @@ jobs:
       - name: Lint OpenAPI
         run: npx spectral lint openapi/*.yaml
       - name: Upload artifact
+        if: failure()
         uses: actions/upload-artifact@v3
         with:
           name: linter-results
