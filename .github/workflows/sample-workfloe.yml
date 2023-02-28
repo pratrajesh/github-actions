@@ -2,8 +2,7 @@ name: OpenAPI Linting
 
 on:
   push:
-    branches:
-
+  
 jobs:
   lint:
     runs-on: ubuntu-latest
@@ -14,14 +13,14 @@ jobs:
       - name: Cache Super Linter dependencies
         uses: actions/cache@v2
         with:
-          path: ~/.super-linter
+          path: /home/runner/.super-linter
           key: ${{ runner.os }}-super-linter-${{ hashFiles('**/*.yaml') }}
           restore-keys: |
             ${{ runner.os }}-super-linter-
 
       - name: Install dependencies
         run: |
-          cd /root/.super-linter
+          cd /home/runner/.super-linter
           npm install
 
       - name: Lint OpenAPI spec
