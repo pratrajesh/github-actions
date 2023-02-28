@@ -2,7 +2,7 @@ name: OpenAPI Linting
 
 on:
   push:
-  
+
 jobs:
   lint:
     runs-on: ubuntu-latest
@@ -10,11 +10,14 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
+      - name: Create directory for Super Linter dependencies
+        run: mkdir -p /home/runner/.super-linter
+
       - name: Cache Super Linter dependencies
         uses: actions/cache@v2
         with:
           path: /home/runner/.super-linter
-          key: ${{ runner.os }}-super-linter-${{ hashFiles('**/*.yaml') }}
+          key: ${{ runner.os }}-super-linter-${{ hashFiles('**/super-linter.json') }}
           restore-keys: |
             ${{ runner.os }}-super-linter-
 
