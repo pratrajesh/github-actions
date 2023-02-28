@@ -1,24 +1,32 @@
-name: OpenAPI Lint
+name: OpenAPI Linting
+
 on:
   push:
-   
+    branches:
+
 jobs:
   lint:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
+        uses: actions/checkout@v2
+
+      - name: Cache Super Linter dependencies
+        uses: actions/cache@v2
         with:
-          node-version: 16
+          path: ~/.super-linter
+          key: ${{ runner.os }}-super-linter-${{ hashFiles('**/*.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-super-linter-
+
       - name: Install dependencies
-        run: npm install @stoplight/spectral-cli
-      - name: Lint OpenAPI
-        run: npx spectral lint openapi/*.yaml
-      - name: Upload artifact
-        if: failure()
-        uses: actions/upload-artifact@v3
+        run: |
+          cd /root/.super-linter
+          npm install
+
+      - name: Lint OpenAPI spec
+        uses: github/super-linter@v4
         with:
-          name: linter-results
-          path: spectral-results.json
+          args: openapi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
