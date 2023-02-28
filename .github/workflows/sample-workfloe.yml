@@ -1,21 +1,29 @@
-name: Super Linter OpenAPI Lint
-
+name: OpenAPI Lint
 on:
   push:
-    branches: [ test ]
-
+    paths:
+      - 'openapi/**.yml'
+      - 'openapi/**.json'
+  pull_request:
+    paths:
+      - 'openapi/**.yml'
+      - 'openapi/**.json'
 jobs:
-  super-linter:
-    name: Super Linter OpenAPI Lint
+  lint:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
-      - name: test
-        run: |
-          sudo ls -a
-      - name: Lint Code Base
-        #uses: docker://github/super-linter:v4
-        uses: github/super-linter@v4
-        env:
-          VALIDATE_OPENAPI: true
+        uses: actions/checkout@v2
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: 14
+      - name: Install dependencies
+        run: npm install @stoplight/spectral
+      - name: Lint OpenAPI
+        run: npx spectral lint openapi/**/*.yml
+      - name: Upload artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: linter-results
+          path: spectral-results.json
