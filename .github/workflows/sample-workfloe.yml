@@ -7,7 +7,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Setup Node.js
         uses: actions/setup-node@v2
         with:
@@ -16,8 +16,3 @@ jobs:
         run: npm install @stoplight/spectral
       - name: Lint OpenAPI
         run: npx spectral lint openapi/*.yaml
-      - name: Upload artifact
-        uses: actions/upload-artifact@v2
-        with:
-          name: linter-results
-          path: spectral-results.json
