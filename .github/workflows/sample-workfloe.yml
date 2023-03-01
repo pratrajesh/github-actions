@@ -2,32 +2,17 @@ name: OpenAPI Linting
 
 on:
   push:
+  workflow_dispatch:
 
 jobs:
   lint:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: Create directory for Super Linter dependencies
-        run: mkdir -p /home/runner/.super-linter
-
-      - name: Cache Super Linter dependencies
-        uses: actions/cache@v2
-        with:
-          path: /home/runner/.super-linter
-          key: ${{ runner.os }}-super-linter-${{ hashFiles('**/super-linter.json') }}
-          restore-keys: |
-            ${{ runner.os }}-super-linter-
-
-      - name: Install dependencies
-        run: |
-          cd /home/runner/.super-linter
-          npm install
+        uses: actions/checkout@v3
 
       - name: Lint OpenAPI spec
-        uses: github/super-linter@v4
+        uses: github/super-linter/slim@v4
         with:
           args: openapi
         env:
