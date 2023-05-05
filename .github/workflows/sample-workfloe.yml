@@ -1,37 +1,35 @@
+name: Cache httpd Docker Image
+
 on:
-  workflow_dispatch:
   push:
-  
-  
+    branches:
+
 jobs:
-  Hello:
+  build-and-cache:
     runs-on: ubuntu-latest
+
     steps:
-      
-      - name: Checkout code
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-      -
-        name: Login to Docker Hub
-        uses: docker/login-action@v2
-        with:
-          username: prathira
-          password: dckr_pat_YC40q1ZsK_cLlxe5AXgSQSzKNK4
-        
-      
-      - name: Pull Super Linter Docker image
-        run: docker pull github/super-linter:v4
-      - name: Cache Docker image
-        uses: actions/cache@v2
-        with:
-          path: /var/lib/docker
-          key: ${{ runner.os }}-docker-Rajesh5
-          restore-keys: ${{ runner.os }}-docker-Rajesh5
-        env:
-          cache-name: my-cache-name-dummy
-      - name: Restore Super-Linter cache
-        uses: actions/cache@v2
-        with:
-          path: /var/lib/docker
-          key: ${{ runner.os }}-docker-Rajesh5
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Cache Docker layers
+      uses: actions/cache@v2
+      with:
+        path: /var/lib/docker
+        key: ${{ runner.os }}-docker-${{ hashFiles('**/Dockerfile') }}
+        restore-keys: |
+          ${{ runner.os }}-docker-
+
+    - name: Build and tag Docker image
+      run: docker build -t my-httpd-image .
+
+    - name: Cache Docker image
+      uses: docker/build-push-action@v2
+      with:
+        context: .
+        push: false
+        cache-from: type=local,src=my-httpd-image
+        cache-to: type=local,dest=my-httpd-image-cache
+
+    - name: Deploy Docker image
+      run: docker push my-httpd-image
