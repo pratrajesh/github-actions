@@ -11,18 +11,19 @@ jobs:
     steps:
         - uses: actions/checkout@v2
 
-        - run: mkdir -p ~/image-cache
+        - run: mkdir -p ~/linter-cache
 
-        - id: image-cache
+        - id: linter-cache
           uses: actions/cache@v1
           with:
-              path: ~/image-cache
-              key: image-cache-${{ runner.os }}
+              path: ~/linter-cache
+              key: linter-cache-${{ runner.os }}
 
-        - if: steps.image-cache.outputs.cache-hit != 'true'
+        - if: steps.linter-cache.outputs.cache-hit != 'true'
           run: |
-              docker pull postgres:13
-              docker save -o ~/image-cache/postgres.tar alpine
+              echo "no cache"
+              docker pull github/super-linter:v4
+              docker save -o ~/linter-cache/super-linter.tar alpine
 
-        - if: steps.image-cache.outputs.cache-hit == 'true'
-          run: docker load -i ~/image-cache/postgres.tar
+        - if: steps.linter-cache.outputs.cache-hit == 'true'
+          run: echo "from cache"
