@@ -27,4 +27,7 @@ jobs:
               docker save -o ~/linter-cache/super-linter.tar alpine
 
         - if: steps.linter-cache.outputs.cache-hit == 'true'
-          run: echo "from cache"
+          run:  |
+            echo "from cache"
+            docker run -e RUN_LOCAL=true -e  VALIDATE_OPENAPI=true -v $PWD:/tmp/lint github/super-linter
+
