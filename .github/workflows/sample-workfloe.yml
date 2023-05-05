@@ -28,10 +28,12 @@ jobs:
         uses: actions/cache@v2
         with:
           path: /var/lib/docker
-          key: ${{ runner.os }}-docker-Rajesh3
-          restore-keys: ${{ runner.os }}-docker-Rajesh3
+          key: ${{ runner.os }}-docker-Rajesh4
+          restore-keys: ${{ runner.os }}-docker-Rajesh4
+        env:
+          cache-name: my-cache-name-dummy
       - name: Restore Super-Linter cache
         uses: actions/cache@v2
         with:
           path: /var/lib/docker
-          key: ${{ runner.os }}-docker-Rajesh3
+          key: ${{ runner.os }}-docker-Rajesh4
