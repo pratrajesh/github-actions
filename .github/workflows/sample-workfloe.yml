@@ -20,6 +20,11 @@ jobs:
         with:
           username: prathira
           password: dckr_pat_YC40q1ZsK_cLlxe5AXgSQSzKNK4
+      - name: Restore Super-Linter cache
+        uses: actions/cache@v2
+        with:
+          path: /var/lib/docker
+          key: ${{ runner.os }}-docker-Rajesh
       - name: Pull Super Linter Docker image
         if: env.CACHE_CREATED != 'true'
         run: docker pull github/super-linter:v4
