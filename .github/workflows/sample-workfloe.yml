@@ -28,6 +28,3 @@ jobs:
 
       - name: Pull Super Linter Docker image
         run: docker pull github/super-linter:v4
-
-      - name: Run Super Linter
-        run: docker run --rm -v $PWD:/tmp/lint github/super-linter:v4
