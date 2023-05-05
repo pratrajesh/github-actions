@@ -6,8 +6,6 @@ on:
 jobs:
   Hello:
     runs-on: ubuntu-latest
-    env:
-      cache-name: my-cache-name  # Define cache-name environment variable
     steps:
       
       - name: Checkout code
@@ -28,12 +26,12 @@ jobs:
         uses: actions/cache@v2
         with:
           path: /var/lib/docker
-          key: ${{ runner.os }}-docker-Rajesh4
-          restore-keys: ${{ runner.os }}-docker-Rajesh4
+          key: ${{ runner.os }}-docker-Rajesh5
+          restore-keys: ${{ runner.os }}-docker-Rajesh5
         env:
           cache-name: my-cache-name-dummy
       - name: Restore Super-Linter cache
         uses: actions/cache@v2
         with:
           path: /var/lib/docker
-          key: ${{ runner.os }}-docker-Rajesh4
+          key: ${{ runner.os }}-docker-Rajesh5
