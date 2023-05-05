@@ -13,6 +13,25 @@ jobs:
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
+      - name: Cache repository
+        uses: actions/cache@v3
+        with:
+          path: |
+            .git/
+            .super-linter.yml
+            .github/workflows/
+          key: ${{ runner.os }}-super-linter-${{ hashFiles('.super-linter.yml') }}
+          restore-keys: |
+            ${{ runner.os }}-super-linter-
+
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Super Linter
+        uses: github/super-linter@v4
+        with:
+          config_file: .super-linter.yml
+          output_format: json
       - name: Cache dependencies
         uses: actions/cache@v3
         id: cache-dependencies
