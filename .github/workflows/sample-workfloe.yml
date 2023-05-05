@@ -24,7 +24,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: /var/lib/docker
-          key: ${{ runner.os }}-docker-Rajesh
+          key: ${{ runner.os }}-docker-Rajesh1
       - name: Pull Super Linter Docker image
         if: env.CACHE_CREATED != 'true'
         run: docker pull github/super-linter:v4
@@ -33,7 +33,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: /var/lib/docker
-          key: ${{ runner.os }}-docker-Rajesh
-          restore-keys: ${{ runner.os }}-docker-Rajesh
+          key: ${{ runner.os }}-docker-Rajesh1
+          restore-keys: ${{ runner.os }}-docker-Rajesh1
         env:
            CACHE_CREATED: true
