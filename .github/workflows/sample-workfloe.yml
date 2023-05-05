@@ -12,24 +12,24 @@ jobs:
     steps:
         - uses: actions/checkout@v2
 
-        - run: mkdir -p ~/linter-cache
+        - run: mkdir -p ~/linter-cache1
 
-        - id: linter-cache
+        - id: linter-cache1
           uses: actions/cache@v1
           with:
-              path: ~/linter-cache
-              key: linter-cache-${{ runner.os }}
+              path: ~/linter-cache1
+              key: linter-cache1-${{ runner.os }}
 
-        - if: steps.linter-cache.outputs.cache-hit != 'true'
+        - if: steps.linter-cache1.outputs.cache-hit != 'true'
           run: |
               echo "no cache"
               docker pull github/super-linter:v4
-              docker save -o ~/linter-cache/super-linter.tar alpine
+              docker save -o ~/linter-cache1/super-linter.tar github/super-linter:v4
 
-        - if: steps.linter-cache.outputs.cache-hit == 'true'
+        - if: steps.linter-cache1.outputs.cache-hit == 'true'
           run:  |
             echo "from cache"
-            docker load -i ~/linter-cache/super-linter.tar
+            docker load -i ~/linter-cache1/super-linter.tar
             docker images
             docker run -e RUN_LOCAL=true -e  VALIDATE_OPENAPI=true -v $PWD:/tmp/lint github/super-linter:v4
 
