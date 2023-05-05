@@ -1,20 +1,20 @@
-name: Create Secrets and Environment Variables
+name: My Docker Workflow
+
 
 on:
   push:
-    branches: [ main ]
+    branches:
+      - main
 
 jobs:
-  create-secrets-and-variables:
+  build-java-project:
     runs-on: ubuntu-latest
     steps:
-      - name: Create Secret
-        uses: actions/secrets-set@v2
-        with:
-          name: MY_SECRET_NAME
-          value: ${{ secrets.MY_SECRET_VALUE }}
+        - uses: actions/checkout@v2
 
-      - name: Create Environment Variable
-        run: echo "MY_ENVIRONMENT_VARIABLE_NAME=$MY_ENVIRONMENT_VARIABLE_VALUE" >> $GITHUB_ENV
-        env:
-          MY_ENVIRONMENT_VARIABLE_NAME: my-value
+        - run: |
+             docker build -t temp-linter .
+             docker images
+        
+
+        
