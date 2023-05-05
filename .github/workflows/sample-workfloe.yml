@@ -7,25 +7,23 @@ on:
       - main
 
 jobs:
-  build-and-deploy:
+  build-java-project:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Code
-        uses: actions/checkout@v2
+        - uses: actions/checkout@v2
 
-      - name: Cache Docker Image
-        id: cache-docker-image
-        uses: actions/cache@v2
-        with:
-          path: /var/lib/docker
-          key: ${{ runner.os }}-docker-httpd
-          restore-keys: ${{ runner.os }}-docker-
+        - run: mkdir -p ~/image-cache
 
-      - name: Pull Docker Image
-        run: docker pull httpd
+        - id: image-cache
+          uses: actions/cache@v1
+          with:
+              path: ~/image-cache
+              key: image-cache-${{ runner.os }}
 
-      - name: Deploy Docker Image
-        run: |
-          docker stop my-container || true
-          docker rm my-container || true
-          docker run -d --name my-container -p 80:80 httpd
+        - if: steps.image-cache.outputs.cache-hit != 'true'
+          run: |
+              docker pull postgres:13
+              docker save -o ~/image-cache/postgres.tar alpine
+
+        - if: steps.image-cache.outputs.cache-hit == 'true'
+          run: docker load -i ~/image-cache/postgres.tar
