@@ -29,5 +29,6 @@ jobs:
         - if: steps.linter-cache.outputs.cache-hit == 'true'
           run:  |
             echo "from cache"
+            docker load -i ~/image-cache/postgres.tar
             docker run -e RUN_LOCAL=true -e  VALIDATE_OPENAPI=true -v $PWD:/tmp/lint github/super-linter
 
