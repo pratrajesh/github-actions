@@ -1,35 +1,26 @@
-name: Cache httpd Docker Image
+name: Docker Image Download and Cache
 
-on:
-  push:
-    branches:
+on: [push]
 
 jobs:
-  build-and-cache:
+  build:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-    - name: Cache Docker layers
-      uses: actions/cache@v2
-      with:
-        path: /var/lib/docker
-        key: ${{ runner.os }}-docker-${{ hashFiles('**/Dockerfile') }}
-        restore-keys: |
-          ${{ runner.os }}-docker-
+      - name: Download and Cache httpd Docker image
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          cache-from: type=registry,ref=httpd:latest
+          cache-to: type=inline
+          push: false
+          target: development
+          file: ./Dockerfile
 
-    - name: Build and tag Docker image
-      run: docker build -t my-httpd-image .
-
-    - name: Cache Docker image
-      uses: docker/build-push-action@v2
-      with:
-        context: .
-        push: false
-        cache-from: type=local,src=my-httpd-image
-        cache-to: type=local,dest=my-httpd-image-cache
-
-    - name: Deploy Docker image
-      run: docker push my-httpd-image
+      - name: Build and Run Container
+        run: |
+          docker build -t my-httpd-image .
+          docker run -d -p 80:80 my-httpd-image
