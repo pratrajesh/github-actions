@@ -20,16 +20,18 @@ jobs:
         with:
           username: prathira
           password: dckr_pat_YC40q1ZsK_cLlxe5AXgSQSzKNK4
-      - name: Restore Super-Linter cache
-        uses: actions/cache@v2
-        with:
-          path: /var/lib/docker
-          key: ${{ runner.os }}-docker-Rajesh2
+        
+      
       - name: Pull Super Linter Docker image
         run: docker pull github/super-linter:v4
       - name: Cache Docker image
         uses: actions/cache@v2
         with:
           path: /var/lib/docker
-          key: ${{ runner.os }}-docker-Rajesh2
-          restore-keys: ${{ runner.os }}-docker-Rajesh2
+          key: ${{ runner.os }}-docker-Rajesh3
+          restore-keys: ${{ runner.os }}-docker-Rajesh3
+      - name: Restore Super-Linter cache
+        uses: actions/cache@v2
+        with:
+          path: /var/lib/docker
+          key: ${{ runner.os }}-docker-Rajesh3
