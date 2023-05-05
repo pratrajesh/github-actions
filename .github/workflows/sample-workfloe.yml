@@ -25,6 +25,5 @@ jobs:
           path: /var/lib/docker
           key: ${{ runner.os }}-docker-${{ hashFiles('**/Dockerfile') }}
           restore-keys: ${{ runner.os }}-docker-
-
       - name: Pull Super Linter Docker image
         run: docker pull github/super-linter:v4
