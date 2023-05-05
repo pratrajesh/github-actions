@@ -21,6 +21,8 @@ jobs:
         with:
           username: prathira
           password: dckr_pat_YC40q1ZsK_cLlxe5AXgSQSzKNK4
+      - name: Pull Super Linter Docker image
+        run: docker pull github/super-linter:v4
       - name: Cache Docker image
         if: env.CACHE_CREATED != 'true'
         uses: actions/cache@v2
@@ -28,5 +30,3 @@ jobs:
           path: /var/lib/docker
           key: ${{ runner.os }}-docker-Rajesh
           restore-keys: ${{ runner.os }}-docker-Rajesh
-      - name: Pull Super Linter Docker image
-        run: docker pull github/super-linter:v4
