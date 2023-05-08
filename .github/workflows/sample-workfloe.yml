@@ -20,6 +20,9 @@ jobs:
           key: ${{ runner.os }}-docker-github/super-linter:latest
           restore-keys: |
             ${{ runner.os }}-docker-github/super-linter:
+      - name: List cache directory
+        run: ls -R /tmp/.buildx-cache
+
 
       - name: Pull Docker image
         run: docker pull github/super-linter:latest
