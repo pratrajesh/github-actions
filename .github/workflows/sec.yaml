@@ -18,3 +18,7 @@ jobs:
         key: ${{ runner.os }}-docker-${{ hashFiles('**/Dockerfile') }}
         restore-keys: |
           ${{ runner.os }}-docker-
+    - name: Change permissions of Docker files and directories
+      run: |
+        sudo chown -R $USER /var/lib/docker
+        sudo chmod -R 777 /var/lib/docker
