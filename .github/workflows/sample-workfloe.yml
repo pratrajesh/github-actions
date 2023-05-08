@@ -1,27 +1,34 @@
-name: lint
+name: My Docker Workflow
+
 
 on:
-  push:
   pull_request:
+    branches:
+      - main
 
 jobs:
-  lint:
+  build-java-project:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+        - uses: actions/checkout@v2
 
-      - name: Cache Docker layers
-        uses: actions/cache@v2
-        with:
-          path: /tmp/.buildx-cache
-          key: ${{ runner.os }}-docker-github/super-linter:latest-${{ hashFiles('**/Dockerfile') }}-${{ hashFiles('**/Dockerfile.alpine') }}-${{ hashFiles('**/.dockerignore') }}-${{ hashFiles('**/entrypoint.sh') }}-${{ hashFiles('**/hadolint.yaml') }}-${{ runner.os }}-docker-github/alpine:3.13
-          restore-keys: |
-             ${{ runner.os }}-docker-github/super-linter:latest-
-             ${{ runner.os }}-docker-github/super-linter:
-   
+        - run: mkdir -p ~/linter-cache2
 
+        - id: linter-cache2
+          uses: actions/cache@v1
+          with:
+              path: ~/linter-cache2
+              key: linter-cache2-${{ runner.os }}
 
-      - name: Pull Docker image
-        run: docker pull github/super-linter:latest
+        - if: steps.linter-cache2.outputs.cache-hit != 'true'
+          run: |
+              echo "no cache"
+              docker pull github/super-linter:slim-v5
+              docker save -o ~/linter-cache2/super-linter.tar github/super-linter:slim-v5
+
+        - if: steps.linter-cache2.outputs.cache-hit == 'true'
+          run:  |
+            echo "from cache"
+            docker load -i ~/linter-cache2/super-linter.tar
+            docker images
+            docker run -e RUN_LOCAL=true -e  VALIDATE_OPENAPI=true -v $PWD:/tmp/lint github/super-linter:slim-v5
