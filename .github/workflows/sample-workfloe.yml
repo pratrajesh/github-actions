@@ -17,11 +17,11 @@ jobs:
         uses: actions/cache@v2
         with:
           path: /tmp/.buildx-cache
-          key: ${{ runner.os }}-docker-github/super-linter:latest
+          key: ${{ runner.os }}-docker-github/super-linter:latest-${{ hashFiles('**/Dockerfile') }}-${{ hashFiles('**/Dockerfile.alpine') }}-${{ hashFiles('**/.dockerignore') }}-${{ hashFiles('**/entrypoint.sh') }}-${{ hashFiles('**/hadolint.yaml') }}-${{ runner.os }}-docker-github/alpine:3.13
           restore-keys: |
-            ${{ runner.os }}-docker-github/super-linter:
-      - name: List cache directory
-        run: ls -R /tmp/.buildx-cache
+             ${{ runner.os }}-docker-github/super-linter:latest-
+             ${{ runner.os }}-docker-github/super-linter:
+   
 
 
       - name: Pull Docker image
