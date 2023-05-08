@@ -2,8 +2,7 @@ name: My Docker Workflow
 
 on:
   push:
-    branches:
-      - main
+
 
 jobs:
   build-java-project:
