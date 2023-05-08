@@ -15,9 +15,16 @@ jobs:
       uses: actions/cache@v2
       with:
         path: /var/lib/docker
-        key: ${{ runner.os }}-docker-${{ hashFiles('**/Dockerfile') }}
+        key: ${{ runner.os }}-docker12-${{ hashFiles('**/Dockerfile') }}
         restore-keys: |
-          ${{ runner.os }}-docker-
+          ${{ runner.os }}-docker12-
+      env:
+        CACHE_KEY_LOCK_PATH: /tmp/cache_key.lock
+
+    - name: Post job cleanup
+      run: |
+        flock $CACHE_KEY_LOCK_PATH -c 'docker image prune -f'
+        flock $CACHE_KEY_LOCK_PATH -c 'docker volume prune -f'
     - name: Change permissions of Docker files and directories
       run: |
         sudo chown -R $USER /var/lib/docker
