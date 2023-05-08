@@ -1,32 +1,14 @@
-name: Super Linter
-
+name: Lint OpenAPI Specification
 on:
   push:
-
-      # Add additional branches as needed
 
 jobs:
   lint:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: Pull Super Linter Docker image
-        uses: docker/metadata-action@v3
-        with:
-          images: docker.io/github/super-linter:latest
-        id: docker_metadata
-
-      - name: Run Super Linter
-        uses: docker://github/super-linter:latest
-        with:
-          entrypoint: /usr/bin/runner.sh
-          args: -c .github/linters/.openapirc.yml
-        env:
-          VALIDATE_OPENAPI: true
-          # Add additional environment variables as needed
-
-
-        
+        uses: actions/checkout@v3
+      - name: Install Spectral
+        run: npm install -g @stoplight/spectral
+      - name: Lint OpenAPI Specification
+        run: spectral lint openapi/Enterprise-API-Providers_Practitioner-1-swagger.yaml -r .github/linters/.openapirc.yml
