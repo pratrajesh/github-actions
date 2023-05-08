@@ -22,6 +22,3 @@ jobs:
 
       - name: Pull Docker image
         run: docker pull github/super-linter:latest
-
-      - name: Run Super Linter
-        run: docker run -v $(pwd):/tmp/lint --rm github/super-linter:latest
