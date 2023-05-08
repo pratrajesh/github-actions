@@ -1,20 +1,19 @@
-name: My Docker Workflow1
+name: My Workflow
 
-
-on:
-  push:
-    branches:
-      - main
+on: [push]
 
 jobs:
-  build-java-project1:
+  my_job:
     runs-on: ubuntu-latest
+
     steps:
-        - uses: actions/checkout@v2
+    - name: Pull Docker image
+      run: docker pull github/super-linter:slim-v5
 
-        - run: |
-             docker build -t temp-linter .
-             docker images
-        
-
-        
+    - name: Cache Docker layers
+      uses: actions/cache@v2
+      with:
+        path: /var/lib/docker
+        key: ${{ runner.os }}-docker-${{ hashFiles('**/Dockerfile') }}
+        restore-keys: |
+          ${{ runner.os }}-docker-
