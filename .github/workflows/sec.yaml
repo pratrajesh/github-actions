@@ -19,7 +19,7 @@ jobs:
           push: false
           cache-from: type=registry,ref=github/super-linter:latest
           cache-to: type=inline
-          target: mytarget
+          target: base_image
 
       - name: Run Super-Linter
         run: docker run --rm -v $(pwd):/tmp/lint github/super-linter
