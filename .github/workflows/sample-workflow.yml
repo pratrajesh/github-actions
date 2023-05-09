@@ -9,23 +9,29 @@ jobs:
   build-java-project:
     runs-on: ubuntu-latest
     steps:
-        - uses: actions/checkout@v2
+        - name: checkout code
+          uses: actions/checkout@v2
 
-        - run: mkdir -p ~/linter-cache2
+        - name: create cache folde
+          run: mkdir -p ~/linter-cache2
 
-        - id: linter-cache2
+        - name: cache and restore
+          id: linter-cache2
           uses: actions/cache@v1
           with:
               path: ~/linter-cache2
               key: linter-cache2-${{ runner.os }}
 
-        - if: steps.linter-cache2.outputs.cache-hit != 'true'
+        - name: pulling and linting
+          if: steps.linter-cache2.outputs.cache-hit != 'true'
           run: |
               echo "no cache"
               docker pull github/super-linter:slim-v5
               docker save -o ~/linter-cache2/super-linter.tar github/super-linter:slim-v5
+              docker run -e RUN_LOCAL=true -e  VALIDATE_OPENAPI=true -v $PWD:/tmp/lint github/super-linter:slim-v5
 
-        - if: steps.linter-cache2.outputs.cache-hit == 'true'
+        - name: getting the image from cache and linting
+          if: steps.linter-cache2.outputs.cache-hit == 'true'
           run:  |
             echo "from cache"
             docker load -i ~/linter-cache2/super-linter.tar
