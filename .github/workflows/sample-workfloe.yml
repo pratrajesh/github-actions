@@ -1,14 +1,33 @@
-name: Lint OpenAPI Specification
+name: Super Linter
+
 on:
   push:
 
+
 jobs:
-  lint:
+  super-linter:
+    name: Lint codebase
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-      - name: Install Spectral
-        run: npm install -g @stoplight/spectral
-      - name: Lint OpenAPI Specification
-        run: spectral lint openapi/Enterprise-API-Providers_Practitioner-1-swagger.yaml -r .github/linters/.openapirc.yml
+    - name: Checkout code
+      uses: actions/checkout@v3
+    - name: Set up Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '14'
+    - name: Install dependencies
+      run: npm install
+    - name: Lint code
+      uses: github/super-linter@v4
+      with:
+        # Optional: set a custom configuration file
+        configuration-file: .github/linters/.openapirc.yml
+        # Required: set the list of linters to run
+        # and their configuration (if any)
+        # In this case, we are running the OpenAPI linter
+        # and pointing it to the OpenAPI spec file in the repository
+        linters: |
+          openapi:
+            enabled: true
+            config:
+              openapi_path: openapi/Enterprise-API-Providers_Practitioner-1-swagger.yaml
