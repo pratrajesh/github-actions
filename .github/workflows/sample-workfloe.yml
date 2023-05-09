@@ -3,7 +3,6 @@ name: Super Linter
 on:
   push:
 
-
 jobs:
   super-linter:
     name: Lint codebase
