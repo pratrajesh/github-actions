@@ -11,7 +11,7 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v3
     - name: Cache dependencies
-      if: failure()
+      if: failure() || success()
       uses: actions/cache@v2
       with:
         # A unique key to identify the cache
