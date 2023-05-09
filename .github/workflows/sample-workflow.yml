@@ -28,8 +28,6 @@ jobs:
               echo "no cache"
               docker pull github/super-linter:slim-v5
               docker save -o ~/linter-cache2/super-linter.tar github/super-linter:slim-v5
-              docker run -e RUN_LOCAL=true -e  VALIDATE_OPENAPI=true -v $PWD:/tmp/lint github/super-linter:slim-v5
-
         - name: getting the image from cache and linting
           if: steps.linter-cache2.outputs.cache-hit == 'true'
           run:  |
