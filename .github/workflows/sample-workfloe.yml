@@ -13,23 +13,12 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Cache dependencies
-        uses: actions/cache@v2
-        id: cache-dependencies
+      - name: Login to Docker Hub
+        uses: docker/login-action@v2.1.0
         with:
-          path: |
-            /root/.cache
-            /root/.local/share/Super-Linter
-          key: ${{ runner.os }}
+          username: prathira
+          password: dckr_pat_NC9nyfU_o-9QwRQRud2JDXv3agI
 
       - name: Lint Code Base
-        uses: prathira/super-linter@latest
-        id: lintcode
-        env:
-          VALIDATE_OPENAPI: true
-          DEFAULT_BRANCH: swagger-sync
-          CREATE_LOG_FILE: true
-          LOG_FILE: linter.log
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SUPER_LINTER_USE_CACHE: true
-          SUPER_LINTER_CACHE_PATH: /root/.cache/Super-Linter
+        run: |
+          docker run -e RUN_LOCAL=true -e VALIDATE_OPENAPI=true --rm -v "$(pwd):/tmp/lint" prathira/super-linter:124
