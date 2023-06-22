@@ -23,7 +23,7 @@ jobs:
           key: ${{ runner.os }}
 
       - name: Lint Code Base
-        uses: github/super-linter@v4
+        uses: prathira/super-linter@latest
         id: lintcode
         env:
           VALIDATE_OPENAPI: true
