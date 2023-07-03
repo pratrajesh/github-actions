@@ -21,4 +21,4 @@ jobs:
 
       - name: Lint Code Base
         run: |
-          docker run -e RUN_LOCAL=true -e VALIDATE_OPENAPI=true --rm -v "$(pwd):/tmp/lint" prathira/super-linter:123
+          docker run -e RUN_LOCAL=true -e VALIDATE_OPENAPI=true --rm -v "$(pwd):/tmp/lint" prathira/super-linter:124
