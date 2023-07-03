@@ -27,12 +27,12 @@ jobs:
           if: steps.linter-cache2.outputs.cache-hit != 'true'
           run: |
               echo "no cache"
-              docker pull github/super-linter:slim-v5
-              docker save -o ~/linter-cache2/super-linter.tar github/super-linter:slim-v5
+              docker pull prathira/super-linter:132
+              docker save -o ~/linter-cache2/super-linter.tar prathira/super-linter:132
         - name: getting the image from cache and linting
           if: steps.linter-cache2.outputs.cache-hit == 'true'
           run:  |
             echo "from cache"
             docker load -i ~/linter-cache2/super-linter.tar
             docker images
-            docker run -e RUN_LOCAL=true -e  VALIDATE_OPENAPI=true -v $PWD:/tmp/lint github/super-linter:slim-v5
+            docker run -e RUN_LOCAL=true -e  VALIDATE_OPENAPI=true -v $PWD:/tmp/lint prathira/super-linter:132
