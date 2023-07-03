@@ -34,5 +34,4 @@ jobs:
           run:  |
             echo "from cache"
             docker load -i ~/linter-cache2/super-linter.tar
-            docker images
             docker run -e RUN_LOCAL=true -e  VALIDATE_OPENAPI=true -v $PWD:/tmp/lint prathira/super-linter:132
