@@ -20,7 +20,7 @@ jobs:
           username: prathira
           password: dckr_pat_NC9nyfU_o-9QwRQRud2JDXv3agI
       - name: Lint Code Base
-        uses: docker://prathira/super-linter:150
+        uses: docker://prathira/super-linter:151
         env:
           VALIDATE_ALL_CODEBASE: false
           VALIDATE_OPENAPI: true
