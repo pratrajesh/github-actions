@@ -19,7 +19,14 @@ jobs:
         with:
           username: prathira
           password: dckr_pat_NC9nyfU_o-9QwRQRud2JDXv3agI
-
       - name: Lint Code Base
-        run: |
-          docker run -e RUN_LOCAL=true -e VALIDATE_OPENAPI=true --rm -v "$(pwd):/tmp/lint" prathira/super-linter:149
+        uses: docker://prathira/super-linter:149
+        env:
+          RUN_LOCAL: true
+          VALIDATE_OPENAPI: true
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+
+     # - name: Lint Code Base
+      #  run: |
+       #   docker run -e RUN_LOCAL=true -e VALIDATE_OPENAPI=true --rm -v "$(pwd):/tmp/lint" prathira/super-linter:149
