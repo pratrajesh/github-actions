@@ -22,7 +22,6 @@ jobs:
       - name: Lint Code Base
         uses: docker://prathira/super-linter:151
         env:
-          VALIDATE_ALL_CODEBASE: false
           VALIDATE_OPENAPI: true
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
