@@ -24,6 +24,7 @@ jobs:
         uses: docker://prathira/super-linter:302
         env:
           VALIDATE_OPENAPI: true
+          DEFAULT_BRANCH: swagger-sync
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 
