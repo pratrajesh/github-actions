@@ -1,5 +1,6 @@
 name: SwaggerHub Integration
 
+
 on:
   workflow_dispatch:
   push:
