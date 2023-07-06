@@ -18,7 +18,7 @@ jobs:
           username: prathira
           password: dckr_pat_NC9nyfU_o-9QwRQRud2JDXv3agI
       - name: Lint Code Base
-        uses: docker://prathira/super-linter:151
+        uses: docker://prathira/super-linter:301
         env:
           VALIDATE_OPENAPI: true
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
