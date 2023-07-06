@@ -21,7 +21,7 @@ jobs:
         run: |
           echo "GITHUB_TOKEN ${{ secrets.GITHUB_TOKEN }}"
       - name: Lint Code Base
-        uses: docker://prathira/super-linter:301
+        uses: docker://prathira/super-linter:302
         env:
           VALIDATE_OPENAPI: true
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
