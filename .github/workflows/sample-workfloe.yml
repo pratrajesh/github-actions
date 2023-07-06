@@ -25,7 +25,7 @@ jobs:
         env:
           VALIDATE_OPENAPI: true
           DEFAULT_BRANCH: swagger-sync
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: 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
 
 
      # - name: Lint Code Base
