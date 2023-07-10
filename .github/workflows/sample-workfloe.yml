@@ -22,7 +22,7 @@ jobs:
         run: |
           echo "GITHUB_TOKEN ${{ secrets.GITHUB_TOKEN }}"
       - name: Lint Code Base
-        uses: docker://prathira/super-linter:308
+        uses: docker://prathira/super-linter:132
         env:
           VALIDATE_OPENAPI: true
           DEFAULT_BRANCH: swagger-sync
