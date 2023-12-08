@@ -252,21 +252,12 @@ components:
       - applicationId
       - searchType
       properties:
-        searchType:
-          type: string
-          description: Name of the search type used for applications search
-          default: byApplicationId
         applicationId:
           type: string
     apps-search-request-byVoiceLogId:
       required:
       - searchType
       - telephoneSignatureVoiceLogId
-      properties:
-        searchType:
-          type: string
-          description: Name of the search type used for applications search
-          default: byVoiceLogId
       allOf:
       - $ref: '#/components/schemas/application-voice-log-id-attribute'
     apps-search-request-byOfficialIdentifier:
@@ -274,11 +265,6 @@ components:
       - identifierCode
       - identifierValue
       - searchType
-      properties:
-        searchType:
-          type: string
-          description: Name of the search type used for applications search
-          default: byOfficialIdentifier
       example:
         searchType: byOfficialIdentifier
         identifierCode: MC
@@ -291,11 +277,6 @@ components:
       - identifierType
       - identifierValue
       - searchType
-      properties:
-        searchType:
-          type: string
-          description: Name of the search type used for applications search
-          default: byInternalIdentifier
       example:
         searchType: byInternalIdentifier
         identifierType: MemberCardId
@@ -305,11 +286,6 @@ components:
     apps-search-request-byDemographics:
       required:
       - searchType
-      properties:
-        searchType:
-          type: string
-          description: Name of the search type used for applications search
-          default: byDemographics
       allOf:
       - $ref: '#/components/schemas/apps-search-request-demographic-block'
       - $ref: '#/components/schemas/official-identifier-code-attribute'
@@ -352,11 +328,6 @@ components:
     apps-search-request-ByAgent:
       required:
       - searchType
-      properties:
-        searchType:
-          type: string
-          description: Name of the search type used for applications search
-          default: byAgent
       allOf:
       - $ref: '#/components/schemas/agent-broker-Id-attribute'
       - $ref: '#/components/schemas/agent-broker-name-attribute'
@@ -365,22 +336,12 @@ components:
     apps-search-request-byDateRange:
       required:
       - searchType
-      properties:
-        searchType:
-          type: string
-          description: Name of the search type used for applications search
-          default: byDateRange
       allOf:
       - $ref: '#/components/schemas/application-search-dates'
     apps-search-request-byLineOfBusiness:
       required:
       - lineOfBusiness
       - searchType
-      properties:
-        searchType:
-          type: string
-          description: Name of the search type used for applications search
-          default: byLineOfBusiness
       allOf:
       - $ref: '#/components/schemas/line-of-business-attribute'
       - $ref: '#/components/schemas/application-search-dates'
@@ -388,11 +349,6 @@ components:
       required:
       - applicationType
       - searchType
-      properties:
-        searchType:
-          type: string
-          description: Name of the search type used for applications search
-          default: byApplicationType
       allOf:
       - $ref: '#/components/schemas/application-type-attribute'
       - $ref: '#/components/schemas/application-search-dates'
@@ -401,10 +357,6 @@ components:
       - applicationStatus
       - searchType
       properties:
-        searchType:
-          type: string
-          description: Name of the search type used for applications search
-          default: byApplicationStatus
         applicationStatus:
           type: string
           description: "Status of the application\n* Submitted  : when an application was received with an applicant's signature \n"
@@ -417,11 +369,6 @@ components:
       required:
       - applicationSignatureType
       - searchType
-      properties:
-        searchType:
-          type: string
-          description: Name of the search type used for applications search
-          default: bySignatureType
       allOf:
       - $ref: '#/components/schemas/application-signature-type-attribute'
       - $ref: '#/components/schemas/application-search-dates'
@@ -429,11 +376,6 @@ components:
       required:
       - enrollmentSourceCode
       - searchType
-      properties:
-        searchType:
-          type: string
-          description: Name of the search type used for applications search
-          default: byChannelCode
       allOf:
       - $ref: '#/components/schemas/application-source-code-attribute'
       - $ref: '#/components/schemas/application-search-dates'
@@ -442,10 +384,6 @@ components:
       - enrollmentSourceCode
       - searchType
       properties:
-        searchType:
-          type: string
-          description: Name of the search type used for applications search
-          default: byBrand
         brand:
           type: string
           description: "The company name.  test, CarePlus, ICare"
@@ -455,6 +393,11 @@ components:
       properties:
         filters:
           type: object
+          properties:
+            searchType:
+                type: string
+          discriminator:
+            propertyName: searchType
           oneOf:
           - $ref: '#/components/schemas/apps-search-request-byApplicationId'
           - $ref: '#/components/schemas/apps-search-request-byOfficialIdentifier'
