@@ -135,10 +135,6 @@ paths:
                     agentBrokerId: t2325325
                     agentBrokerName: Danielle Hansen
                     agentBrokerSocialSecurityNumber: "020609519"
-                    applicationSubmittedFromDate: 2023-12-04
-                    applicationSubmittedToDate: 2023-12-04
-                    applicationSignatureFromDate: ""
-                    applicationSignatureToDate: ""
               byLineOfBusiness:
                 summary: byLineOfBusiness
                 description: Applications can be searched by lineOfBusiness with a combination of submitted from and to dates or signature from and to date.
