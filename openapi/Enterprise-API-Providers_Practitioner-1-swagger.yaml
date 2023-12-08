@@ -120,7 +120,7 @@ paths:
                 description: "Applications can be searched by applicationSignatureFromDate and  applicationSignatureToDate. if 'applicationSignatureFromDate' is provided in the request, 'applicationSignatureToDate' is required.\nApplications can be searched by applicationSubmittedFromDate and  applicationSubmittedToDate. If 'applicationSubmittedFromDate' is provided in the request, 'applicationSubmittedToDate' is required. \n"
                 value:
                   filters:
-                    searchType: byDateRange
+                    #searchType: byDateRange
                     applicationSubmittedFromDate: 2023-12-04
                     applicationSubmittedToDate: 2023-12-04
                     applicationSignatureFromDate: 2023-12-04
