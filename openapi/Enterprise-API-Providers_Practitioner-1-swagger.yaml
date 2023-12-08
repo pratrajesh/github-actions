@@ -251,6 +251,10 @@ components:
       required:
       - applicationId
       properties:
+        searchType:
+          type: string
+          enum:
+            - byApplicationId
         applicationId:
           type: string
     apps-search-request-byVoiceLogId:
@@ -383,21 +387,7 @@ components:
             searchType:
                 type: string
                 description: The type of search
-                enum:
-                 - byApplicationId
-                 - byOfficialIdentifier
-                 - byInternalIdentifier
-                 - byDemographics
-                 - byVoiceLogId
-                 - byDateRange
-                 - byAgent
-                 - byLineOfBusiness
-                 - byApplicationType
-                 - byApplicationStatus
-                 - bySignatureType
-                 - byChannelCode
-                 - byBrand
-                discriminator:
+          discriminator:
                   propertyName: searchType    
           oneOf:
               - $ref: '#/components/schemas/apps-search-request-byApplicationId'
