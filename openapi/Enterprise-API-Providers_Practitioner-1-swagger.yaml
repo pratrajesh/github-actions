@@ -160,10 +160,6 @@ paths:
                   filters:
                     searchType: byApplicationStatus
                     applicationStatus: Submitted
-                    applicationSubmittedFromDate: 2023-12-04
-                    applicationSubmittedToDate: 2023-12-04
-                    applicationSignatureFromDate: ""
-                    applicationSignatureToDate: ""
               bySignatureType:
                 summary: bySignatureType
                 description: Applications can be searched by signatureType with a combination of submitted from and to dates or signature from and to date.
