@@ -338,6 +338,11 @@ components:
     apps-search-request-ByAgent:
       required:
         - agentBrokerId
+      properties:
+        searchType:
+          type: string
+          enum:
+            - byAgent
       allOf:
       - $ref: '#/components/schemas/agent-broker-Id-attribute'
       - $ref: '#/components/schemas/agent-broker-name-attribute'
