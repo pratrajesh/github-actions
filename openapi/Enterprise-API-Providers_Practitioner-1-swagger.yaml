@@ -384,46 +384,22 @@ components:
                 type: string
                 description: The type of search
                 enum:
-                - byApplicationId
-                - byOfficialIdentifier
-                - byInternalIdentifier
-                - byDemographics
-                - byVoiceLogId
-                - byDateRange
-                - byAgent
-                - byLineOfBusiness
-                - byApplicationType
-                - byApplicationStatus
-                - bySignatureType
-                - byChannelCode
-                - byBrand
-        byApplicationId:
-           $ref: '#/components/schemas/apps-search-request-byApplicationId'
-        byOfficialIdentifier:
-            $ref: '#/components/schemas/apps-search-request-byOfficialIdentifier'
-        byInternalIdentifier:
-           $ref: '#/components/schemas/apps-search-request-byInternalIdentifier'
-        byDemographics:
-           $ref: '#/components/schemas/apps-search-request-byDemographics'
-        byVoiceLogId:
-            $ref: '#/components/schemas/apps-search-request-byVoiceLogId'
-        byDateRange:
-           $ref: '#/components/schemas/apps-search-request-byDateRange'
-        byAgent:
-            $ref: '#/components/schemas/apps-search-request-ByAgent'
-        byLineOfBusiness:
-           $ref: '#/components/schemas/apps-search-request-byLineOfBusiness'
-        byApplicationType:
-            $ref: '#/components/schemas/apps-search-request-byApplicationType'
-        byApplicationStatus:
-           $ref: '#/components/schemas/apps-search-request-byApplicationStatus'
-        bySignatureType:
-            $ref: '#/components/schemas/apps-search-request-bySignatureType'   
-        byChannelCode:
-           $ref: '#/components/schemas/apps-search-request-byChannelCode'
-        byBrand:
-            $ref: '#/components/schemas/apps-search-request-byBrand'            
-      oneOf:
+                 - byApplicationId
+                 - byOfficialIdentifier
+                 - byInternalIdentifier
+                 - byDemographics
+                 - byVoiceLogId
+                 - byDateRange
+                 - byAgent
+                 - byLineOfBusiness
+                 - byApplicationType
+                 - byApplicationStatus
+                 - bySignatureType
+                 - byChannelCode
+                 - byBrand
+                discriminator:
+                  propertyName: searchType    
+          oneOf:
               - $ref: '#/components/schemas/apps-search-request-byApplicationId'
               - $ref: '#/components/schemas/apps-search-request-byOfficialIdentifier'
               - $ref: '#/components/schemas/apps-search-request-byInternalIdentifier'
