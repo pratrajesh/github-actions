@@ -123,8 +123,8 @@ paths:
                     searchType: byDateRange
                     applicationSubmittedFromDate: 2023-12-04
                     applicationSubmittedToDate: 2023-12-04
-                    applicationSignatureFromDate: ""
-                    applicationSignatureToDate: ""
+                    applicationSignatureFromDate: 2023-12-04
+                    applicationSignatureToDate: 2023-12-04
               byAgent:
                 summary: byAgent
                 description: |
