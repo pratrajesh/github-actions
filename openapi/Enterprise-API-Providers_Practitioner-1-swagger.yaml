@@ -286,6 +286,11 @@ components:
     apps-search-request-byDemographics:
       required:
         - firstName
+      properties:
+        searchType:
+          type: string
+          enum:
+            - byDemographics
       allOf:
       - $ref: '#/components/schemas/apps-search-request-demographic-block'
       - $ref: '#/components/schemas/official-identifier-code-attribute'
