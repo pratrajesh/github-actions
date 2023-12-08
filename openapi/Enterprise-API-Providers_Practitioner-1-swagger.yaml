@@ -397,7 +397,7 @@ components:
                 - bySignatureType
                 - byChannelCode
                 - byBrand
-            oneOf:
+      oneOf:
               - $ref: '#/components/schemas/apps-search-request-byApplicationId'
               - $ref: '#/components/schemas/apps-search-request-byOfficialIdentifier'
               - $ref: '#/components/schemas/apps-search-request-byInternalIdentifier'
