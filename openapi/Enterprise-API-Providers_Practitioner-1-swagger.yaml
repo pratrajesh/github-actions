@@ -397,20 +397,20 @@ components:
                 - bySignatureType
                 - byChannelCode
                 - byBrand
-        oneOf:
-          - $ref: '#/components/schemas/apps-search-request-byApplicationId'
-          - $ref: '#/components/schemas/apps-search-request-byOfficialIdentifier'
-          - $ref: '#/components/schemas/apps-search-request-byInternalIdentifier'
-          - $ref: '#/components/schemas/apps-search-request-byDemographics'
-          - $ref: '#/components/schemas/apps-search-request-ByAgent'
-          - $ref: '#/components/schemas/apps-search-request-byVoiceLogId'
-          - $ref: '#/components/schemas/apps-search-request-byDateRange'
-          - $ref: '#/components/schemas/apps-search-request-byLineOfBusiness'
-          - $ref: '#/components/schemas/apps-search-request-byApplicationType'
-          - $ref: '#/components/schemas/apps-search-request-byApplicationStatus'
-          - $ref: '#/components/schemas/apps-search-request-bySignatureType'
-          - $ref: '#/components/schemas/apps-search-request-byChannelCode'
-          - $ref: '#/components/schemas/apps-search-request-byBrand'
+            oneOf:
+              - $ref: '#/components/schemas/apps-search-request-byApplicationId'
+              - $ref: '#/components/schemas/apps-search-request-byOfficialIdentifier'
+              - $ref: '#/components/schemas/apps-search-request-byInternalIdentifier'
+              - $ref: '#/components/schemas/apps-search-request-byDemographics'
+              - $ref: '#/components/schemas/apps-search-request-ByAgent'
+              - $ref: '#/components/schemas/apps-search-request-byVoiceLogId'
+              - $ref: '#/components/schemas/apps-search-request-byDateRange'
+              - $ref: '#/components/schemas/apps-search-request-byLineOfBusiness'
+              - $ref: '#/components/schemas/apps-search-request-byApplicationType'
+              - $ref: '#/components/schemas/apps-search-request-byApplicationStatus'
+              - $ref: '#/components/schemas/apps-search-request-bySignatureType'
+              - $ref: '#/components/schemas/apps-search-request-byChannelCode'
+              - $ref: '#/components/schemas/apps-search-request-byBrand'
     applications-search-response:
       allOf:
       - $ref: '#/components/schemas/application-search-response'
