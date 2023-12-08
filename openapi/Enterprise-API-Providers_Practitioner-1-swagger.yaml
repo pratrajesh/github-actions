@@ -1,332 +1,2288 @@
 openapi: 3.0.0
 info:
-  version: 1.0.0
-  title: Products - POC
-  description: >
-    A draft API resource model for products proof of concept based on Medicare
-    Products and Plans
+  title: Applications Search API
+  description: "Able to search for an enrollment application and see all the details along with stauts. \n"
+  contact:
+    name: ABC
+    url: https://inspirewellness.sharepoint.com/sites/EnterpriseAPIIntegration2
+    email: TEST_Product_and_Portfolio_Team@test.com
+    x-owner-snow-group-name: Ask the domain team for their SNow group Name
+    x-sre-team-name: Ask the domain team for their SRE team name
+  version: 2.0.0
+  x-api-type: rest
+  x-classification: private
+  x-consumption-domain: internal
+  x-business-capability: enrollment
+  x-resource: consumers
+  x-segment: insurance
+  x-sub-segment: medicare
+  x-architecture-category: enterprise
 servers:
-  # Added by API Auto Mocking Plugin
-  - description: SwaggerHub API Auto Mocking
-    url: https://virtserver.swaggerhub.com/RAJESHP1231234_1/Rajesh/1.0.0
-  - description: SwaggerHub API Auto Mocking
-    url: 'https://virtserver.swaggerhub.com/Enterprise-API/Producs-POC/1.0.0'
-  - url: 'https://api.humana.com/v1'
-    #description: The server URL for v1 APIs
+- url: "https://{serverName}/{apiVersion}/{basePath}"
+  description: The server URL for v2 Applications Search API
+  variables:
+    serverName:
+      description: Name of the server
+      default: dev-hapi-ugw1.test.com
+      enum:
+      - test
+    basePath:
+      description: Base path and folder for the API
+      default: enrollment-search
+    apiVersion:
+      description: API version in URL
+      default: v2
+security:
+- Apikey: []
+- OAuth2:
+  - APPLICATIONS.*.READ
+  - APPLICATIONS.*.WRITE
 paths:
-  /lookups/plan-service-area-codes:
-    get:
+  /applications/search:
+    post:
       tags:
-        - Lookups
-      summary: Searchable list of plan service areas (FIPS code)
+      - Search applications
+      summary: Search submitted enrollment applications and get details
+      description: |
+        Search submitted enrollment applications and get details
+      parameters:
+      - name: offset
+        in: query
+        description: "Optional. This parameter is used to facilitate pagination of available results by providing an offset position to the results list. It can be sent by the consumer to indicate the starting point of the result set for the current call. The offset is a non-negative integer representing the first result to return. If not provided, it defaults the value of 0."
+        schema:
+          type: integer
+        example: 0
+      - name: limit
+        in: query
+        description: "Optional. Default is 50 records. This parameter is used to facilitate pagination by indicating a count of results to return in each page. The query parameter limit should be sent by the consumer to determine the number of results returned in the current call. The limit shall be a non-negative, non-zero integer indicating the maximum number of results to return at one time."
+        schema:
+          type: integer
+        example: 50
+      - name: x-system-name
+        in: header
+        description: Name of the channel or system which will be consuming the API. This name will help identify who made the request and log the request with the sytem name + system's user details.
+        required: false
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: x-user-id
+        in: header
+        description: Id of the user in the consuming channel or system who is making the request. This id help identify who made the request and log the request with the sytem name + system's user details.
+        required: false
+        style: simple
+        explode: false
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/app-search-criteria-schema'
+            examples:
+              byApplicationId:
+                summary: byApplicationId
+                description: Applications can be search by Application Id independently
+                value:
+                  filters:
+                    searchType: byApplicationId
+                    applicationId: Av2325325
+              byOfficialIdentifier:
+                summary: byOfficialIdentifier
+                description: Applications can be search by Medicare or Medicaid Id through official Identifiers block. Code "MC" should be used to search for apllications with "Medicare Id". Code "MA" should be used to search for applications with "Medicaid Id"
+                value:
+                  filters:
+                    searchType: byOfficialIdentifier
+                    identifierCode: MC
+                    identifierValue: v12324
+              byInternalIdentifier:
+                summary: byInternalIdentifier
+                description: Applications can be search by test internal Id like Member Card Id independently. identifierType "MemberCardId" should be used to search for apllications.
+                value:
+                  filters:
+                    searchType: byOfficialIdentifier
+                    identifierType: MemberCardId
+                    identifierValue: H123456
+              byDemographics:
+                summary: byDemographics
+                description: "Applications can be search by demographic information. \nTo search by person's name:  first name, last name, middle name needs to be provided with the combination of DOB or official Identifiers likes Medicaid id or Medicare Id.\nApplications can search by Email address alone.\nApplications can search by Phone number alone.\nApplications can search by DOB alone.\n"
+                value:
+                  filters:
+                    searchType: byOfficialIdentifier
+                    firstName: Joe
+                    lastName: Doe
+                    middleName: D
+                    dateOfBirthDate: 1956-03-03
+                    emailAddress: ""
+                    phoneNumber: ""
+                    state: ""
+                    identifierCode: MC
+                    identifierValue: v12324
+              byVoiceLogId:
+                summary: byVoiceLogId
+                description: Applications can be search by telephone Signature Voice Log Id independently
+                value:
+                  filters:
+                    searchType: byVoiceLogId
+                    applicationTelephoneSignatureVoiceLogId: t2325325
+              byDateRange:
+                summary: byDateRange
+                description: "Applications can be searched by applicationSignatureFromDate and  applicationSignatureToDate. if 'applicationSignatureFromDate' is provided in the request, 'applicationSignatureToDate' is required.\nApplications can be searched by applicationSubmittedFromDate and  applicationSubmittedToDate. If 'applicationSubmittedFromDate' is provided in the request, 'applicationSubmittedToDate' is required. \n"
+                value:
+                  filters:
+                    searchType: byDateRange
+                    applicationSubmittedFromDate: 2023-12-04
+                    applicationSubmittedToDate: 2023-12-04
+                    applicationSignatureFromDate: ""
+                    applicationSignatureToDate: ""
+              byAgent:
+                summary: byAgent
+                description: |
+                  Applications can be searched by agent full name or system assigned number or  SSN with a combination of submitted from and to dates or signature from and to date.
+                value:
+                  filters:
+                    searchType: byAgent
+                    agentBrokerId: t2325325
+                    agentBrokerName: Danielle Hansen
+                    agentBrokerSocialSecurityNumber: "020609519"
+                    applicationSubmittedFromDate: 2023-12-04
+                    applicationSubmittedToDate: 2023-12-04
+                    applicationSignatureFromDate: ""
+                    applicationSignatureToDate: ""
+              byLineOfBusiness:
+                summary: byLineOfBusiness
+                description: Applications can be searched by lineOfBusiness with a combination of submitted from and to dates or signature from and to date.
+                value:
+                  filters:
+                    searchType: byLineOfBusiness
+                    lineOfBusiness: Medicare
+                    applicationSubmittedFromDate: 2023-12-04
+                    applicationSubmittedToDate: 2023-12-04
+                    applicationSignatureFromDate: ""
+                    applicationSignatureToDate: ""
+              byApplicationType:
+                summary: byApplicationType
+                description: "Applications can be searched by applicationType ( MA, MAPD PDP, OSB, CSNP, DSNP, SNP, ISNP, Med Supp, IDV) with a combination of submitted from andto dates or signature from and to date."
+                value:
+                  filters:
+                    searchType: byApplicationType
+                    applicationType: PDP
+                    applicationSubmittedFromDate: 2023-12-04
+                    applicationSubmittedToDate: 2023-12-04
+                    applicationSignatureFromDate: ""
+                    applicationSignatureToDate: ""
+              byApplicationStatus:
+                summary: byApplicationStatus
+                description: Applications can be searched by applicationStatus with a combination of submitted from and to dates or signature from and to date
+                value:
+                  filters:
+                    searchType: byApplicationStatus
+                    applicationStatus: Submitted
+                    applicationSubmittedFromDate: 2023-12-04
+                    applicationSubmittedToDate: 2023-12-04
+                    applicationSignatureFromDate: ""
+                    applicationSignatureToDate: ""
+              bySignatureType:
+                summary: bySignatureType
+                description: Applications can be searched by signatureType with a combination of submitted from and to dates or signature from and to date.
+                value:
+                  filters:
+                    searchType: bySignatureType
+                    applicationSignatureType: WetSignature
+                    applicationSubmittedFromDate: 2023-12-04
+                    applicationSubmittedToDate: 2023-12-04
+                    applicationSignatureFromDate: ""
+                    applicationSignatureToDate: ""
+              byChannelCode:
+                summary: byChannelCode
+                description: Applications can be searched by enrollmentSourceCode with a combination of submitted from and to dates or signature from and to date.
+                value:
+                  filters:
+                    searchType: byChannelCode
+                    applicationEnrollmentSourceCode: CT
+                    applicationSubmittedFromDate: 2023-12-04
+                    applicationSubmittedToDate: 2023-12-04
+                    applicationSignatureFromDate: ""
+                    applicationSignatureToDate: ""
+              byBrand:
+                summary: byBrand
+                description: Applications can be searched by brand with a combination of submitted from and to dates or signature from and to date.
+                value:
+                  filters:
+                    searchType: byBrand
+                    brand: test
+                    applicationSubmittedFromDate: 2023-12-04
+                    applicationSubmittedToDate: 2023-12-04
+                    applicationSignatureFromDate: ""
+                    applicationSignatureToDate: ""
+        required: true
       responses:
-        '200':
-          description: OK
+        "200":
+          description: status
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/lookups-plan-service-area-codes-response'
-        '401':
-          description: Unauthorized access
+                $ref: '#/components/schemas/applications-search-response'
+        "400":
+          description: Bad Request
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/HTTP-401'
-        '404':
+                $ref: '#/components/schemas/400Error'
+        "401":
           description: Resource not found
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/HTTP-404'
-        '500':
+                $ref: '#/components/schemas/404Error'
+        "422":
+          description: Unprocessable entity
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/422Error'
+        "500":
           description: Internal Server Error
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/HTTP-500'
-        '503':
+                $ref: '#/components/schemas/500Error'
+        "503":
           description: Service Unavailable
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/HTTP-503'
+                $ref: '#/components/schemas/503Error'
 components:
   schemas:
-    lookups-plan-service-area-codes-response:
-      allOf:
-        - $ref: '#/components/schemas/lookups-plan-service-area-codes-block'
-    lookups-plan-service-area-codes-block:
+    apps-search-request-byApplicationId:
+      required:
+      - applicationId
+      - searchType
       properties:
-        serviceAreaCodes:
-          type: array
-          description: List of service area codes
-          items:
-            properties:
-              fipsCode:
-                type: string
-                description: Plan FIPS code
-                example: 21111
-              label:
-                type: string
-                description: Human-readable label for the code
-                example: Plan FIPS Code
-              description:
-                type: string
-                description: Plan FIPS Code
-                example: Plan FIPS Code
-              postalCodes:
-                type: string
-                description: List of postal codes applicable to the FIPS code
-                example:
-                  - '22111'
-                  - '11111'
-              state:
-                type: string
-                description: Plan service area state
-                example: KY
-              county:
-                type: string
-                description: Plan service area county
-                example: Jefferson
-    HTTP-401:
-      properties:
-        timestamp:
+        searchType:
           type: string
-          description: An ISO 8601 date/time in UTC indicating when the error occurred
-          example: '2022-02-15T22:14:45.624+0000'
-        status:
-          type: integer
-          description: >-
-            The HTTP status code generated by service for this occurrence of the
-            problem.
-          example: 401
+          description: Name of the search type used for applications search
+          default: byApplicationId
+        applicationId:
+          type: string
+    apps-search-request-byVoiceLogId:
+      required:
+      - searchType
+      - telephoneSignatureVoiceLogId
+      properties:
+        searchType:
+          type: string
+          description: Name of the search type used for applications search
+          default: byVoiceLogId
+      allOf:
+      - $ref: '#/components/schemas/application-voice-log-id-attribute'
+    apps-search-request-byOfficialIdentifier:
+      required:
+      - identifierCode
+      - identifierValue
+      - searchType
+      properties:
+        searchType:
+          type: string
+          description: Name of the search type used for applications search
+          default: byOfficialIdentifier
+      example:
+        searchType: byOfficialIdentifier
+        identifierCode: MC
+        identifierValue: V123255436457
+      allOf:
+      - $ref: '#/components/schemas/official-identifier-code-attribute'
+      - $ref: '#/components/schemas/identifier-value-attribute'
+    apps-search-request-byInternalIdentifier:
+      required:
+      - identifierType
+      - identifierValue
+      - searchType
+      properties:
+        searchType:
+          type: string
+          description: Name of the search type used for applications search
+          default: byInternalIdentifier
+      example:
+        searchType: byInternalIdentifier
+        identifierType: MemberCardId
+        identifierValue: H123456
+      allOf:
+      - $ref: '#/components/schemas/internal-identifier'
+    apps-search-request-byDemographics:
+      required:
+      - searchType
+      properties:
+        searchType:
+          type: string
+          description: Name of the search type used for applications search
+          default: byDemographics
+      allOf:
+      - $ref: '#/components/schemas/apps-search-request-demographic-block'
+      - $ref: '#/components/schemas/official-identifier-code-attribute'
+      - $ref: '#/components/schemas/identifier-value-attribute'
+    apps-search-request-demographic-block:
+      properties:
+        firstName:
+          type: string
+        lastName:
+          type: string
+        middleName:
+          type: string
+        dateOfBirthDate:
+          type: string
+          format: date
+        emailAddress:
+          type: string
+        phoneNumber:
+          type: string
+        state:
+          type: string
+    application-search-dates:
+      properties:
+        applicationSubmittedFromDate:
+          type: string
+          description: The date range from when test receives the application.
+          format: date
+        applicationSubmittedToDate:
+          type: string
+          description: The date range to when test receives the application.
+          format: date
+        applicationSignatureFromDate:
+          type: string
+          description: The date range from when an application was signed by the applicant
+          format: date
+        applicationSignatureToDate:
+          type: string
+          description: The date range to when an application was signed by the applicant
+          format: date
+    apps-search-request-ByAgent:
+      required:
+      - searchType
+      properties:
+        searchType:
+          type: string
+          description: Name of the search type used for applications search
+          default: byAgent
+      allOf:
+      - $ref: '#/components/schemas/agent-broker-Id-attribute'
+      - $ref: '#/components/schemas/agent-broker-name-attribute'
+      - $ref: '#/components/schemas/agent-broker-ssn-attribute'
+      - $ref: '#/components/schemas/application-search-dates'
+    apps-search-request-byDateRange:
+      required:
+      - searchType
+      properties:
+        searchType:
+          type: string
+          description: Name of the search type used for applications search
+          default: byDateRange
+      allOf:
+      - $ref: '#/components/schemas/application-search-dates'
+    apps-search-request-byLineOfBusiness:
+      required:
+      - lineOfBusiness
+      - searchType
+      properties:
+        searchType:
+          type: string
+          description: Name of the search type used for applications search
+          default: byLineOfBusiness
+      allOf:
+      - $ref: '#/components/schemas/line-of-business-attribute'
+      - $ref: '#/components/schemas/application-search-dates'
+    apps-search-request-byApplicationType:
+      required:
+      - applicationType
+      - searchType
+      properties:
+        searchType:
+          type: string
+          description: Name of the search type used for applications search
+          default: byApplicationType
+      allOf:
+      - $ref: '#/components/schemas/application-type-attribute'
+      - $ref: '#/components/schemas/application-search-dates'
+    apps-search-request-byApplicationStatus:
+      required:
+      - applicationStatus
+      - searchType
+      properties:
+        searchType:
+          type: string
+          description: Name of the search type used for applications search
+          default: byApplicationStatus
+        applicationStatus:
+          type: string
+          description: "Status of the application\n* Submitted  : when an application was received with an applicant's signature \n"
+          enum:
+          - Submitted
+          - Completed
+      allOf:
+      - $ref: '#/components/schemas/application-search-dates'
+    apps-search-request-bySignatureType:
+      required:
+      - applicationSignatureType
+      - searchType
+      properties:
+        searchType:
+          type: string
+          description: Name of the search type used for applications search
+          default: bySignatureType
+      allOf:
+      - $ref: '#/components/schemas/application-signature-type-attribute'
+      - $ref: '#/components/schemas/application-search-dates'
+    apps-search-request-byChannelCode:
+      required:
+      - enrollmentSourceCode
+      - searchType
+      properties:
+        searchType:
+          type: string
+          description: Name of the search type used for applications search
+          default: byChannelCode
+      allOf:
+      - $ref: '#/components/schemas/application-source-code-attribute'
+      - $ref: '#/components/schemas/application-search-dates'
+    apps-search-request-byBrand:
+      required:
+      - enrollmentSourceCode
+      - searchType
+      properties:
+        searchType:
+          type: string
+          description: Name of the search type used for applications search
+          default: byBrand
+        brand:
+          type: string
+          description: "The company name.  test, CarePlus, ICare"
+      allOf:
+      - $ref: '#/components/schemas/application-search-dates'
+    app-search-criteria-schema:
+      properties:
+        filters:
+          type: object
+          discriminator:
+            propertyName: pet_type
+          oneOf:
+          - $ref: '#/components/schemas/apps-search-request-byApplicationId'
+          - $ref: '#/components/schemas/apps-search-request-byOfficialIdentifier'
+          - $ref: '#/components/schemas/apps-search-request-byInternalIdentifier'
+          - $ref: '#/components/schemas/apps-search-request-byDemographics'
+          - $ref: '#/components/schemas/apps-search-request-ByAgent'
+          - $ref: '#/components/schemas/apps-search-request-byVoiceLogId'
+          - $ref: '#/components/schemas/apps-search-request-byDateRange'
+          - $ref: '#/components/schemas/apps-search-request-byLineOfBusiness'
+          - $ref: '#/components/schemas/apps-search-request-byApplicationType'
+          - $ref: '#/components/schemas/apps-search-request-byApplicationStatus'
+          - $ref: '#/components/schemas/apps-search-request-bySignatureType'
+          - $ref: '#/components/schemas/apps-search-request-byChannelCode'
+          - $ref: '#/components/schemas/apps-search-request-byBrand'
+    applications-search-response:
+      allOf:
+      - $ref: '#/components/schemas/application-search-response'
+      - $ref: '#/components/schemas/application-search-paginations-response'
+      - $ref: '#/components/schemas/app-search-criteria-schema'
+    application-search-response:
+      properties:
+        applications:
+          type: array
+          items:
+            $ref: '#/components/schemas/applicationsearchresponse_applications'
+    application-search-paginations-response:
+      properties:
+        pagination:
+          $ref: '#/components/schemas/pagination-model'
+        links:
+          type: array
+          description: "Optional. A list of pagination links, if applicable"
+          example:
+          - rel: self
+            href: https://api.test.com/v2/enrollment-search/applications/search?offset=0&limit=50
+          - rel: first
+            href: https://api.test.com/v2/enrollment-search/applications/search?offset=0&limit=50
+          - rel: prev
+            href: https://api.test.com/v2/enrollment-search/applications/search?offset=0&limit=50
+          - rel: next
+            href: https://api.test.com/v2/enrollment-search/applications/search?offset=60&limit=50
+          - rel: last
+            href: https://api.test.com/v2/enrollment-search/applications/search?offset=200&limit=50
+          items:
+            $ref: '#/components/schemas/link-model'
+    "400Error":
+      properties:
+        causes:
+          type: array
+          items:
+            allOf:
+            - $ref: '#/components/schemas/exception-state'
+      allOf:
+      - $ref: '#/components/schemas/exception-state'
+      - type: object
+    exception-state:
+      type: object
+      properties:
         code:
           type: string
           description: A case-insensitive alpha-numeric identifier for the error.
           example: invalid.login
-        path:
+        description:
           type: string
-          description: >-
-            A URI reference that identifies the Enterprise API resource which
-            produced the problem.
-          example: v1/products/12345/plans
-    HTTP-404:
-      properties:
+          description: A human-readable explanation specific to this occurrence of the problem. This should focus on helping the client correct the problem rather than debugging information.
+          example: Sample description for error
         timestamp:
           type: string
           description: An ISO 8601 date/time in UTC indicating when the error occurred
-          example: '2022-02-15T22:14:45.624+0000'
+          example: 2022-02-15T22:14:45.624+0000
         status:
-          type: integer
-          description: >-
-            The HTTP status code generated by service for this occurrence of the
-            problem.
-          example: 404
-        code:
           type: string
-          description: A case-insensitive alpha-numeric identifier for the error.
-          example: resource.not.found
+          description: The HTTP status code generated by service for this occurrence of the problem.
+          example: "401"
         path:
           type: string
-          description: >-
-            A URI reference that identifies the Enterprise API resource which
-            produced the problem.
-          example: v1/products/A1
-    HTTP-422:
+          description: A URI reference that identifies the Enterprise API resource which produced the problem
+          example: v2/current-resource-name/A1
+        traceId:
+          type: string
+          description: a trace identifier which may be used to consult logs and telemetry infrastructure regarding the error
+          example: 1234HH4445
+    "404Error":
       properties:
+        causes:
+          type: array
+          items:
+            allOf:
+            - $ref: '#/components/schemas/exception-state'
+      allOf:
+      - $ref: '#/components/schemas/exception-state'
+      - type: object
+    "422Error":
+      type: object
+      properties:
+        message:
+          type: string
+          description: The error message associated with procesing failure
+          example: Validation Failed
         timestamp:
           type: string
           description: An ISO 8601 date/time in UTC indicating when the error occurred
-          example: '2022-02-15T22:14:45.624+0000'
+          example: 2022-02-15T22:14:45.624+0000
         status:
           type: integer
-          description: >-
-            The HTTP status code generated by service for this occurrence of the
-            problem.
+          description: The HTTP status code generated by service for this occurrence of the problem.
           example: 422
         code:
           type: string
-          description: >-
-            A case-insensitive alpha-numeric identifier for the error. The
-            collection of expected error codes should be documented within the
-            OpenAPI specification.
+          description: A case-insensitive alpha-numeric identifier for the error. The collection of expected error codes should be documented within the OpenAPI specification.
           example: P5ABCD
         path:
           type: string
-          description: >-
-            A URI reference that identifies the Enterprise API resource which
-            produced the problem.
-          example: v1/products/search
-        correlationId:
+          description: A URI reference that identifies the Enterprise API resource which produced the problem.
+          example: v1/resource/12345/sub-resource-name-here
+        description:
           type: string
-          description: >-
-            a trace identifier which may be used to consult logs and telemetry
-            infrastructure regarding the error
+          description: A description of the specific error
+          example: Error XYZ from back-end ABC
+        traceId:
+          type: string
+          description: a trace identifier which may be used to consult logs and telemetry infrastructure regarding the error
           example: 1234HH4445
         causes:
           type: array
           items:
-            properties:
-              timestamp:
-                type: string
-                description: >-
-                  An ISO 8601 date/time in UTC indicating when the error
-                  occurred
-                example: '2022-02-15T22:14:45.624+0000'
-              status:
-                type: integer
-                description: >-
-                  The HTTP status code generated by service for this occurrence
-                  of the problem.
-                example: 422
-              code:
-                type: string
-                description: >-
-                  A case-insensitive alpha-numeric identifier for the error. The
-                  collection of expected error codes should be documented within
-                  the OpenAPI specification.
-                example: P5ABCD
-              path:
-                type: string
-                description: >-
-                  A URI reference that identifies the Enterprise API resource
-                  which produced the problem.
-                example: v1/products/12345/plans
-              correlationId:
-                type: string
-                description: >-
-                  a trace identifier which may be used to consult logs and
-                  telemetry infrastructure regarding the error
-                example: 1234HH4445
-    HTTP-500:
+            allOf:
+            - $ref: '#/components/schemas/exception-state'
+    "500Error":
       properties:
-        timestamp:
-          type: string
-          description: An ISO 8601 date/time in UTC indicating when the error occurred
-          example: '2022-02-15T22:14:45.624+0000'
-        status:
-          type: integer
-          description: >-
-            The HTTP status code generated by service for this occurrence of the
-            problem.
-          example: 500
-        code:
-          type: string
-          description: >-
-            A case-insensitive alpha-numeric identifier for the error. The
-            collection of expected error codes should be documented within the
-            OpenAPI specification.
-          example: AABBCC
-        path:
-          type: string
-          description: >-
-            A URI reference that identifies the Enterprise API resource which
-            produced the problem.
-          example: v1/products/search
-        correlationId:
-          type: string
-          description: >-
-            a trace identifier which may be used to consult logs and telemetry
-            infrastructure regarding the error
-          example: 1234HH4445
         causes:
           type: array
           items:
-            properties:
-              timestamp:
-                type: string
-                description: >-
-                  An ISO 8601 date/time in UTC indicating when the error
-                  occurred
-                example: '2022-02-15T22:14:45.624+0000'
-              status:
-                type: integer
-                description: >-
-                  The HTTP status code generated by service for this occurrence
-                  of the problem.
-                example: 500
-              code:
-                type: string
-                description: >-
-                  A case-insensitive alpha-numeric identifier for the error. The
-                  collection of expected error codes should be documented within
-                  the OpenAPI specification.
-                example: AABBDD
-              path:
-                type: string
-                description: >-
-                  A URI reference that identifies the Enterprise API resource
-                  which produced the problem.
-                example: v1/products/search
-              correlationId:
-                type: string
-                description: >-
-                  a trace identifier which may be used to consult logs and
-                  telemetry infrastructure regarding the error
-                example: 1234HH4445
-    HTTP-503:
+            allOf:
+            - $ref: '#/components/schemas/exception-state'
+      allOf:
+      - $ref: '#/components/schemas/exception-state'
+      - type: object
+    "503Error":
       properties:
-        timestamp:
-          type: string
-          description: An ISO 8601 date/time in UTC indicating when the error occurred
-          example: '2022-02-15T22:14:45.624+0000'
-        status:
-          type: integer
-          description: >-
-            The HTTP status code generated by service for this occurrence of the
-            problem.
-          example: 503
-        code:
-          type: string
-          description: >-
-            A case-insensitive alpha-numeric identifier for the error. The
-            collection of expected error codes should be documented within the
-            OpenAPI specification.
-          example: AABBCC
-        path:
-          type: string
-          description: >-
-            A URI reference that identifies the Enterprise API resource which
-            produced the problem.
-          example: v1/products/12345
-        correlationId:
-          type: string
-          description: >-
-            a trace identifier which may be used to consult logs and telemetry
-            infrastructure regarding the error
-          example: 1234HH4445
         causes:
           type: array
           items:
-            properties:
-              timestamp:
-                type: string
-                description: >-
-                  An ISO 8601 date/time in UTC indicating when the error
-                  occurred
-                example: '2022-02-15T22:14:45.624+0000'
-              status:
-                type: integer
-                description: >-
-                  The HTTP status code generated by service for this occurrence
-                  of the problem.
-                example: 503
-              code:
-                type: string
-                description: >-
-                  A case-insensitive alpha-numeric identifier for the error. The
-                  collection of expected error codes should be documented within
-                  the OpenAPI specification.
-                example: AABBDD
-              path:
-                type: string
-                description: >-
-                  A URI reference that identifies the Enterprise API resource
-                  which produced the problem.
-                example: v1/products/12345
-              correlationId:
-                type: string
-                description: >-
-                  a trace identifier which may be used to consult logs and
-                  telemetry infrastructure regarding the error
-                example: 1234HH4445
+            allOf:
+            - $ref: '#/components/schemas/exception-state'
+      allOf:
+      - $ref: '#/components/schemas/exception-state'
+      - type: object
+    application-voice-log-id-attribute:
+      properties:
+        applicationTelephoneSignatureVoiceLogId:
+          type: string
+          description: Telephone Signature VoiceLog Id is available after Telephone Signature process is completed. It is the recording id from a vendor
+    official-identifier-code-attribute:
+      properties:
+        identifierCode:
+          type: string
+          description: "Identifier code of the applicant, based on the lookup (https://terminology.hl7.org/4.0.0/CodeSystem-v2-0203.html#v2-0203-MR):\n * `MC` - Medicare Id\n * `MA` - Medicaid Id\n * `SS` - Social Security number\n * `MCN` - Medicaid Case Number \n    Medicaid Case Number ties a family or household together\n \n"
+          example: MC
+          enum:
+          - MC
+          - MA
+          - SS
+          - MCN
+    identifier-value-attribute:
+      properties:
+        identifierValue:
+          type: string
+          description: Value of the identifier
+    internal-identifier:
+      properties:
+        identifierType:
+          type: string
+          description: "Name of the identifier\n* MemberCardId - This is the number which is on the insurance Card. Also called as HNumber , Member Card Id, Member Id\n* Enterprise Member Id - Unique identifier for a person after being mastered. \n"
+          enum:
+          - MemberCardId
+          - EnterpriseMemberId
+      allOf:
+      - $ref: '#/components/schemas/identifier-value-attribute'
+    agent-broker-Id-attribute:
+      properties:
+        agentBrokerId:
+          type: string
+          description: System assigned number of an agent or a broker
+          example: "1129696"
+    agent-broker-name-attribute:
+      properties:
+        agentBrokerName:
+          type: string
+          description: Name of an agent or a broker
+          example: Danielle Hansen
+    agent-broker-ssn-attribute:
+      properties:
+        agentBrokerSocialSecurityNumber:
+          type: string
+          description: Social secuirty number of an agent or a broker
+          example: "020609519"
+    line-of-business-attribute:
+      properties:
+        lineOfBusiness:
+          type: string
+          description: Line of business of the plan.
+          example: Medicare
+          enum:
+          - Commercial
+          - Medicare
+          - Medicaid
+          - testOne
+    application-type-attribute:
+      properties:
+        applicationType:
+          type: string
+          description: "Product type of the application. Type of application which was submitted. MA, MAPD PDP, OSB, CSNP, DSNP, SNP, ISNP, Med Supp, IDV"
+          example: PDP
+    application-signature-type-attribute:
+      properties:
+        applicationSignatureType:
+          type: string
+          description: "The method that was used to sign the application\n\n* WetSignature : Wet Signature  - Signature filled on the physical application received through mail or fax which triggered through a process from an internal systems that allowed an agent to search and submit demographics electronically for a prospect to receive a physical application, which then filled and mailed back.\n* ElectronicSignature : Electronic Signature -  Electronically signed, The application is filled by an agent but signed by a consumer with a process of receiving an email link to provide their signature.\n* DigitalSignature: Digital Signature - Agent have the applicant sign through Laptop or tablet digitally ( with a finger or mouse or electronic pen) prior to summitting the application. \n* TelephonicSignature: T-Sig - Process where agent will dial a 3rd party number to record the flow of applicant providing signature. A Voice Log Id is generated by the 3rd party of the  recording. \n* Unsigned - No Signature \n* InteractiveVoiceResponseSignature: IVrT-Signature - Signature captured by telephone which is triggered by an agent but the agent is not present on the phone line. \n* ShortMessageServiceSignature :  SMS signature - Signature captured electronically with a  process triggered by the agent. The process where applicant receives a SMS with a link to provide signature to their mobile devices.  \n"
+          enum:
+          - WetSignature
+          - ElectronicSignature
+          - DigitalSignature
+          - TelephonicSignature
+          - Unsigned
+          - InteractiveVoiceResponseSignature
+          - ShortMessageServiceSignature
+    application-source-code-attribute:
+      properties:
+        applicationEnrollmentSourceCode:
+          type: string
+          description: "Application enrollment source system(Channel). A sales entity used a particular route/connection to send applications to test.\n\nE1 and E7 are deprecated but applications can be search by these channels for legacy data\n\n* CT - Consumer TSR\n* DA - Digital API - Enrollment\n* DM - Digital Sales Material\n* DV - VIPR-D2C\n* E0 - Delegated Agent D2C\n* E1 - MAPA \n* E2 - FastApp Delegated Agent\n* E3 - FastApp TSR\n* E4 - D2C- Direct to Consumer\n* E5 - Delegated Agent (Med Sup only)\n* E6 - FastApp Delegated TSR\n* E7 - MAPA\n* E8 - Careplus\n* E9 - Abbreviated Enrollment Form\n* EC - D2C Click2Chat\n* ED - Delegated AEF\n* EM - Captive AEF\n* EN - Autoamted Full IVR\n* EW - Web AEF\n* MS - MedSupp EDI\n* OC - VIPR-Omni\n* PA - Acs Medsupp app\n* Q1 - EH 1.0 Captive\n* Q7 - EH 1.0 Delegated\n* S1 - EH 2.0 Captive\n* S7 - EH 2.0 Delegated\n* VP - VIPR Pro\n"
+          example: CT
+    consumers-block:
+      properties:
+        consumers:
+          type: object
+          allOf:
+          - $ref: '#/components/schemas/consumers-demographics-with-additional-demographics-attributes'
+          - $ref: '#/components/schemas/consumers-biometrics-block'
+          - $ref: '#/components/schemas/official-identifiers'
+          - $ref: '#/components/schemas/internal-identifiers'
+          - $ref: '#/components/schemas/consumers-contact-information-block'
+          - $ref: '#/components/schemas/consumers-external-contracts-block'
+          - $ref: '#/components/schemas/consumers-designees-block'
+          - $ref: '#/components/schemas/insurances-block'
+          - $ref: '#/components/schemas/plans-non-medicaid-block'
+          - $ref: '#/components/schemas/optional-supplemental-benefits-block'
+          - $ref: '#/components/schemas/consumers-other-coverages-block'
+          - $ref: '#/components/schemas/consumers-providers-block'
+          - $ref: '#/components/schemas/consumers-payments-block'
+          - $ref: '#/components/schemas/communication-preferences-block'
+          - $ref: '#/components/schemas/consumers-conditions-block'
+          - $ref: '#/components/schemas/consumers-chronic-conditions-block'
+          - $ref: '#/components/schemas/long-term-care-block'
+    consumers-demographics-with-additional-demographics-attributes:
+      properties:
+        additionalDemographics:
+          type: object
+          allOf:
+          - $ref: '#/components/schemas/additional-demographics-block'
+          - $ref: '#/components/schemas/veteran-status-attribute'
+      allOf:
+      - $ref: '#/components/schemas/demographics-block'
+      - $ref: '#/components/schemas/deceased-date-attribute'
+    demographics-block:
+      allOf:
+      - $ref: '#/components/schemas/name-block'
+      - $ref: '#/components/schemas/date-of-birth-attribute'
+      - $ref: '#/components/schemas/sex-attribute'
+      - $ref: '#/components/schemas/age-attribute'
+    name-block:
+      properties:
+        prefix:
+          type: string
+          description: "MR     Mister\nMS     Miss\nDR     Doctor\nMRS    Missus\nREV    Reverend\nSR     Sister\nADM    Admiral\nCAPT   Captain\nCOL    Colonel\nCPL    Corporal\nHON    Honorable\nMAJ    Major\nPROF   Professor\nSGT    Sergeant\nPRV    Private\nSPC    Specialist\nCOR    Corporal\nSRG    Sergeant\nWRO    Warrant Officer\nLNT    Lieutenant\nCAP    Captain\nGEN    General\nAIR    Airman\nCMC    Commandant of the Marine Corps\nSEA    Seaman \nPOF    Petty Officer \nENS    Ensign\nCOM    Commander\nCNO    Chief of Naval Operations\nCCG    Commandant of the Coast Guard\n"
+          enum:
+          - MR
+          - MS
+          - DR
+          - MRS
+          - REV
+          - SR
+          - ADM
+          - CAPT
+          - COL
+          - CPL
+          - HON
+          - MAJ
+          - PROF
+          - SGT
+          - PRV
+          - SPC
+          - COR
+          - SRG
+          - WRO
+          - LNT
+          - CAP
+          - GEN
+          - AIR
+          - CMC
+          - SEA
+          - POF
+          - ENS
+          - COM
+          - CNO
+          - CCG
+        firstName:
+          type: string
+          description: First name of the person
+          example: John
+        middleName:
+          type: string
+          description: Middle Name of the person
+          example: Will
+        middleInitial:
+          type: string
+          description: MiddleName Initial of the person
+          example: W
+        lastName:
+          type: string
+          description: Last name of the person
+          example: Smith
+        suffix:
+          type: string
+          description: |
+            A naming tradition that follows a person's name and provides additional information about the person
+            I      First
+            II    Second
+            III    Third
+            IV    Fourth
+            V      Fifth
+            VI    Sixth
+            VII    Seventh
+            AAH    Associate in Allied Health
+            ARNP  Advanced Registered Nurse Practitioner
+            BA    Bachelor of Arts
+            BS    Bachelor of Science
+            BSN    Bachelor of Science in Nursing
+            CCM    Certified Case Manager
+            CD    Clinical Dietitian
+            CLU    Certified Life Underwriter
+            CM    Certified Midwife
+            CNA    Certified Nursing Assistant\
+            CNM    Certified Nurse Midwife
+            CNS    Clinical Nurse Specialist
+            COTA  Certified Occupational Therapy Assistant
+            CPA    Certified Public Accountant
+            CRTT  Certified Respiratory Therapy Technician
+            DDS    Doctor of Dental Surgery
+            DMD    Doctor of Dental Medicine
+            DO    Doctor of Osteopathy
+            DPM    Doctor of Podiatric Medicine
+            DVM    Doctor of Veterinary Medicine
+            EMT    Emergency Medical Technician
+            JR    Junior
+            LAC    Licensed Acupuncturist
+            LPN    Licensed Practical Nurse
+            MD    Medical Doctor
+            OD    Doctor of Optometry
+            PHD    Doctor of Philosophy
+            RD    Registered Dietitian
+            RN    Registered Nurse
+          enum:
+          - I
+          - II
+          - III
+          - IV
+          - V
+          - VI
+          - VII
+          - AAH
+          - ARNP
+          - BA
+          - BS
+          - BSN
+          - CCM
+          - CD
+          - CLU
+          - CM
+          - CNA
+          - CNM
+          - CNS
+          - COTA
+          - CPA
+          - CRTT
+          - DDS
+          - DMD
+          - DO
+          - DPM
+          - DVM
+          - EMT
+          - JR
+          - LAC
+          - LPN
+          - MD
+          - OD
+          - PhD
+          - RD
+          - RN
+          - SR
+    date-of-birth-attribute:
+      properties:
+        dateOfBirthDate:
+          type: string
+          description: Date of birth of the person in YYYY-MM-DD ISO-8601 format
+          format: date
+          example: 1970-12-12
+    sex-attribute:
+      properties:
+        sex:
+          type: string
+          description: |
+            A bio-physiological trait that classifies a person as male, female, or unknown on the basis of their reproductive organs and internal structures. Attribute codes alinged with HL7
+
+            * M : Male
+            * F : Female
+            * U : Unknown
+            * O : Others
+          enum:
+          - M
+          - F
+          - U
+          - O
+    age-attribute:
+      properties:
+        age:
+          type: integer
+          description: The length of time that a person has lived or a thing has existed.
+          example: 52
+    deceased-date-attribute:
+      properties:
+        deceasedDate:
+          type: string
+          description: "Date of death of the applicant in YYYY-MM-DD ISO-8601 format. If Date value is not available for this particular field, remove the attribute from the payload."
+          format: date
+          example: 2023-06-30
+    additional-demographics-block:
+      allOf:
+      - $ref: '#/components/schemas/marital-status-attribute'
+      - $ref: '#/components/schemas/ethnicities-attribute'
+      - $ref: '#/components/schemas/races-attribute'
+      - $ref: '#/components/schemas/homeless-indicator'
+    marital-status-attribute:
+      properties:
+        maritalStatus:
+          type: string
+          description: "Marital status of the person. Attribute codes alinged with HL7 \n\n  * M - Married\n  * D - Divorced\n  * W - Widowed\n  * S - Single or Never Married\n"
+          example: M
+          enum:
+          - M
+          - D
+          - W
+          - S
+    ethnicities-attribute:
+      properties:
+        ethnicities:
+          type: array
+          description: "Ethnicity of the person\nL  : Hispanic or Latino,  also represent  \"Another Hispanic, Latino/a, Or Spanish Origin\" \nN  : Not Hispanic or Latino also represent \"Not Of Hispanic, Latino/a, Or Spanish Origin\"\nI  : I Choose Not To Answer\nP  : Puerto Rican  ( will be deprecated in the future)\nC  : Cuban ( will be deprecated in the future)\nM  : Mexican, Mexican, American, Or Chicano ( will be deprecated in the future)\n"
+          example:
+          - L
+          items:
+            type: string
+            enum:
+            - C
+            - I
+            - L
+            - "N"
+            - M
+            - P
+    races-attribute:
+      properties:
+        races:
+          type: array
+          description: "Race of the person. Code value should be provided from https://fhir-ru.github.io/v3/Race/vs.html, if a person selects \" I choose not to answer\" then send '0'."
+          example:
+          - 1002-5
+          - 1004-1
+          items:
+            type: string
+    homeless-indicator:
+      properties:
+        isHomeless:
+          type: boolean
+          description: Indicator to identify if the member is homeless or not
+          example: false
+          default: false
+    veteran-status-attribute:
+      properties:
+        veteranStatus:
+          type: string
+          description: If the person  or someone in person's household who served in the military
+          example: Self
+          enum:
+          - Self
+          - Spouse
+          - Dependent
+          - IAmNotAVeteran
+          - PrefersNotToAnswer
+    consumers-biometrics-block:
+      properties:
+        biometrics:
+          type: object
+          allOf:
+          - $ref: '#/components/schemas/height-attribute'
+          - $ref: '#/components/schemas/weight-attribute'
+    height-attribute:
+      properties:
+        height:
+          type: number
+          description: Height of the person in inches
+          format: double
+          example: 62
+    weight-attribute:
+      properties:
+        weight:
+          type: number
+          description: Weight of the person in pounds
+          format: double
+          example: 120
+    official-identifiers:
+      properties:
+        officialIdentifiers:
+          type: array
+          description: List of identifiers which are not generated by test's systems.
+          items:
+            $ref: '#/components/schemas/official-identifier-block'
+    official-identifier-block:
+      allOf:
+      - $ref: '#/components/schemas/official-identifier-code-block'
+      - $ref: '#/components/schemas/official-identifier-entry-block'
+    official-identifier-code-block:
+      allOf:
+      - $ref: '#/components/schemas/official-identifier-code-attribute'
+      - $ref: '#/components/schemas/official-identifier-code-definition-attribute'
+    official-identifier-code-definition-attribute:
+      properties:
+        identifierDefinition:
+          type: string
+          description: Definition of the code property
+          example: Medicare Id
+    official-identifier-entry-block:
+      properties:
+        identifierIssuingAuthority:
+          type: string
+          description: Issuing authority for the identifier for the applicant
+          example: Kentucky Medicaid
+      allOf:
+      - $ref: '#/components/schemas/identifier-value-attribute'
+    internal-identifiers:
+      properties:
+        internalIdentifiers:
+          type: array
+          description: List of internal consumer identifiers to test. Identifiers are generated by and unique to only test systems.
+          items:
+            $ref: '#/components/schemas/internal-identifier'
+    consumers-contact-information-block:
+      properties:
+        contactInformation:
+          type: object
+          allOf:
+          - $ref: '#/components/schemas/email-addresses-block'
+          - $ref: '#/components/schemas/phone-numbers-block'
+          - $ref: '#/components/schemas/consumers-postal-addresses-block'
+    email-addresses-block:
+      properties:
+        emailAddresses:
+          type: array
+          items:
+            $ref: '#/components/schemas/email-address-block'
+    email-address-block:
+      properties:
+        emailAddressType:
+          type: string
+          description: Type of the email address of the person
+          example: Personal
+          default: Personal
+          enum:
+          - Personal
+          - Work
+          - Alternate
+      allOf:
+      - $ref: '#/components/schemas/email-address-attribute'
+    email-address-attribute:
+      properties:
+        emailAddress:
+          type: string
+          description: "Email address of the person. Email address must include an @( at symbol), a . ( period symbol) and alphanumeric character."
+          example: myemail@gmail.com
+    phone-numbers-block:
+      properties:
+        phoneNumbers:
+          type: array
+          items:
+            $ref: '#/components/schemas/phoneNumber-block'
+    phoneNumber-block:
+      properties:
+        phoneNumberType:
+          type: string
+          description: Type of the phone number
+          enum:
+          - Home
+          - Work
+          - Mobile
+          - Other
+        phoneNumber:
+          pattern: "^\\d{3}-\\d{3}-\\d{4}"
+          type: string
+          description: Phone number of the person. Phone Number should be a twelve (12) character alphanumeric field that can support dashes in the following format XXX-XXX-XXXX.
+          example: 111-222-3333
+        phoneNumberExtension:
+          type: string
+          description: Phone number extension.
+    consumers-postal-addresses-block:
+      properties:
+        isResidenceAddressSameAsMailing:
+          type: boolean
+          description: Indicates whether the applicant residence address is same as mailing
+          example: true
+        postalAddresses:
+          type: array
+          items:
+            allOf:
+            - $ref: '#/components/schemas/postal-address-type'
+            - $ref: '#/components/schemas/postal-address-with-effectiveDate'
+    postal-address-type:
+      properties:
+        addressType:
+          type: string
+          description: "Type of the address\n* Mailing :  Refers to a place where mail should be sent \n* Residence : Refers to a place where the residents know the person. \n* Billing :  Refers to a place where where bills should be sent\n* Work : Refers to a work address specific to the person.\n* Vacation : \n* Servicing : Represents Physical Medical Office or Provider\n* MailOrder : Represents Virtual Medical Office or Provider\n"
+          enum:
+          - Mailing
+          - Residence
+          - Billing
+          - Work
+          - Vacation
+          - Servicing
+          - MailOrder
+    postal-address-with-effectiveDate:
+      properties:
+        effectiveDate:
+          type: string
+          description: The date that the location became effective
+          format: date
+          example: 1989-09-09
+      allOf:
+      - $ref: '#/components/schemas/postal-address-type'
+      - $ref: '#/components/schemas/postal-address'
+    postal-address:
+      properties:
+        addressLine1:
+          type: string
+          description: The Street name and number of the location
+          example: 123 Main Street
+        addressLine2:
+          type: string
+          description: The Unit or Apartment number of the location
+          example: Apartment 5A
+        addressLine3:
+          type: string
+          description: Address Line 3 of the location
+          example: Building 1
+        addressLine4:
+          type: string
+          description: Address Line 4 of the location
+        city:
+          type: string
+          description: The city of the location
+          example: Louisville
+        county:
+          type: string
+          description: The county of the location
+          example: Jefferson
+        countyCode:
+          type: string
+          description: The county code of the location
+          example: "111"
+        stateOrProvince:
+          pattern: "^[A-Z]{2}"
+          type: string
+          description: The state of the location. Use officially assinged ISO 3166-2 codes in upper case.
+          example: KY
+        postalCode:
+          type: string
+          description: The zip code of the location. Should be 5 numberic value. Zip Plus should be provided separately in another attribute.
+          example: "12345"
+        postalCodePlus:
+          type: string
+          description: The zip plus of the location
+          example: "0727"
+        countryCode:
+          pattern: "[A-Z]{3}"
+          type: string
+          description: The country of the location. Use officially assigned ISO 3166-1 alpha-3 codes in upper case
+          example: USA
+          default: USA
+    consumers-external-contracts-block:
+      properties:
+        externalContacts:
+          type: array
+          description: Array of contacts where Emergency contacts and more contacts can be provided.
+          items:
+            $ref: '#/components/schemas/consumersexternalcontractsblock_externalContacts'
+    postal-address-with-type:
+      allOf:
+      - $ref: '#/components/schemas/postal-address-type'
+      - $ref: '#/components/schemas/postal-address'
+    consumers-designees-block:
+      properties:
+        designees:
+          type: array
+          description: "Array of individual or organizations selected to carry out a specific role. \nFirstName, LastName, designeeType, relationshipType are required for all designeeRoles\nPowerOfAttorneyType is required when designeeRole is \"PowerOfAttorney\"\nDateOfBirthDate,startDate, signedBy, signedDate, consentSource  are required when designeeRole is \"CareGiver\" \n"
+          example:
+          - designeeRole: CareGiver
+            designeeType: Person
+            relationshipType: Spouse
+            firstName: Rita
+            lastName: Call
+            dateOfBirthDate: 1971-12-13
+            phoneNumbers:
+            - phoneNumberType: Home
+              phoneNumber: 455-434-5543
+              phoneNumberExtension: ""
+            emailAddresses:
+            - emailAddressType: Personal
+              emailAddress: ritacall@test.com
+            postalAddresses:
+            - addressType: Mailing
+              addressLine1: 123 Main Street
+              addressLine2: Apartment 5A
+              addressLine3: Building 1
+              addressLine4: ""
+              city: Louisville
+              county: Jefferson
+              countyCode: "111"
+              stateOrProvince: KY
+              postalCode: "12345"
+              postalCodePlus: "0727"
+              countryCode: USA
+            consents:
+            - consentPeriod:
+                startDate: 2023-10-15
+              consentDisclosureType: FullDisclosure
+              consentSignature:
+                signedBy: Member
+                signedDate: 2023-10-15
+              consentSource: Electronic
+          - designeeRole: CareGiver
+            designeeType: Organization
+            organizationName: AK Limited LLC
+            relationshipType: Organization
+            firstName: Betty
+            lastName: Vaughn
+            dateOfBirthDate: 1978-12-13
+            phoneNumbers:
+            - phoneNumberType: Other
+              phoneNumber: 999-088-5656
+              phoneNumberExtension: ""
+            emailAddresses:
+            - emailAddressType: Work
+              emailAddress: bettyvaughn@AKLimited.com
+            postalAddresses:
+            - addressType: Mailing
+              addressLine1: 666 Main Street
+              addressLine2: Floor 5
+              addressLine3: Unit 1
+              addressLine4: ""
+              city: Louisville
+              county: Jefferson
+              countyCode: "111"
+              stateOrProvince: KY
+              postalCode: "12345"
+              postalCodePlus: "0727"
+              countryCode: USA
+            consents:
+            - consentPeriod:
+                startDate: 2023-10-15
+                endDate: 2023-12-31
+              consentDisclosureType: LimitedDisclosure
+              limitedDisclosureStatement: Dr. Vaughn has access to discuss only about heart conditions
+              limitedDisclosureProductType:
+              - Dental
+              consentSignature:
+                signedBy: Member
+                signedDate: 2023-10-15
+              consentSource: Electronic
+          - designeeRole: PowerOfAttorney
+            designeeType: Person
+            relationshipType: Spouse
+            firstName: Rita
+            lastName: Call
+            dateOfBirthDate: 1971-12-13
+            powerOfAttorneyType: H
+            phoneNumbers:
+            - phoneNumberType: Home
+              phoneNumber: 455-434-5543
+              phoneNumberExtension: ""
+            emailAddresses:
+            - emailAddressType: Personal
+              emailAddress: ritacall@test.com
+            postalAddresses:
+            - addressType: Mailing
+              addressLine1: 123 Main Street
+              addressLine2: Apartment 5A
+              addressLine3: Building 1
+              addressLine4: ""
+              city: Louisville
+              county: Jefferson
+              countyCode: "111"
+              stateOrProvince: KY
+              postalCode: "12345"
+              postalCodePlus: "0727"
+              countryCode: USA
+          items:
+            allOf:
+            - $ref: '#/components/schemas/designee-POA-block'
+            - $ref: '#/components/schemas/designee-caregiver-block'
+    designee-POA-block:
+      allOf:
+      - $ref: '#/components/schemas/designee-core-attributes-block'
+      - $ref: '#/components/schemas/power-of-attorney-type-attribute'
+    designee-core-attributes-block:
+      required:
+      - firstName
+      - lastName
+      properties:
+        postalAddresses:
+          type: array
+          items:
+            $ref: '#/components/schemas/postal-address-with-type'
+      allOf:
+      - $ref: '#/components/schemas/designee-core-attributes'
+      - $ref: '#/components/schemas/name-block'
+      - $ref: '#/components/schemas/date-of-birth-attribute'
+      - $ref: '#/components/schemas/phone-numbers-block'
+      - $ref: '#/components/schemas/email-addresses-block'
+    designee-core-attributes:
+      properties:
+        designeeRole:
+          type: string
+          description: "The role and the description of the desingee. Role should be used as the value.\nRole                        : Description of the role\nAppointmentOfRepresentative : AOR - Appointment of Representative  \nCareGiver                   : Consent for PHI\nPowerOfAttorney             : Power Of Attorney\nGuardian                    : Medicaid Guardian\nLegalGuardian               : Legal Guardian\nChildSupportOrder           : Medical Child Support Order\nExecutorOfEstate            : Executor Of Estate\n"
+        designeeType:
+          type: string
+          description: "Type of a deignee , a Person or an Organization. The information is disclosed to an individual or an organization."
+          enum:
+          - Person
+          - Organization
+        organizationName:
+          type: string
+          description: |
+            Name of an organization
+            A designee can be appointed within an organization, there could be different designees from the same organization.
+        relationshipType:
+          type: string
+          description: |
+            Relationship to the applicant who has access to different information
+            - Spouse
+            - Sibling
+            - Parent
+            - Child
+            - Agent Broker
+            - Friend
+            - Organization
+    power-of-attorney-type-attribute:
+      properties:
+        powerOfAttorneyType:
+          type: string
+          description: "The authority the POA has. Type of requests a POA can make for the person.\n* H - `Health` - POA Can request all updates for a member\n* O - `Other` - POA can only request demographic changes\n* U - `Unknown` \n* C - `Court Order Document`\n"
+          example: H
+          enum:
+          - H
+          - O
+          - U
+          - C
+    designee-caregiver-block:
+      allOf:
+      - $ref: '#/components/schemas/designee-core-attributes-block'
+      - $ref: '#/components/schemas/designee-consents-attributes'
+    designee-consents-attributes:
+      properties:
+        consents:
+          type: array
+          items:
+            required:
+            - consentDisclosureType
+            allOf:
+            - $ref: '#/components/schemas/consents-attributs-block'
+    consents-attributs-block:
+      properties:
+        consentDates:
+          type: object
+          description: Start date of the consent when this be valid from and End date of the consent when this is valid till.
+          allOf:
+          - $ref: '#/components/schemas/start-end-dates-block'
+        consentDisclosureType:
+          type: string
+          description: |
+            Full Disclosure: Any protected health information test and its affiliates maintains, including mental health, HIV, health status or substance use or disorder records. This also includes sharing information on mail-order pharmacy, wellness products, and health programs with the person being authorized.
+            Limited Disclosure: You specify what PHI to share, e.g., condition or treatment information, a specific date range, or product type. Unless you limit by product type, information will apply to all products and services
+          enum:
+          - FullDisclosure
+          - LimitedDisclosure
+        limitedDisclosureStatement:
+          type: string
+          description: Ability to provide more details for limited Disclosure
+          example: Dr. Ross has access to discuss only about heart conditions
+        limitedDisclosureProductType:
+          type: array
+          description: |
+            If Limited Disclosure was selected in the disclosureType attribute then which product or products should it apply to
+            - Medical AndOr Prescription Coverage
+              - Vision
+              - Dental
+              - Centerwell Pharmacy
+              - Go365
+              - Other
+          items:
+            type: string
+        consentSignature:
+          type: object
+          description: "Consent signedBy will have 2 options Member or LegalRepresentative. one of the value should be passed.  \nsignedDate is when the consent was signed in YYYY-MM-DD ISO-8601 format\n"
+          allOf:
+          - $ref: '#/components/schemas/signature-signed-by-attribute'
+          - $ref: '#/components/schemas/signature-signed-date-attribute'
+        consentSource:
+          type: string
+          description: "Source location where the consent was provided\n- Electronic\n- Email\n- Fax\n- FastApp_TSig\n- FastApp_DSig\n- MAPA\n- Onsite_Face_To_Face_Paper\n- Paper\n- Phone\n- Spec_DSig \n- Telephonic_Clinical_Ops\n- Telephonic_HPSA\n- Telephonic_Telephonic_HPSA\n- Telephonic_Health_Services_Org_HSO\n- Telephonic_test_at_Home\n- Telephonic_Multi_Discplinary_Care\n- Telephonic_Pharmacy\n"
+    start-end-dates-block:
+      properties:
+        startDate:
+          type: string
+          description: "The start date, YYYY-MM-DD ISO-8601 format."
+          format: date
+          example: 2023-01-01
+        endDate:
+          type: string
+          description: "The end date, YYYY-MM-DD ISO-8601 format."
+          format: date
+          example: 2024-01-01
+    signature-signed-by-attribute:
+      properties:
+        signedBy:
+          type: string
+    signature-signed-date-attribute:
+      properties:
+        signedDate:
+          type: string
+          description: Date when the signature was signed in YYYY-MM-DD ISO-8601 format
+          format: date
+          example: 1973-12-12
+    insurances-block:
+      properties:
+        otherInsurances:
+          $ref: '#/components/schemas/insurancesblock_otherInsurances'
+    plans-non-medicaid-block:
+      properties:
+        plans:
+          type: array
+          items:
+            $ref: '#/components/schemas/plansnonmedicaidblock_plans'
+    plan-name-attribute:
+      properties:
+        planName:
+          type: string
+          description: Name of the test Plan
+          example: testChoice H5216-142 (PPO)
+    plan-benefit-package-number-attribute:
+      properties:
+        planBenefitPackageNumber:
+          type: string
+          description: A plan's benefit package number. For a planId H5619-111-000 is 111 (delimited by a dash ie '-')
+          example: "111"
+    plan-segment-number-attribute:
+      properties:
+        segmentNumber:
+          type: string
+          description: A plan's segment number. For a planId H5619-111-000 is 000 (delimited by a dash ie '-').
+          example: "000"
+    plan-contract-number-attribute:
+      properties:
+        contractNumber:
+          type: string
+          description: A plan's contract number. For a planId H5619-111-000 is H5619 (delimited by a dash ie '-').
+          example: H5619
+    plan-groupId-attribute:
+      properties:
+        groupId:
+          type: string
+          description: A unique identifier assigned by test to identify the test group into which the prospect is enrolling or a customer value to be translated to the test group.
+          example: "235389"
+    plan-benefit-sequence-number-attribute:
+      properties:
+        benefitSequenceNumber:
+          type: string
+          description: A number used to identify a customer's set of benefit plans under the same Ledger entry.
+          example: "027"
+    line-of-coverage-attribute:
+      properties:
+        lineOfCoverage:
+          type: string
+          description: Type of benefit the applicant is enrolling in or enrolled. Medical or  Prescription Drug Or Dental or Vision Or  Hearing
+          example: PrescriptionDrug
+          enum:
+          - Medical
+          - PrescriptionDrug
+          - Dental
+          - Vision
+          - Hearing
+    optional-supplemental-benefits-block:
+      properties:
+        optionalSupplementalBenefits:
+          type: array
+          description: Optional supplemental benefits are benfit of a MA or MAPD Plan
+          items:
+            allOf:
+            - $ref: '#/components/schemas/plan-OSB-package-id-attribute'
+            - $ref: '#/components/schemas/plan-OSB-package-description-attribute'
+            - $ref: '#/components/schemas/plan-OSB-premium-amount-attribute'
+            - $ref: '#/components/schemas/plan-OSB-dates-attributes'
+    plan-OSB-package-id-attribute:
+      properties:
+        optionalSupplementalBenefitPackageId:
+          type: string
+    plan-OSB-package-description-attribute:
+      properties:
+        optionalSupplementalBenefitPackageDescription:
+          type: string
+          example: MyOption Total Dental HMO
+    plan-OSB-premium-amount-attribute:
+      properties:
+        optionalSupplementalBenefitPremiumAmount:
+          type: number
+          format: double
+    plan-OSB-dates-attributes:
+      properties:
+        optionalSupplementalBenefitStartDate:
+          type: string
+          description: The start date of the optional supplemental benefit
+          format: date
+          example: 2021-01-01
+    consumers-other-coverages-block:
+      properties:
+        otherCoverages:
+          type: array
+          items:
+            $ref: '#/components/schemas/consumersothercoveragesblock_otherCoverages'
+    effective-end-dates-block:
+      properties:
+        effectiveDate:
+          type: string
+          description: "The effective date, YYYY-MM-DD ISO-8601 format."
+          format: date
+          example: 2023-01-01
+        endDate:
+          type: string
+          description: "The end date, YYYY-MM-DD ISO-8601 format."
+          format: date
+          example: 2024-01-01
+    coverage-group-number-attribute:
+      properties:
+        coverageGroupId:
+          type: string
+          description: A unique identifier assigned by carrier(issuer of the policy).
+    coverage-policy-number-attribute:
+      properties:
+        coveragePolicyNumber:
+          type: string
+          description: Policy Number of the coverage
+    consumers-providers-block:
+      properties:
+        providers:
+          type: array
+          example:
+          - providerRelationType: RequestedProvider
+            isEstablishedPatientForProvider: true
+            associatedChronicConditionType:
+            - None
+            providerId: DR1234
+            providerDisplayName: Mr DR
+            nationalProviderIdentifier: N23254364
+            providerAddress:
+              addressLine1: 123 Main Street
+              addressLine2: Apartment 5A
+              addressLine3: Building 1
+              addressLine4: string
+              city: Louisville
+              county: Bullitt
+              countyCode: "056"
+              stateOrProvince: KY
+              postalCode: "12345"
+              postalCodePlus: "0727"
+              countryCode: USA
+          - providerRelationType: ChronicConditionsVerificationProvider
+            isEstablishedPatientForProvider: false
+            associatedChronicConditionType:
+            - ChronicLungDisease
+            - CardiovascularDisease
+            providerId: DR1244
+            providerDisplayName: Dr R
+            nationalProviderIdentifier: B354364
+            providerAddress:
+              addressLine1: 127 Main Street
+              addressLine2: Apartment 5A
+              city: Louisville
+              county: Bullitt
+              countyCode: "056"
+              stateOrProvince: KY
+              postalCode: "12345"
+              postalCodePlus: "0727"
+              countryCode: USA
+          items:
+            $ref: '#/components/schemas/consumersprovidersblock_providers'
+    provider-name-block:
+      allOf:
+      - $ref: '#/components/schemas/provider-display-name-block'
+      - $ref: '#/components/schemas/name-block'
+    provider-display-name-block:
+      properties:
+        providerDisplayName:
+          type: string
+          description: Full name of the provider
+          example: Dr. John P Smith
+    national-provider-identifier-field:
+      properties:
+        nationalProviderIdentifier:
+          type: string
+          description: "Standard National Provider Identifier, aka 'NPI' as defined by CMS (https://www.cms.gov/medicare/regulations-guidance/administrative-simplification)"
+    consumers-payments-block:
+      properties:
+        paymentPreferences:
+          type: array
+          description: "The applicant may pay their monthly plan premium via automatic deduction from different payment methods. \nDifferent payment methods can be selected to pay for initial or ongoing payments. If Both option is selected for paymentCategory then only 1 payment method is needed. If bankPayment section is populated , cardPayement section will be empty, vice versa.\nIf card or bank are not the payment preference then those sections can be empty.\n"
+          example:
+          - paymentCategory: Initial
+            paymentMethodType: CouponBook
+            paymentFrequency: OneTime
+            paymentMonthlyPremiumAmount: 32
+          - paymentCategory: Ongoing
+            paymentMethodType: AutomatedClearingHouse
+            paymentFrequency: Monthly
+            paymentMonthlyPremiumAmount: 32
+            bankPayment:
+              bankAccountBankName: Bank of America
+              bankAccountHolderName: Joe Smith
+              bankAccountType: Checking
+              bankAccountNumber: "456565757"
+              bankAccountTransitNumber: "45969589"
+          items:
+            allOf:
+            - $ref: '#/components/schemas/payments-method-block'
+            - $ref: '#/components/schemas/bank-block'
+            - $ref: '#/components/schemas/credit-debit-card-block'
+    payments-method-block:
+      properties:
+        paymentCategory:
+          type: string
+          description: Payment category for the payment method.
+          enum:
+          - Initial
+          - Ongoing
+          - Both
+        paymentMethodType:
+          type: string
+          description: The method which will be used to pay the premium. If applicant wish to pay by mail then Coupon Book method will be selected.
+          enum:
+          - CouponBook
+          - RailroadRetirementWithholding
+          - SocialSecurityCheckWithholding
+          - AutomatedClearingHouse
+          - CreditCard
+        paymentFrequency:
+          type: string
+          description: Frequency of the payment
+          enum:
+          - OneTime
+          - Monthly
+          - Annual
+          - None
+        paymentMonthlyPremiumAmount:
+          type: number
+          format: double
+    bank-block:
+      properties:
+        bankPayment:
+          $ref: '#/components/schemas/bank-account-block'
+    bank-account-block:
+      properties:
+        bankAccountBankName:
+          type: string
+          description: Name of the bank
+        bankAccountHolderName:
+          type: string
+          description: Bank account holder's name
+        bankAccountNumber:
+          type: string
+          description: Bank account Number
+        bankAccountType:
+          type: string
+          description: Type of an account
+          enum:
+          - Checking
+          - Saving
+        bankAccountTransitNumber:
+          type: string
+          description: Routing number of the bank account
+    credit-debit-card-block:
+      properties:
+        cardPayment:
+          $ref: '#/components/schemas/creditdebitcardblock_cardPayment'
+    card-name-attribute:
+      properties:
+        cardHolderName:
+          type: string
+          description: Card holder Name
+          example: Joe Smith
+    card-type-attribute:
+      properties:
+        cardTypeCode:
+          type: string
+          description: |
+            Type of a payment card
+            * AE : American Express
+            * DV : Discover Card
+            * MC : Master Card
+            * V  : Visa
+          example: V
+          enum:
+          - AE
+          - DV
+          - MC
+          - V
+    card-expiration-date-attribute:
+      properties:
+        cardExpirationDate:
+          type: string
+          description: Card expiration date in YYYY-MM format
+          example: 2023-09
+    communication-preferences-block:
+      properties:
+        communicationPreferences:
+          type: object
+          allOf:
+          - $ref: '#/components/schemas/preference-written-language-attribute'
+          - $ref: '#/components/schemas/preference-verbal-language-attribute'
+          - $ref: '#/components/schemas/preference-communication-language-attribute'
+          - $ref: '#/components/schemas/preference-alternate-communication-format-attribute'
+    preference-written-language-attribute:
+      properties:
+        preferredWrittenLanguage:
+          pattern: "[A-Z]{3}"
+          description: Preferred written communication language. This parameter accept value in ISO_639-3 standard in uppercase format.
+          example: ENG
+    preference-verbal-language-attribute:
+      properties:
+        preferredVerbalLanguage:
+          pattern: "[A-Z]{3}"
+          description: Preferred verbal communication language. This parameter accept value in ISO_639-3 standard in uppercase format.
+          example: ENG
+    preference-communication-language-attribute:
+      properties:
+        preferredCommunicationMethod:
+          type: string
+          description: Preferred communication method.  Email or Mail
+          example: Email
+    preference-alternate-communication-format-attribute:
+      properties:
+        preferredAlternateCommunicationFormat:
+          type: string
+          description: Prefereed alternative format to standard print
+          example: Audio
+    consumers-conditions-block:
+      properties:
+        conditions:
+          type: object
+          allOf:
+          - $ref: '#/components/schemas/smoker-attribute'
+          - $ref: '#/components/schemas/disability-attribute'
+    smoker-attribute:
+      properties:
+        isSmoker:
+          type: boolean
+          description: Indicates whether the applicant smokes
+          example: false
+    disability-attribute:
+      properties:
+        hasDisability:
+          type: boolean
+          description: Indicates whether the person has a disability
+          example: false
+    consumers-chronic-conditions-block:
+      properties:
+        chronicConditions:
+          type: array
+          description: A list of chronic conditions. Pre-Qualification assessment for special needs plan(SNP)
+          items:
+            allOf:
+            - $ref: '#/components/schemas/chronic-cardiovascular-disease-block'
+            - $ref: '#/components/schemas/chronic-heart-failure-block'
+            - $ref: '#/components/schemas/chronic-lung-disease-block'
+            - $ref: '#/components/schemas/chronic-diabetes-block'
+    chronic-cardiovascular-disease-block:
+      properties:
+        cardiovascularDisease:
+          $ref: '#/components/schemas/chroniccardiovasculardiseaseblock_cardiovascularDisease'
+    chronic-heart-failure-block:
+      properties:
+        heartFailure:
+          $ref: '#/components/schemas/chronicheartfailureblock_heartFailure'
+    chronic-lung-disease-block:
+      properties:
+        lungDisease:
+          $ref: '#/components/schemas/chroniclungdiseaseblock_lungDisease'
+    chronic-diabetes-block:
+      properties:
+        diabetes:
+          $ref: '#/components/schemas/chronicdiabetesblock_diabetes'
+    long-term-care-block:
+      properties:
+        longTermCare:
+          $ref: '#/components/schemas/longtermcareblock_longTermCare'
+    application-block:
+      properties:
+        enrollmentApplicationSubmission:
+          $ref: '#/components/schemas/applicationblock_enrollmentApplicationSubmission'
+    special-election-period-block:
+      properties:
+        specialElectionPeriodReasonType:
+          description: "An exception code that may allow the applicant to enroll outside of AEP/OEP/IEP/ICEP periods. specialElectionPeriodReasonType should be provided if the Election Type is \"SEP\". \n\n* If DST is selected, which original election type was missed (AEP/IEP/SEP) should be provided in DisasterElectionType.  \n    - If it is \"SEP\", then which SEP reason type was missed should be provided in disasterSpecialElectionPeriodReasonType , along with the Date(disasterSpecialElectionPeriodDate).\n    - If disasterSpecialElectionPeriodReasonType is OTH, then reason disasterSpecialElectionPeriodReason should be provided along with other disaster prefix fields. \n"
+          example: DST
+          allOf:
+          - $ref: '#/components/schemas/specialElectionPeriodTypes'
+        disasterElectionType:
+          type: string
+          description: "The original election type that was missed due to the disaster. \n\n* AEP    - Annual Election Period\n* IEP    - Initial Election Period\n* ICEP   - Initial Coverage Election Period\n* OEP    - Open Enrollment Period\n* OEPI   - Open Enrollment Period For Institutionalized Individuals\n* OEPNew - Open Enrollment Period For Newly Eligible Beneficiaries\n* SEP    - Special Election Period\n"
+          example: SEP
+          enum:
+          - AEP
+          - IEP
+          - ICEP
+          - OEP
+          - OEPI
+          - OEPNew
+          - SEP
+        disasterSpecialElectionPeriodReasonType:
+          description: The original special election period code that was missed due to the disaster if disasterElectionType is "SEP".
+          example: OTH
+          allOf:
+          - $ref: '#/components/schemas/specialElectionPeriodTypes'
+        disasterSpecialElectionPeriodDate:
+          type: string
+          description: Special Enrollment Period Date due to the disaster code. ISO date format YYYY-MM-DD. Remove the attribute from the payload if not applicable.
+          format: date
+        disasterSpecialElectionPeriodReason:
+          type: string
+          description: TBD
+          example: Free form text
+        disasterSpecialElectionPeriodEmergencyReason:
+          type: string
+          description: The reason why a special enrollment period was selected due to the disaster.
+          example: Hurricane
+        specialElectionPeriodDate:
+          type: string
+          description: Special Enrollment Period Date. ISO date format YYYY-MM-DD.  Remove the attribute from the payload if not applicable.
+          format: date
+        specialElectionPeriodReason:
+          type: string
+          description: The reason why special enrollment period code was selected
+          example: Lost health insurance
+    specialElectionPeriodTypes:
+      type: string
+      description: "\n* COS : SEP for individuals enrolled in cost plans that are nonrenewing their contracts\n* ESR : SEP for individuals with ESRD whose entitlement determination was made retroactively\n* LEC : For individuals losing or recently lost employer-sponsored coverage (including union or COBRA).\n* LIS : I receive extra help paying for Medicare prescription drug coverage\n* LCC : For individuals who recently involuntarily lost creditable prescription drug coverage as good as Medicare's.\n* LOP : SEP for Individuals who after April 1 switch from Original Medicare to an MA only (no PDP) plan\n* LTC : For individuals moving into, residing in or moving out of a Long Term Care facility to elect PDP (coordinates with OEP-I).\n* MAI : SEP for an MAPD enrollee using the MA Open Enrollment period for Institutionalized individuals [OEPI] to disenroll from an MAPD plan.\n* MAN : SEP for MAPD enrollee using the MA OEPNEW to disenroll to Original Medicare and a PDP\n* MAO : SEP for MAPD enrollees using the MA OEP to disenroll to Original Medicare OR MA only PFFS plan and a Stand-alone PDP\n* MDE : For individuals with Medicaid and/or LIS who have NOT had a change in status - ONCE per QTR use.\n* 12G : For individuals who dropped Medicare Supplement after enrolling in MA/MAPD for the FIRST time (12mo. Trial Right) to return to Original Medicare with PDP.\n* MOV : For individuals who have made a permanent move, notified of a move or were disenrolled due to out-of-service-area (OSA).\n* NON : For individuals enrolled in MA/MAPD/PDP/Cost plan where contract is not renewing\n* PAC : For individuals who recently disenrolled from the Program of All-inclusive Care for the Elderly (PACE).\n* PMV : SEP for those who became ineligible for Part D after their Part D IEP due to permanent move out of US or incarceration\n* 12J : For individuals who elected a MA/MAPD during IEP/ICEP at age 65 to return to Original Medicare with PDP within first 12 months.\n* SNP : For individuals who recently lost Special Needs status within the last 3 months.\n* PAP : For individuals who belong to a State Pharmaceutical Assistance Plan (SPAP) or lost SPAP eligibility.\n* UNM : SEP for Full benefit dual eligibles with retroactive uncovered months\n* GRP : Group Medicare Enrollment\n* CHR : For individuals with chronic condition(s) to enroll in a CC-SNP for that condition or if after enrollment found to not have the qualifying condition to enroll in different plan.\n* OTH : None of the listed elections apply, however individual has special circumstance to be allowed to enroll (NOTE: app will pend).\n* ADP : SEP for MA/MAPD enrollees using the Medicare Annual Disenrollment Period to return to Original Medicare and enroll in a Stand-alone PDP\n* OCC : For individuals to enroll in MA-only (and disenroll Part D) to enroll/maintain other creditable coverage (such as TriCare or VA).\n* LLT : SEP for individuals who live in or recently moved \"out\" of a Long Term Care Facility (for example, a nursing home or long term care facility).\n* MOE : TN exp 6/30, GA exp 5/1: SEP for individuals who were enrolled in a MAPD plan and decided to go back to Original Medicare in order to enroll in a Medigap policy during a Special Open Enrollment Period and who want to enroll in a stand-alone PDP plan.\n* SSI : SEP for individuals who are not currently in a Part D plan and who newly qualify for the Low Income Subsidy (LIS) because they have SSI or applied for LIS at SSA\n* LLS : I am no longer eligible for extra help paying for my Medicare prescription drugs\n* 5ST : For individuals to enroll in a plan with a 5-star overall rating.\n* OEP : MA/MAPD enrollees to enroll in a PDP (and disenroll from MA/MAPD) during MA OEP.\n* OEP-N :  I recently enrolled in a Medicare Advantage plan and I wish to make a plan change to another Medicare Advantage plan or go back to Original Medicare.\n* CRE : SEP for individuals who are not adequately informed of a loss of creditable coverage or never had creditable coverage.  Note: This SEP must be approved by CMS and the member will be required to submit proof of approval in writing.\n* ERR : SEP for individuals whose enrollment or non-enrollment in a Part D plan is erroneous due to an action, inaction or error by a federal employee.  Note: This SEP must be approved by CMS and the member will be required to submit proof of approval in writing.\n* RET : SEP for individuals whose Medicare entitlement determination was made retroactively.  Note: This SEP must be approved by CMS and the member will be required to submit proof of approval in writing.\n* SAN : SEP for individuals who disenroll in connection with a CMS sanction.  Note: This SEP must be approved by CMS and the member will be required to submit proof of approval in writing.\n* VIO : SEP for Contract Violations.  Note: This SEP must be approved by CMS and the member will be required to submit proof of approval in writing. \n* MCD : For individuals who gained, lost or had a change in Medicaid status within last 3 months.\n* NLS : For individuals who gained, lost or had a change in LIS/Extra Help status within last 3 months.\n* DIF : For individuals auto-enrolled in a plan by Medicare or the State within last 3 months and want to choose a different plan.\n* RUS : For individuals who recently returned to the United States after living permanently outside of the U.S.\n* ACC : For individuals who missed an eligible election period due to delayed receipt of Accessibility materials.\n* INC : For individuals recently released from incarceration.\n* LAW : For individuals who recently obtained lawful status in the United States within the last 3 months.\n* DST : For individuals who resided in a Government-declared emergency/disaster area who missed other eligible election period\n* MRD : For individuals on Medicare due to disability who are turning 65 getting second ICEP for MA-only\n* GEP : For individuals enrolled in Part B during Part B General Enrollment when NOT entitled to free Part A for PDP.\n"
+    application-signature-block:
+      properties:
+        applicationSignature:
+          type: object
+          description: "signedBy : The person who signed the application. Application can be signed by Client, Power Of Attorney, Witness, Agent and Spouse.\nsignedDate: The date (YYYY-MM-DD ISO-8601) when the application was signed by the applicant. If the value is not available for this particular field, remove the attribute from the payload. \n"
+          allOf:
+          - $ref: '#/components/schemas/signature-signed-by-attribute'
+          - $ref: '#/components/schemas/signature-signed-date-attribute'
+          - $ref: '#/components/schemas/signature-time-attribute'
+          - $ref: '#/components/schemas/application-signature-type-attribute'
+          - $ref: '#/components/schemas/telephone-signature-id-attribute'
+          - $ref: '#/components/schemas/application-voice-log-id-attribute'
+    signature-time-attribute:
+      properties:
+        applicationSignatureTime:
+          pattern: "^\\d{2}:\\d{2}:\\d{2}Z$"
+          type: string
+          description: The time when the applicantion was signed. format to be follow  time-hour:time-minute:time-secondZ
+          example: 17:32:00Z
+    telephone-signature-id-attribute:
+      properties:
+        applicationTelephoneSignatureId:
+          type: string
+          description: T-Sig - Process where agent will dial a 3rd party number to record the flow of applicant providing signature. A Voice Log Id will be generated by the 3rd party of this recording.
+    application-document-control-number-attribute:
+      properties:
+        documentControlNumber:
+          type: string
+          description: This document control number is used to identify the specific paper application being submitted
+          example: GHHKRPVEN_2024
+    application-scope-of-appointment-block:
+      properties:
+        scopeOfAppointmentId:
+          type: string
+          description: A CMS-required form that must be completed prior to any face-to-face sales meeting or conference call. This form lets the agent know beforehand which coverage options are open for discussion.
+        scopeOfAppointmentSource:
+          type: string
+          description: |
+            Source of Scope Of Appointment
+            - test Paper
+            - Interactive Voice Response
+            - Digital Marketing Services
+            - Non-test Paper
+            - Enrollment Hub
+            - CarePlus Paper
+            - Non-CarePlus Paper
+          example: test Paper
+    agents-brokers-block:
+      properties:
+        agentsAndBrokers:
+          type: array
+          description: A list of agents and brokers that the applicant worked with
+          items:
+            allOf:
+            - $ref: '#/components/schemas/agent-broker-type-attribute'
+            - $ref: '#/components/schemas/agent-broker-Id-attribute'
+            - $ref: '#/components/schemas/agent-broker-name-attribute'
+            - $ref: '#/components/schemas/agent-broker-emailAddress-attribute'
+            - $ref: '#/components/schemas/agent-broker-ssn-attribute'
+    agent-broker-type-attribute:
+      properties:
+        agentBrokerType:
+          type: string
+          description: Role type of sale personal
+          example: Agent
+          enum:
+          - Agent
+          - WritingAgent
+          - AgentOfRecord
+          - ReferringBroker
+          - SaleRepresentative
+    agent-broker-emailAddress-attribute:
+      properties:
+        agentBrokerEmailAddress:
+          type: string
+          description: Email address of an agent or a broker
+          example: dhansen@example.com
+    partner-marketing-block:
+      properties:
+        partnerAndMarketing:
+          $ref: '#/components/schemas/partnermarketingblock_partnerAndMarketing'
+    pagination-model:
+      properties:
+        offset:
+          type: integer
+          example: 0
+        limit:
+          type: integer
+          example: 20
+        countOfItems:
+          type: integer
+          example: 1000
+        countOfPages:
+          type: integer
+          example: 50
+      description: Pagination attributes
+    link-model:
+      properties:
+        rel:
+          type: string
+          description: Name of the sub-resource
+        href:
+          type: string
+          description: Path to the sub-resource
+    applicationsearchresponse_applications:
+      properties:
+        applicationId:
+          type: string
+        applicationStatus:
+          type: string
+          example: Submitted
+    consumersexternalcontractsblock_externalContacts:
+      properties:
+        contactPersonType:
+          type: string
+          description: Contact person type of an appliant.
+          example: EmergencyContacts
+          enum:
+          - EmergencyContacts
+          - ResponsibleParty
+          - Parent
+          - AlternatePayer
+          - TaxPayer
+        contactRelationship:
+          type: string
+          description: Contact's relationship to the applicant
+          example: Sister
+        contactAddress:
+          type: object
+          allOf:
+          - $ref: '#/components/schemas/postal-address-with-type'
+    insurancesblock_otherInsurances:
+      type: object
+      properties:
+        medicarePartAEnrollmentDate:
+          type: string
+          description: Medicare Part A (Hospital Insurance) enrollment date
+          format: date
+          example: 2024-01-01
+        medicarePartBEnrollmentDate:
+          type: string
+          description: Medicare Part B (Medical Insurance) enrollment date
+          format: date
+          example: 2024-01-01
+    plansnonmedicaidblock_plans:
+      properties:
+        planCostPremiumAmount:
+          type: number
+          description: Plan's premium amount for the applicant
+          format: double
+          example: 30
+    consumersothercoveragesblock_otherCoverages:
+      properties:
+        isPrescriptionCoveredAsPartOfMedicalCoverage:
+          type: boolean
+          description: Indicator of if prescription is covered as part of medical coverage
+        carrierName:
+          type: string
+          description: Name of the coverage provider
+          example: BCBS of KY
+        carrierPayerSequenceType:
+          type: string
+          description: "Type of payer responsibility,  will this carrier be user's primary insurance or secondary"
+        carrierPhoneNumber:
+          type: string
+          description: Phone number of coverage provider. Phone Number should be a twelve (12) character alphanumeric field that can support dashes in the following format XXX-XXX-XXXX.
+        carrierAddress:
+          $ref: '#/components/schemas/postal-address'
+        coveragePeriod:
+          $ref: '#/components/schemas/effective-end-dates-block'
+    consumersprovidersblock_providers:
+      properties:
+        providerRelationType:
+          type: string
+          description: Type of provider for which the information will be added. Is it requested provider or provider used for verification of chronic conditions.
+          enum:
+          - RequestedProvider
+          - ChronicConditionsVerificationProvider
+          - PreviousProvider
+        isEstablishedPatientForProvider:
+          type: boolean
+          description: Indicates whether the applicant is already a patient of the requested provider
+        associatedChronicConditionType:
+          type: array
+          description: Type of condition to contact the provider for.
+          items:
+            type: string
+            enum:
+            - CardiovascularDisease
+            - ChronicHeartFailure
+            - ChronicLungDisease
+            - Diabetes
+            - None
+        providerId:
+          type: string
+          description: Unique id of the provider.
+        providerAddress:
+          $ref: '#/components/schemas/postal-address'
+    creditdebitcardblock_cardPayment:
+      type: object
+      properties:
+        cardToken:
+          type: string
+          description: Temporary or permanent token instead of the card number which will be sent by a client(PrivateCore service or Channels)
+    chroniccardiovasculardiseaseblock_cardiovascularDisease:
+      type: object
+      properties:
+        hasCirculationProblems:
+          type: boolean
+          description: Indicates whether the person has circulation problem
+        hasHeartProblems:
+          type: boolean
+          description: Indicates whether the person has heart problems
+        hasLegPain:
+          type: boolean
+          description: Indicates whether the person has leg pain
+    chronicheartfailureblock_heartFailure:
+      type: object
+      properties:
+        hasFluidInHeart:
+          type: boolean
+          description: Indicates whether the person has fluid in heart
+        hasHeartFailure:
+          type: boolean
+          description: Indicates whether the person has Heart failure or congestive heart failure
+        hasLegSwelling:
+          type: boolean
+          description: Indicates whether the person has leg swelling due to your heart
+    chroniclungdiseaseblock_lungDisease:
+      type: object
+      properties:
+        hasBreathingProblem:
+          type: boolean
+          description: Indicates whether the person has chronic breathing problems
+        hasLungProblem:
+          type: boolean
+          description: "Indicates whether the person has lung problem such as emphysema, asthma, chronic bronchitis, scarring in the lung, or high pressure in the lungs"
+        usesInhaler:
+          type: boolean
+          description: Indicates whether the person uses inhaler
+      description: "Chronic lung disorders (Asthma, Chronic Bronchitis, Emphysema, Pulmonary Fibrosis, and Pulmonary Hypertension)"
+    chronicdiabetesblock_diabetes:
+      type: object
+      properties:
+        hasHighBloodSugar:
+          type: boolean
+          description: Indicates whether the person has High blood sugar
+        hasInsulinOralMedication:
+          type: boolean
+          description: Indicates whether the person takes blood sugar medications
+        monitorsBloodSugar:
+          type: boolean
+          description: Indicates whether the person monitor blood sugar to stay within the target range
+    longtermcareblock_longTermCare:
+      type: object
+      properties:
+        longTermCareLocationType:
+          type: string
+          description: "Where will the applicant be recieving the care. Type of long Term Care. Institution (e.g. Long Term Care Skilled Nursing Facility, Skilled Nursing Facility/Nursing Facility, Intermediate Care Facility for Mentally Handicapped, Inpatient Psychiatric Facility) or Assisted Living Facility or Home."
+          enum:
+          - Institution
+          - AssistedLivingFacility
+          - Home
+        isInLongTermCare:
+          type: boolean
+          description: Indicates whether the applicant is in long term care or expect to be
+        inLongTermCarePeriod:
+          type: object
+          description: "The date when the applicant enterted or will enter into the long term care along with the end date of long term care.If date values are not available, remove the attributes from the payload."
+          allOf:
+          - $ref: '#/components/schemas/start-end-dates-block'
+        organizationId:
+          type: string
+          description: Id of the facility where the applicant is residing
+        longTermCareFacilityName:
+          type: string
+          description: The applicant's long term care facility's name
+        longTermCareFacilityPhoneNumber:
+          type: string
+          description: The applicant's long term care facility's phone number. Phone Number should be a twelve (12) character alphanumeric field that can support dashes in the following format XXX-XXX-XXXX.
+        longTermCareFacilityAddress:
+          description: The applicant's long term care facility's address
+          allOf:
+          - $ref: '#/components/schemas/postal-address'
+    applicationblock_enrollmentApplicationSubmission:
+      required:
+      - applicationSubmittedTimestamp
+      type: object
+      properties:
+        applicationSubmittedId:
+          type: string
+          description: "Unique identifier of the application at test level. The Id generated by the channels passed to downstream services. When channels doesn't pass any applicationId, private core will generate this and pass it along."
+          example: LDWRO0FRNDE66AB9
+        applicationProposedEffectiveDate:
+          type: string
+          description: "Proposed effective date of coverage ,YYYY-MM-DD ISO-8601 format. If Date value is not available for this particular field, remove the attribute from the payload."
+          format: date
+          example: 2024-01-01
+        applicationSubmittedTimestamp:
+          type: string
+          description: The date when test receives the application. The dateTime will be generated by the channel systems for digital-only applications.   accepts "2022-10-21T17:32:00Z" format.
+          format: date-time
+          example: 2022-10-21T17:32:00Z
+        marketReceivedTimestamp:
+          type: string
+          description: "The date an agent receive the application from an applicant. For digital applications, the value will be the same as applicationSubmittedDate."
+          format: date-time
+          example: 2022-10-21T17:32:00Z
+        electionType:
+          type: string
+          description: |
+            Election period of the application
+            * AEP    - Annual Election Period
+            * IEP    - Initial Election Period
+            * ICEP   - Initial Coverage Election Period
+            * OEP    - Open Enrollment Period
+            * OEPI   - Open Enrollment Period For Institutionalized Individuals
+            * OEPNew - Open Enrollment Period For Newly Eligible Beneficiaries
+            * SEP    - SpecialElectionPeriod
+          example: SEP
+          enum:
+          - AEP
+          - IEP
+          - ICEP
+          - OEP
+          - OEPI
+          - OEPNew
+          - SEP
+        enrollmentAttestation:
+          type: boolean
+          example: true
+        specialElectionPeriodException:
+          type: object
+          allOf:
+          - $ref: '#/components/schemas/special-election-period-block'
+    partnermarketingblock_partnerAndMarketing:
+      type: object
+      properties:
+        partnerApplicationId:
+          type: string
+          description: Unique identifier of the application generated by a partner.
+        partnerId:
+          type: string
+          description: Partner Id
+        partnerName:
+          type: string
+          description: Name of the Partner
+        partnerLocationId:
+          type: string
+          description: Location of the Partner
+        marketingCampaign:
+          type: string
+          description: Marketing Campaign code
+        marketingLeadSourceCode:
+          type: string
+          description: |
+            From where Scope of Appointment was initiated
+            One of the value from the below list should be selected for marketingLeadSource
+            - Book Of Business
+            - CarePlus
+            - CMS Online Enrollment Center
+            - Event
+            - test
+            - test Outbound
+            - Marketing Advertisement
+            - Marketing Advertisement AffinityPartner
+            - Marketing Advertisement Consumer Direct
+            - Marketing Advertisement Inbound
+            - Third-Party
+            - Third-Party AffinityPartner
+            - Third-Party Aggregator
+          example: Book Of Business
+  responses:
+    badRequest:
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/400Error'
+    resourceNotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/404Error'
+    unprocessableEntity:
+      description: Unprocessable entity
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/422Error'
+    internalServerError:
+      description: Internal Server Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/500Error'
+    serviceUnavailable:
+      description: Service Unavailable
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/503Error'
+  parameters:
+    systemName:
+      name: x-system-name
+      in: header
+      description: Name of the channel or system which will be consuming the API. This name will help identify who made the request and log the request with the sytem name + system's user details.
+      required: false
+      style: simple
+      explode: false
+      schema:
+        type: string
+    userId:
+      name: x-user-id
+      in: header
+      description: Id of the user in the consuming channel or system who is making the request. This id help identify who made the request and log the request with the sytem name + system's user details.
+      required: false
+      style: simple
+      explode: false
+      schema:
+        type: string
+    offset:
+      name: offset
+      in: query
+      description: "Optional. This parameter is used to facilitate pagination of available results by providing an offset position to the results list. It can be sent by the consumer to indicate the starting point of the result set for the current call. The offset is a non-negative integer representing the first result to return. If not provided, it defaults the value of 0."
+      schema:
+        type: integer
+      example: 0
+    limit:
+      name: limit
+      in: query
+      description: "Optional. Default is 50 records. This parameter is used to facilitate pagination by indicating a count of results to return in each page. The query parameter limit should be sent by the consumer to determine the number of results returned in the current call. The limit shall be a non-negative, non-zero integer indicating the maximum number of results to return at one time."
+      schema:
+        type: integer
+      example: 50
+  securitySchemes:
+    OAuth2:
+      type: oauth2
+      flows:
+        clientCredentials:
+          tokenUrl: https://login.microsoftonline.com/56c62bbe-8598-4b85-9e51-1ca753fa50f2/oauth2/v2.0/token
+          scopes:
+            read: Grants read access
+            write: Grants write access
+            admin: Grants access to admin operations
+    Apikey:
+      type: apiKey
+      name: x-apikey
+      in: header
