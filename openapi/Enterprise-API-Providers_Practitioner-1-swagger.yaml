@@ -100,7 +100,7 @@ paths:
                 description: "Applications can be search by demographic information. \nTo search by person's name:  first name, last name, middle name needs to be provided with the combination of DOB or official Identifiers likes Medicaid id or Medicare Id.\nApplications can search by Email address alone.\nApplications can search by Phone number alone.\nApplications can search by DOB alone.\n"
                 value:
                   filters:
-                    searchType: byOfficialIdentifier
+                    searchType: byDemographics
                     firstName: Joe
                     lastName: Doe
                     middleName: D
