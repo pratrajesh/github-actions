@@ -321,8 +321,8 @@ components:
       - $ref: '#/components/schemas/agent-broker-ssn-attribute'
       - $ref: '#/components/schemas/application-search-dates'
     apps-search-request-byDateRange:
-      required:
-        - applicationSignatureFromDate
+      #required:
+      #  - applicationSignatureFromDate
       properties:
         searchType:
           type: string
