@@ -146,10 +146,6 @@ paths:
                   filters:
                     searchType: byLineOfBusiness
                     lineOfBusiness: Medicare
-                    applicationSubmittedFromDate: 2023-12-04
-                    applicationSubmittedToDate: 2023-12-04
-                    applicationSignatureFromDate: ""
-                    applicationSignatureToDate: ""
               byApplicationType:
                 summary: byApplicationType
                 description: "Applications can be searched by applicationType ( MA, MAPD PDP, OSB, CSNP, DSNP, SNP, ISNP, Med Supp, IDV) with a combination of submitted from andto dates or signature from and to date."
