@@ -108,8 +108,6 @@ paths:
                     emailAddress: ""
                     phoneNumber: ""
                     state: ""
-                    identifierCode: MC
-                    identifierValue: v12324
               byVoiceLogId:
                 summary: byVoiceLogId
                 description: Applications can be search by telephone Signature Voice Log Id independently
