@@ -385,6 +385,11 @@ components:
     apps-search-request-bySignatureType:
       required:
       - applicationSignatureType
+      properties:
+        searchType:
+          type: string
+          enum:
+            - bySignatureType
       allOf:
       - $ref: '#/components/schemas/application-signature-type-attribute'
       - $ref: '#/components/schemas/application-search-dates'
