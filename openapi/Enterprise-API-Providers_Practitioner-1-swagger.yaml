@@ -153,10 +153,6 @@ paths:
                   filters:
                     searchType: byApplicationType
                     applicationType: PDP
-                    applicationSubmittedFromDate: 2023-12-04
-                    applicationSubmittedToDate: 2023-12-04
-                    applicationSignatureFromDate: ""
-                    applicationSignatureToDate: ""
               byApplicationStatus:
                 summary: byApplicationStatus
                 description: Applications can be searched by applicationStatus with a combination of submitted from and to dates or signature from and to date
