@@ -174,10 +174,6 @@ paths:
                   filters:
                     searchType: byChannelCode
                     applicationEnrollmentSourceCode: CT
-                    applicationSubmittedFromDate: 2023-12-04
-                    applicationSubmittedToDate: 2023-12-04
-                    applicationSignatureFromDate: ""
-                    applicationSignatureToDate: ""
               byBrand:
                 summary: byBrand
                 description: Applications can be searched by brand with a combination of submitted from and to dates or signature from and to date.
@@ -379,7 +375,7 @@ components:
       - $ref: '#/components/schemas/application-search-dates'
     apps-search-request-byChannelCode:
       required:
-      - enrollmentSourceCode
+      - applicationEnrollmentSourceCode
       allOf:
       - $ref: '#/components/schemas/application-source-code-attribute'
       - $ref: '#/components/schemas/application-search-dates'
