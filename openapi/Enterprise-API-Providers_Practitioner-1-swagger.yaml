@@ -259,7 +259,7 @@ components:
           type: string
     apps-search-request-byVoiceLogId:
       required:
-      - telephoneSignatureVoiceLogId
+      - applicationTelephoneSignatureVoiceLogId
       allOf:
       - $ref: '#/components/schemas/application-voice-log-id-attribute'
     apps-search-request-byOfficialIdentifier:
@@ -284,6 +284,8 @@ components:
       allOf:
       - $ref: '#/components/schemas/internal-identifier'
     apps-search-request-byDemographics:
+      required:
+        - firstName
       allOf:
       - $ref: '#/components/schemas/apps-search-request-demographic-block'
       - $ref: '#/components/schemas/official-identifier-code-attribute'
@@ -324,12 +326,16 @@ components:
           description: The date range to when an application was signed by the applicant
           format: date
     apps-search-request-ByAgent:
+      required:
+        - agentBrokerId
       allOf:
       - $ref: '#/components/schemas/agent-broker-Id-attribute'
       - $ref: '#/components/schemas/agent-broker-name-attribute'
       - $ref: '#/components/schemas/agent-broker-ssn-attribute'
       - $ref: '#/components/schemas/application-search-dates'
     apps-search-request-byDateRange:
+      required:
+        - applicationSignatureFromDate
       allOf:
       - $ref: '#/components/schemas/application-search-dates'
     apps-search-request-byLineOfBusiness:
