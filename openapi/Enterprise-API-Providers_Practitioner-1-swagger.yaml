@@ -346,6 +346,11 @@ components:
     apps-search-request-byDateRange:
       required:
         - applicationSignatureFromDate
+      properties:
+        searchType:
+          type: string
+          enum:
+            - byDateRange
       allOf:
       - $ref: '#/components/schemas/application-search-dates'
     apps-search-request-byLineOfBusiness:
