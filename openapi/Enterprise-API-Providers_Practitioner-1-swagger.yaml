@@ -382,6 +382,7 @@ components:
           properties:
             searchType:
                 type: string
+                description: The type of search
                 enum:
                 - byApplicationId
                 - byOfficialIdentifier
@@ -396,8 +397,7 @@ components:
                 - bySignatureType
                 - byChannelCode
                 - byBrand
-              description: The type of search
-          oneOf:
+        oneOf:
           - $ref: '#/components/schemas/apps-search-request-byApplicationId'
           - $ref: '#/components/schemas/apps-search-request-byOfficialIdentifier'
           - $ref: '#/components/schemas/apps-search-request-byInternalIdentifier'
