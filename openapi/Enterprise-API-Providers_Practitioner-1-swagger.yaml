@@ -299,19 +299,26 @@ components:
       properties:
         firstName:
           type: string
+          description: Value of the identifier
         lastName:
           type: string
+          description: Value of the identifier
         middleName:
           type: string
+          description: Value of the identifier
         dateOfBirthDate:
           type: string
+          description: Value of the identifier
           format: date
         emailAddress:
           type: string
+          description: Value of the identifier
         phoneNumber:
           type: string
+          description: Value of the identifier
         state:
           type: string
+          description: Value of the identifier
     application-search-dates:
       properties:
         applicationSubmittedFromDate:
