@@ -250,13 +250,11 @@ components:
     apps-search-request-byApplicationId:
       required:
       - applicationId
-      - searchType
       properties:
         applicationId:
           type: string
     apps-search-request-byVoiceLogId:
       required:
-      - searchType
       - telephoneSignatureVoiceLogId
       allOf:
       - $ref: '#/components/schemas/application-voice-log-id-attribute'
@@ -264,7 +262,6 @@ components:
       required:
       - identifierCode
       - identifierValue
-      - searchType
       example:
         searchType: byOfficialIdentifier
         identifierCode: MC
@@ -276,7 +273,6 @@ components:
       required:
       - identifierType
       - identifierValue
-      - searchType
       example:
         searchType: byInternalIdentifier
         identifierType: MemberCardId
@@ -284,8 +280,6 @@ components:
       allOf:
       - $ref: '#/components/schemas/internal-identifier'
     apps-search-request-byDemographics:
-      required:
-      - searchType
       allOf:
       - $ref: '#/components/schemas/apps-search-request-demographic-block'
       - $ref: '#/components/schemas/official-identifier-code-attribute'
@@ -326,36 +320,29 @@ components:
           description: The date range to when an application was signed by the applicant
           format: date
     apps-search-request-ByAgent:
-      required:
-      - searchType
       allOf:
       - $ref: '#/components/schemas/agent-broker-Id-attribute'
       - $ref: '#/components/schemas/agent-broker-name-attribute'
       - $ref: '#/components/schemas/agent-broker-ssn-attribute'
       - $ref: '#/components/schemas/application-search-dates'
     apps-search-request-byDateRange:
-      required:
-      - searchType
       allOf:
       - $ref: '#/components/schemas/application-search-dates'
     apps-search-request-byLineOfBusiness:
       required:
       - lineOfBusiness
-      - searchType
       allOf:
       - $ref: '#/components/schemas/line-of-business-attribute'
       - $ref: '#/components/schemas/application-search-dates'
     apps-search-request-byApplicationType:
       required:
       - applicationType
-      - searchType
       allOf:
       - $ref: '#/components/schemas/application-type-attribute'
       - $ref: '#/components/schemas/application-search-dates'
     apps-search-request-byApplicationStatus:
       required:
       - applicationStatus
-      - searchType
       properties:
         applicationStatus:
           type: string
@@ -368,21 +355,18 @@ components:
     apps-search-request-bySignatureType:
       required:
       - applicationSignatureType
-      - searchType
       allOf:
       - $ref: '#/components/schemas/application-signature-type-attribute'
       - $ref: '#/components/schemas/application-search-dates'
     apps-search-request-byChannelCode:
       required:
       - enrollmentSourceCode
-      - searchType
       allOf:
       - $ref: '#/components/schemas/application-source-code-attribute'
       - $ref: '#/components/schemas/application-search-dates'
     apps-search-request-byBrand:
       required:
       - enrollmentSourceCode
-      - searchType
       properties:
         brand:
           type: string
@@ -393,6 +377,8 @@ components:
       properties:
         filters:
           type: object
+          required:
+            - searchType
           properties:
             searchType:
                 type: string
