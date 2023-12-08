@@ -177,10 +177,6 @@ paths:
                   filters:
                     searchType: byBrand
                     brand: test
-                    applicationSubmittedFromDate: 2023-12-04
-                    applicationSubmittedToDate: 2023-12-04
-                    applicationSignatureFromDate: ""
-                    applicationSignatureToDate: ""
         required: true
       responses:
         "200":
@@ -377,7 +373,7 @@ components:
       - $ref: '#/components/schemas/application-search-dates'
     apps-search-request-byBrand:
       required:
-      - enrollmentSourceCode
+      - brand
       properties:
         brand:
           type: string
