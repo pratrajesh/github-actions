@@ -179,10 +179,6 @@ paths:
                   filters:
                     searchType: bySignatureType
                     applicationSignatureType: WetSignature
-                    applicationSubmittedFromDate: 2023-12-04
-                    applicationSubmittedToDate: 2023-12-04
-                    applicationSignatureFromDate: ""
-                    applicationSignatureToDate: ""
               byChannelCode:
                 summary: byChannelCode
                 description: Applications can be searched by enrollmentSourceCode with a combination of submitted from and to dates or signature from and to date.
