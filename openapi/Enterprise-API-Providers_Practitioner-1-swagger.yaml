@@ -382,8 +382,21 @@ components:
           properties:
             searchType:
                 type: string
-          discriminator:
-            propertyName: searchType
+                enum:
+                - byApplicationId
+                - byOfficialIdentifier
+                - byInternalIdentifier
+                - byDemographics
+                - byVoiceLogId
+                - byDateRange
+                - byAgent
+                - byLineOfBusiness
+                - byApplicationType
+                - byApplicationStatus
+                - bySignatureType
+                - byChannelCode
+                - byBrand
+              description: The type of search
           oneOf:
           - $ref: '#/components/schemas/apps-search-request-byApplicationId'
           - $ref: '#/components/schemas/apps-search-request-byOfficialIdentifier'
