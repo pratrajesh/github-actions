@@ -221,28 +221,14 @@ paths:
                 $ref: '#/components/schemas/503Error'
 components:
   schemas:
-    SearchTypeEnum:
-      type: string
-      enum:
-        - "byApplicationId"
-        - "byVoiceLogId"
-        - "byOfficialIdentifier"
-        - "byInternalIdentifier"
-        - "byDemographics"
-        - "byAgent"
-        - "byDateRange"
-        - "byLineOfBusiness"
-        - "byApplicationType"
-        - "byApplicationStatus"
-        - "bySignatureType"
-        - "byChannelCode"
-        - "byBrand"
     apps-search-request-byApplicationId:
       required:
       - applicationId
       properties:
         searchType:
-          $ref: '#/components/schemas/SearchTypeEnum'
+          type: string
+          enum:
+            - byApplicationId
         applicationId:
           type: string
     apps-search-request-byVoiceLogId:
@@ -406,9 +392,25 @@ components:
             - searchType
           properties:
             searchType:
-                $ref: '#/components/schemas/SearchTypeEnum'
+                type: string
+                description: The type of search
           discriminator:
-                  propertyName: searchType    
+                  propertyName: searchType  
+                  mapping:
+                    byApplicationId: '#/components/schemas/apps-search-request-byApplicationId'
+                    byOfficialIdentifier: '#/components/schemas/apps-search-request-byOfficialIdentifier'
+                    byInternalIdentifier: '#/components/schemas/apps-search-request-byInternalIdentifier'
+                    byDemographics: '#/components/schemas/apps-search-request-byDemographics'
+                    ByAgent: '#/components/schemas/apps-search-request-ByAgent'
+                    byVoiceLogId: '#/components/schemas/apps-search-request-byVoiceLogId'
+                    byDateRange: '#/components/schemas/apps-search-request-byDateRange'
+                    byLineOfBusiness: '#/components/schemas/apps-search-request-byLineOfBusiness'
+                    byApplicationType: '#/components/schemas/apps-search-request-byApplicationType'
+                    byApplicationStatus: '#/components/schemas/apps-search-request-byApplicationStatus'
+                    bySignatureType: '#/components/schemas/apps-search-request-bySignatureType'
+                    byChannelCode: '#/components/schemas/apps-search-request-byChannelCode'
+                    byBrand: '#/components/schemas/apps-search-request-byBrand'
+                    
           oneOf:
               - $ref: '#/components/schemas/apps-search-request-byApplicationId'
               - $ref: '#/components/schemas/apps-search-request-byOfficialIdentifier'
