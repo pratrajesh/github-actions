@@ -124,7 +124,7 @@ paths:
                 description: "Applications can be searched by applicationSignatureFromDate and  applicationSignatureToDate. if 'applicationSignatureFromDate' is provided in the request, 'applicationSignatureToDate' is required.\nApplications can be searched by applicationSubmittedFromDate and  applicationSubmittedToDate. If 'applicationSubmittedFromDate' is provided in the request, 'applicationSubmittedToDate' is required. \n"
                 value:
                   filters:
-                    searchType: byDateRange
+                    #searchType: byDateRange
                     applicationSubmittedFromDate: 2023-12-04
                     applicationSubmittedToDate: 2023-12-04
                     applicationSignatureFromDate: 2023-12-04
@@ -221,10 +221,28 @@ paths:
                 $ref: '#/components/schemas/503Error'
 components:
   schemas:
+    SearchTypeEnum:
+      type: string
+      enum:
+        - "byApplicationId"
+        - "byVoiceLogId"
+        - "byOfficialIdentifier"
+        - "byInternalIdentifier"
+        - "byDemographics"
+        - "byAgent"
+        - "byDateRange"
+        - "byLineOfBusiness"
+        - "byApplicationType"
+        - "byApplicationStatus"
+        - "bySignatureType"
+        - "byChannelCode"
+        - "byBrand"
     apps-search-request-byApplicationId:
       required:
       - applicationId
       properties:
+        searchType:
+          $ref: '#/components/schemas/SearchTypeEnum'
         applicationId:
           type: string
     apps-search-request-byVoiceLogId:
@@ -254,6 +272,13 @@ components:
       allOf:
       - $ref: '#/components/schemas/internal-identifier'
     apps-search-request-byDemographics:
+      required:
+        - firstName
+      properties:
+        searchType:
+          type: string
+          enum:
+            - byDemographics
       allOf:
       - $ref: '#/components/schemas/apps-search-request-demographic-block'
       - $ref: '#/components/schemas/official-identifier-code-attribute'
@@ -301,12 +326,26 @@ components:
           description: The date range to when an application was signed by the applicant
           format: date
     apps-search-request-ByAgent:
+      required:
+        - agentBrokerId
+      properties:
+        searchType:
+          type: string
+          enum:
+            - byAgent
       allOf:
       - $ref: '#/components/schemas/agent-broker-Id-attribute'
       - $ref: '#/components/schemas/agent-broker-name-attribute'
       - $ref: '#/components/schemas/agent-broker-ssn-attribute'
       - $ref: '#/components/schemas/application-search-dates'
     apps-search-request-byDateRange:
+      #required:
+      #  - applicationSignatureFromDate
+      properties:
+        searchType:
+          type: string
+          enum:
+            - byDateRange
       allOf:
       - $ref: '#/components/schemas/application-search-dates'
     apps-search-request-byLineOfBusiness:
@@ -336,6 +375,11 @@ components:
     apps-search-request-bySignatureType:
       required:
       - applicationSignatureType
+      properties:
+        searchType:
+          type: string
+          enum:
+            - bySignatureType
       allOf:
       - $ref: '#/components/schemas/application-signature-type-attribute'
       - $ref: '#/components/schemas/application-search-dates'
@@ -346,6 +390,8 @@ components:
       - $ref: '#/components/schemas/application-source-code-attribute'
       - $ref: '#/components/schemas/application-search-dates'
     apps-search-request-byBrand:
+      required:
+      - brand
       properties:
         brand:
           type: string
@@ -360,8 +406,7 @@ components:
             - searchType
           properties:
             searchType:
-                type: string
-                description: The type of search
+                $ref: '#/components/schemas/SearchTypeEnum'
           discriminator:
                   propertyName: searchType    
           oneOf:
