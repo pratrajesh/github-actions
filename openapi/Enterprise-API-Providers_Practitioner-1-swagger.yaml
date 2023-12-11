@@ -227,8 +227,6 @@ components:
       properties:
         searchType:
           type: string
-          enum:
-            - byApplicationId
         applicationId:
           type: string
     apps-search-request-byVoiceLogId:
@@ -263,8 +261,6 @@ components:
       properties:
         searchType:
           type: string
-          enum:
-            - byDemographics
       allOf:
       - $ref: '#/components/schemas/apps-search-request-demographic-block'
       - $ref: '#/components/schemas/official-identifier-code-attribute'
@@ -317,8 +313,6 @@ components:
       properties:
         searchType:
           type: string
-          enum:
-            - byAgent
       allOf:
       - $ref: '#/components/schemas/agent-broker-Id-attribute'
       - $ref: '#/components/schemas/agent-broker-name-attribute'
@@ -330,8 +324,6 @@ components:
       properties:
         searchType:
           type: string
-          enum:
-            - byDateRange
       allOf:
       - $ref: '#/components/schemas/application-search-dates'
     apps-search-request-byLineOfBusiness:
@@ -364,8 +356,6 @@ components:
       properties:
         searchType:
           type: string
-          enum:
-            - bySignatureType
       allOf:
       - $ref: '#/components/schemas/application-signature-type-attribute'
       - $ref: '#/components/schemas/application-search-dates'
@@ -376,8 +366,6 @@ components:
       - $ref: '#/components/schemas/application-source-code-attribute'
       - $ref: '#/components/schemas/application-search-dates'
     apps-search-request-byBrand:
-      required:
-      - brand
       properties:
         brand:
           type: string
